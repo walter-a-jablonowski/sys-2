@@ -8,6 +8,7 @@ I am making an app that can be used to manage all kind of activities in one app.
 Different types of activities can be defined in a file structure like
 
 - /activities
+  - def.yml contains: definitions of default data fields with basic validation
   - /shared: shared activity types
     - /MY_ACTIVITY_TYPE
       - def.yml contains: definitions of default data fields with basic validation
@@ -39,7 +40,7 @@ description: |
 
 allowedSubTypes:  # list of id of allowed sub types
 
-fields:
+fields:           # special fields for this type
   myField:        # name of the field
     type:         # string, int, float or bool
     required:     # true | false
@@ -52,15 +53,13 @@ fields:
   ...
 ```
 
-Default fields for all activity types:
+Default fields for all activity types (defined in activities/def.yml):
 
-- unique id (string)
-  - prefer a human readable id like default_TYPE_IDENT where:
-    - "default" is currently our only user
-    - and TYPE_IDENT is derived from the type name (convert each word to first character uppercase, then remove all non alpha numeric chars)
 - date (string, YYYY-MM-DD)
 - title (string)
 - description (string)
+
+We don't explicitly define the id field here, the app adds it to each instance of a type that is created under /data.
 
 ## Initial types
 
