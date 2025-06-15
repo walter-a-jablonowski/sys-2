@@ -31,7 +31,7 @@ Deriving ids from name or title:
 def.yml:
 
 ```yml
-id:               # unique id (derived from name)
+id:               # unique id (use the rules for deriving ids from name)
 date:             # created date
 
 name:             # type name
@@ -57,36 +57,37 @@ Default fields for all activity types (defined in activities/def.yml):
 
 - date (string, YYYY-MM-DD)
 - title (string)
-- description (string)
 
 We don't explicitly define the id field here, the app adds it to each instance of a type that is created under /data.
 
 ## Initial types
 
-Currently we have only one activity type with 2 entry types for my searching for my search for a new apartment:
+- Baisc type "Activity", special fields:
+  - description (string)
 
-- Event type "apartments" currently with no special data fields
-- Default fields for entry types:
+We also define these types for my search for a new apartment:
+
+- Type "Apartment"
+  - special fields:
+    - description (string)
+    - a status (dropdown)
+      - new
+      - current
+      - maybe
+      - done
+    - result (string)
+    - url (string)
+    - files_nr (string, 4 digits with leading zeros, incrementing)
+      - use a json file to remember the last id in /data/apartments/files_id.json
+  - allowedSubTypes: Acivity
+
+## User Interface
+
   - date (YYYY-MM-DD)
   - title (input)
   - fields currently hidden in UI:
     - id (hidden in UI)
     - description (textarea)
-- Entry type "common activity", special fields:
-  - text (input)
-- Entry type "apartment", special fields:
-  - details (textarea)
-  - a status (dropdown)
-    - new
-    - current
-    - maybe
-    - done
-  - result (input)
-  - url (input)
-  - files_id (readonly in UI, 4 digits with leading zeros, incrementing)
-    - use a json file to remember the last id
-
-## User Interface
 
 Therefore in the header bar of the app we have a dropdown on the left and gears icon on the right. The dropdown can be used to switch events so that the user can quickly go to a seperate event if he has multiple things to manage. The gear icon currently has no function. 
 
