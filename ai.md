@@ -10,7 +10,7 @@ Different types of activities can be defined in a file structure like
 - /activities
   - /shared: shared activity types
     - /MY_ACTIVITY_TYPE
-      - def.yml: contains: data field definitions and definition for basic validation
+      - def.yml contains: definitions of default data fields with basic validation
       - list.php: cell renderer used to render the list cell
       - edit.php: renderer for the edit page
       - /ajax: possible ajax functions one file per function (ajax call forwarded by ajax.php)
@@ -18,22 +18,25 @@ Different types of activities can be defined in a file structure like
     - def.yml contains: data field definitions
     - /types: special sub types
       - /MY_ACTIVITY_TYPE
-        - ...
+        - def.yml contains: definitions of special data fields with basic validation
+        - same as above ...
 
 Default fields for all activity types:
 
-- unique id
-  - prefer a human readable id like YY-MM-DD-HHMMSS
+- unique id (string)
+  - prefer a human readable id like default_TYPE_IDENT where:
+    - "default" is currently our only user
+    - and TYPE_IDENT is derived from the type name (convert each word to first character uppercase, then remove all non alpha numeric chars)
+- date (string, YYYY-MM-DD)
 - title (string)
-- fields currently hidden in UI:
-  - date (YYYY-MM-DD)
-  - description (textarea)
+- description (string)
 
 def.yml:
 
 ```yml
+name:          # type name
 fields:
-  myField: 
+  myField:     # name of the field
     type:      # string, int, float or bool
     required:  # true | false
     format:    # regex (for strings)
@@ -45,9 +48,9 @@ fields:
   ...
 ```
 
-## Data
+## Initial types
 
-types are defined in def.yml (see file structure below). Currently we have only one activity type with 2 entry types for my searching for my search for a new apartment:
+Currently we have only one activity type with 2 entry types for my searching for my search for a new apartment:
 
 - Event type "apartments" currently with no special data fields
 - Default fields for entry types:
