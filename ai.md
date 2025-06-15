@@ -21,6 +21,37 @@ Different types of activities can be defined in a file structure like
         - def.yml contains: definitions of special data fields with basic validation
         - same as above ...
 
+Deriving ids from name or title:
+
+- prefer a human readable id like default_TYPE_IDENT where:
+  - "default" is currently our only user
+  - and TYPE_IDENT is derived from the type name (convert each word to first character uppercase, then remove all non alpha numeric chars)
+
+def.yml:
+
+```yml
+id:               # unique id (derived from name)
+date:             # created date
+
+name:             # type name
+description: |
+  type description
+
+allowedSubTypes:  # list of id of allowed sub types
+
+fields:
+  myField:        # name of the field
+    type:         # string, int, float or bool
+    required:     # true | false
+    format:       # regex (for strings)
+    min:          # min, max, step (for numbers)
+    max: 
+    step: 
+    values:       # for dropdown
+      "My label": someValue 
+  ...
+```
+
 Default fields for all activity types:
 
 - unique id (string)
@@ -30,23 +61,6 @@ Default fields for all activity types:
 - date (string, YYYY-MM-DD)
 - title (string)
 - description (string)
-
-def.yml:
-
-```yml
-name:          # type name
-fields:
-  myField:     # name of the field
-    type:      # string, int, float or bool
-    required:  # true | false
-    format:    # regex (for strings)
-    min:       # min, max, step (for numbers)
-    max: 
-    step: 
-    values:    # for dropdown
-      "My label": someValue 
-  ...
-```
 
 ## Initial types
 
