@@ -83,13 +83,15 @@ We also define these types for my search for a new apartment:
 
 ## User Interface
 
+We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a list of entries (list group).
+
+In the header bar of the app we have a dropdown on the left and gears icon on the right. The dropdown can be used to switch events so that the user can quickly go to a seperate event if he has multiple things to manage. The gear icon currently has no function. 
+
   - date (YYYY-MM-DD)
   - title (input)
   - fields currently hidden in UI:
     - id (hidden in UI)
     - description (textarea)
-
-Therefore in the header bar of the app we have a dropdown on the left and gears icon on the right. The dropdown can be used to switch events so that the user can quickly go to a seperate event if he has multiple things to manage. The gear icon currently has no function. 
 
 Below the header the app shows a list of entries (bootstrap list group), sorted by last one first. Each list entry can be of a different type
 
@@ -113,7 +115,5 @@ File structure for data:
     - ,,,
 
 For apartments, also let me use the smartphones cam to add images that are saved in /data/apartments/files/FILES_ID/.
-
-Use bootstrap 5.3 and be sure that it looks good on smartphones.
 
 Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
