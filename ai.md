@@ -25,9 +25,9 @@ Different types of entries can be defined in a file structure like
         - def.yml contains: definitions of special data fields with basic validation
         - same as above ...
 
-Deriving ids from name or title:
+Deriving ids from field name:
 
-- an id is derived from the name or title
+- an id is derived from the name
   - convert each word to first character uppercase, then remove all non alpha numeric chars
   - usually we also add a additional string to the id to make it unique (see below)
 
@@ -59,7 +59,7 @@ fields:               # special fields for this type
 Default fields for all entry types (defined in entries/def.yml):
 
 - date (string, YYYY-MM-DD)
-- title (string)
+- name (string)
 
 The id isn't explicitly defined in def.yml but made via code
 
@@ -67,7 +67,7 @@ The id isn't explicitly defined in def.yml but made via code
 
 - Baisc type "Info" (default_Info), special fields:
   - description (string)
-  - list renderer: show date and title
+  - list renderer: show date and name
 
 We also define these types for my search for a new apartment:
 
@@ -105,7 +105,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
-  - button with gears icon on the right (currently has no function)
+  - Button with gears icon on the right (currently has no function)
 - List (list group)
   - initially show the main entries
     - the data is from data/MY_INSTANCE/data.yml
@@ -113,8 +113,8 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - all cells of any type get an action menu on the right (dropdown, single entry: delete)
   - the cell content on the left side is rendered by the list cell renderer of the current type
     and will show some of the entry data, usually:
-    - TASK: first line title
-  - Defaul hehaviour for navigating:
+    - TASK: first line name
+  - default hehaviour for navigating:
     - single click or touch: open a modal for editing the entry
     - double click or touch: load the the list of sub entries associated with the entry
 
