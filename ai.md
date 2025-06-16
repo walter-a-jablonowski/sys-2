@@ -126,6 +126,9 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
     - default behaviour for navigating:
       - single click or touch: open a modal for editing the entry
 
-For apartments, also let me use the smartphones cam to add images that are saved in /data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files/FILES_NR/.
+TASK: For apartments, also let me use the smartphones cam to add images that are saved in /data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files/FILES_NR/.
 
-Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
+## Misc
+
+- Use simple code for input validation, ideally with no third party library
+- Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
