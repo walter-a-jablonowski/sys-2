@@ -27,9 +27,8 @@ Different types of entries can be defined in a file structure like
 
 Deriving ids from field name:
 
-- an id is derived from the name
-  - convert each word to first character uppercase, then remove all non alpha numeric chars
-  - usually we also add a additional string to the id to make it unique (see below)
+- convert each word to first character uppercase, then remove all non alpha numeric chars
+- usually we also add a additional string to the id to make it unique (see below)
 
 def.yml:
 
@@ -41,7 +40,7 @@ name:                 # type name
 description: |
   type description
 
-allowedSubTypes:      # list of type ids of allowed sub types for the list
+allowedSubTypes: ["Info"]  # list of type ids of allowed sub types for the list
 
 fields:               # special fields for this type
   myField:            # name of the field
@@ -61,7 +60,7 @@ Default fields for all entry types (defined in entries/def.yml):
 - date (string, YYYY-MM-DD)
 - name (string)
 
-The id isn't explicitly defined in def.yml but made via code
+The id isn't explicitly defined in def.yml but hardcoded
 
 ## Initial types
 
