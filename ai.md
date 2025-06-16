@@ -67,7 +67,10 @@ The id isn't explicitly defined in def.yml but made via code
 
 - Baisc type "Info" (default_Info), special fields:
   - description (string)
-  - list renderer: show date and name
+  - list renderer:
+    - left aligned:  date (format MM-DD)
+    - right aligned: name
+  - edit renderer: form in modal for editing all fields
 
 We also define these types for my search for a new apartment:
 
@@ -84,7 +87,14 @@ We also define these types for my search for a new apartment:
     - files_nr (string, 4 digits with leading zeros, incrementing)
       - use a json file to remember the last id in data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files_nr.json
   - allowedSubTypes: Info
-  - TASK: list renderer
+  - list renderer:
+    - first line:
+      - left aligned:  name (with clickable url if present) 
+      - right aligned: status as badge 
+    - second line (small, grey): 
+      - left aligned:  date
+      - right aligned: files_nr 
+  - edit renderer: form in modal for editing all fields
 
 # Data
 
@@ -111,7 +121,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - the list is sorted by last one first (field date)
   - when we double click or touch on an entry this loads the the list of sub entries associated with the entry
   - list cells
-    - all cells of any type get an action menu on the right (dropdown, single entry: delete)
+    - all cells get an action menu on the right (dropdown, single entry: delete)
     - the cell content on the left side is rendered by the list cell renderer of the current type
     - default behaviour for navigating:
       - single click or touch: open a modal for editing the entry
