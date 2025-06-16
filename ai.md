@@ -1,6 +1,9 @@
 
 PC layout or tablets in widescreen: show the main list left and the details right. When the user clicks on a sub entry, show the sub entry details right.
 
+- Header bar
+  - dropdown on the left: can be used to switch main entries so that the user can quickly switch them
+
  --
 
 I am making an app that can be used to manage hierarchical entries of different types in one app.
@@ -99,7 +102,7 @@ These are the instances of our types. The ids for type instances are made via co
 We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a list of entries (list group).
 
 - Header bar
-  - dropdown on the left: can be used to switch main entries so that the user can quickly switch them
+  - App title
   - button with gears icon on the right (currently has no function)
 - List
   - initially show the list of the main entries
