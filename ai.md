@@ -67,6 +67,7 @@ The id isn't explicitly defined in def.yml but made via code
 
 - Baisc type "Info" (default_Info), special fields:
   - description (string)
+  - list renderer: show date and title
 
 We also define these types for my search for a new apartment:
 
@@ -83,6 +84,7 @@ We also define these types for my search for a new apartment:
     - files_nr (string, 4 digits with leading zeros, incrementing)
       - use a json file to remember the last id in data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files_nr.json
   - allowedSubTypes: Info
+  - TASK: list renderer
 
 # Data
 
@@ -102,25 +104,19 @@ These are the instances of our types. The ids for type instances are made via co
 We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a list of entries (list group).
 
 - Header bar
-  - App title
+  - Name of the current level in the hierarchcal list (initially "Start")
   - button with gears icon on the right (currently has no function)
-- List
-  - initially show the list of the main entries
+- List (list group)
+  - initially show the main entries
+    - the data is from data/MY_INSTANCE/data.yml
   - sorted by last one first (field date)
-  - in principal each entry in the list can be of a different type
-
-  - We can navigate from the entries list to a details page
-  - Each entry by default can also have a list of sub entries (hierarchical)
-  - In the UI this list is shown below the entry fields
-  - For the entry type apartment we use this for status texts only
-
-  - date (YYYY-MM-DD)
-  - title (input)
-  - fields currently hidden in UI:
-    - id (hidden in UI)
-    - description (textarea)
-
-Add typical CRUD functions everywhere in a user friendly way.
+  - all cells of any type get an action menu on the right (dropdown, single entry: delete)
+  - the cell content on the left side is rendered by the list cell renderer of the current type
+    and will show some of the entry data, usually:
+    - TASK: first line title
+  - Defaul hehaviour for navigating:
+    - single click or touch: open a modal for editing the entry
+    - double click or touch: load the the list of sub entries associated with the entry
 
 For apartments, also let me use the smartphones cam to add images that are saved in /data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files/FILES_NR/.
 
