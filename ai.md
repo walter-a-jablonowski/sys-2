@@ -6,7 +6,16 @@ PC layout or tablets in widescreen: show the main list left and the details righ
 
  --
 
-I am making an app that can be used to manage hierarchical entries of different types in one app.
+I am making an app that can be used to manage a list of entries of different types. from each entry the user can navigate to a list of sub entries (hierarchical).
+
+## Common
+
+Deriving ids from field name:
+
+- convert each word to first character uppercase, then remove all non alpha numeric chars
+- usually we also add a additional string to the id to make it unique (see below)
+
+## Types
 
 Different types of entries can be defined in a file structure like
 
@@ -24,11 +33,6 @@ Different types of entries can be defined in a file structure like
       - /MY_ENTRY_TYPE
         - def.yml contains: definitions of special data fields with basic validation
         - same as above ...
-
-Deriving ids from field name:
-
-- convert each word to first character uppercase, then remove all non alpha numeric chars
-- usually we also add a additional string to the id to make it unique (see below)
 
 def.yml:
 
@@ -64,7 +68,7 @@ The id isn't explicitly defined in def.yml but hardcoded
 
 ## Initial types
 
-- Baisc type "Info" (default_Info), special fields:
+- Type "Info" (default_Info), special fields:
   - description (string)
   - list renderer:
     - left aligned:  date (format MM-DD)
@@ -95,9 +99,9 @@ We also define these types for my search for a new apartment:
       - right aligned: files_nr 
   - edit renderer: form in modal for editing all fields
 
-# Data
+# Instances of entry types (data)
 
-These are the instances of our types. The ids for type instances are made via code like `myApartmentSearch_YYYY-MM-DD-HHMMSS`.
+The ids for instances look like `myApartmentSearch_YYYY-MM-DD-HHMMSS`
 
 - /data
   - /myApartmentSearch_YYYY-MM-DD-HHMMSS
@@ -118,7 +122,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 - List (list group)
   - initially show the main entries (the data is from the first level of folders in /data)
   - the list is sorted by last one first (field date)
-  - when we double click or touch on an entry this loads the the list of sub entries associated with the entry
+  - when we double clicks or touches an entry this loads the the list of sub entries associated with the entry
   - list cells
     - all cells get an action menu on the right (dropdown, single entry: delete)
     - the cell content on the left side is rendered by the list cell renderer of the current type
