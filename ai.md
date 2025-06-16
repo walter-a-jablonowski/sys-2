@@ -107,16 +107,14 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - Name of the current level in the hierarchcal list (initially "Start")
   - Button with gears icon on the right (currently has no function)
 - List (list group)
-  - initially show the main entries
-    - the data is from data/MY_INSTANCE/data.yml
-  - sorted by last one first (field date)
-  - all cells of any type get an action menu on the right (dropdown, single entry: delete)
-  - the cell content on the left side is rendered by the list cell renderer of the current type
-    and will show some of the entry data, usually:
-    - TASK: first line name
-  - default hehaviour for navigating:
-    - single click or touch: open a modal for editing the entry
-    - double click or touch: load the the list of sub entries associated with the entry
+  - initially show the main entries (the data is from the first level of folders in /data)
+  - the list is sorted by last one first (field date)
+  - when we double click or touch on an entry this loads the the list of sub entries associated with the entry
+  - list cells
+    - all cells of any type get an action menu on the right (dropdown, single entry: delete)
+    - the cell content on the left side is rendered by the list cell renderer of the current type
+    - default behaviour for navigating:
+      - single click or touch: open a modal for editing the entry
 
 For apartments, also let me use the smartphones cam to add images that are saved in /data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files/FILES_NR/.
 
