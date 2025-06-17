@@ -14,6 +14,12 @@ PC layout or tablets in widescreen: show the main list left and the details righ
 
 I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
+## Common
+
+```yml
+dataFileName: "-this"  # name of the data file used in data
+```
+
 ## Types
 
 Different types of entries can be defined in a file structure like
@@ -38,26 +44,25 @@ Different types of entries can be defined in a file structure like
 Type definition:
 
 ```yml
-id:   MyType          # type unique id (derived from name)
-time:                 # created time YYYY-MM-DD HH:MM:SS
+id:   MyType        # type unique id (derived from name)
+time:               # created time YYYY-MM-DD HH:MM:SS
 
-name: My Type         # type name
+name: My Type       # type name
 description: |
   type description
 
-typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # name of the data file used in data
-dataFileName:       "-this"   # name of the data file used in data
-allowedSubTypes:    ["Info"]  # list of type ids of allowed sub types for the list
+typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this agains file name)
+allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list
 
-fields:               # special fields for this type
-  myField:            # name of the field
-    type:             # string, int, float or bool
-    required:         # true | false
-    format:           # regex (for strings)
-    min:              # min, max, step (for numbers)
+fields:             # special fields for this type
+  myField:          # name of the field
+    type:           # string, int, float or bool
+    required:       # true | false
+    format:         # regex (for strings)
+    min:            # min, max, step (for numbers)
     max: 
     step: 
-    values:           # for dropdown
+    values:         # for dropdown
       "My label": someValue 
   ...
 ```
