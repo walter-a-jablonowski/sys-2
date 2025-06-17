@@ -76,6 +76,10 @@ fields:               # special fields for this type
 - Type "Activity" (default_Activity), special fields:
   - priority (int)
   - state (dropdown)
+  - list renderer:
+    - left aligned:  priority as badge and name
+    - right aligned: state
+  - edit renderer: form in modal for editing all fields
 - Type "Info" (default_Info)
   - list renderer:
     - left aligned:  date (format MM-DD)
