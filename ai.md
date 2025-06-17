@@ -24,6 +24,10 @@ Different types of entries can be defined in a file structure like
     - time (string, YYYY-MM-DD HH:MM:SS)
     - name (string)
     - description (string)
+    - TASK: id: the id isn't explicitly defined here, derive it from the field "name"
+       when an instance is created:
+       - convert each word to first character uppercase
+       - then remove all non alpha numeric chars
   - /MyType_1
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - list.php: cell renderer used to render the list cell
@@ -99,11 +103,7 @@ We also define these types for my search for a new apartment:
       - right aligned: files_nr 
   - edit renderer: form in modal for editing all fields
 
-# Instances of entry types (data)
-
-The id isn't explicitly defined in global def.yml but hardcoded, derive it from
-the field "name": convert each word to first character uppercase, then remove all
-non alpha numeric chars
+# Instances of types (data)
 
 - /data
   - /myApartmentSearch: this is an instance of type "Activity"
@@ -127,7 +127,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - the list is sorted by last one first (field time)
   - when we double clicks or touches an entry this loads the the list of sub entries associated with the entry
   - list cells
-    - all cells get an action menu on the right (dropdown, single entry: delete)
+    - all cells get an action menu on the right (dropdown, single action: delete)
     - the cell content on the left side is rendered by the list cell renderer of the current type
     - default behaviour for navigating:
       - single click or touch: open a modal for editing the entry
