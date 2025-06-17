@@ -21,12 +21,6 @@ Deriving ids from field name:
 - convert each word to first character uppercase, then remove all non alpha numeric chars
 - usually we also add a additional string to the id to make it unique (see below)
 
-config.yml:
-
-```yml
-dataFile: "-this"  # name of the data file used in data
-```
-
 ## Types
 
 Different types of entries can be defined in a file structure like
@@ -50,13 +44,15 @@ def.yml:
 
 ```yml
 id:   default_MyType  # unique id (derived from name, add "default" in front which is currently the only user)
-date:                 # created date
+time:                 # created time YYYY-MM-DD HH:MM:SS
 
 name:                 # type name
 description: |
   type description
 
-allowedSubTypes: ["Info"]  # list of type ids of allowed sub types for the list
+typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # name of the data file used in data
+dataFileName:       "-this"   # name of the data file used in data
+allowedSubTypes:    ["Info"]  # list of type ids of allowed sub types for the list
 
 fields:               # special fields for this type
   myField:            # name of the field
@@ -71,9 +67,9 @@ fields:               # special fields for this type
   ...
 ```
 
-Default fields for all entry types (defined in entries/def.yml):
+Default fields for all instances of a types (defined in entries/def.yml):
 
-- date (string, YYYY-MM-DD)
+- time (string, YYYY-MM-DD HH:MM:SS)
 - name (string)
 - description (string)
 
@@ -83,6 +79,7 @@ The id isn't explicitly defined in def.yml but hardcoded
 
 - Type "Activity" (default_Activity), special fields:
   - priority (int)
+  - state (dropdown)
 - Type "Info" (default_Info)
   - list renderer:
     - left aligned:  date (format MM-DD)
@@ -93,7 +90,7 @@ We also define these types for my search for a new apartment:
 
 - Type "Apartment" (default_Apartment)
   - special fields:
-    - a status (dropdown)
+    - state (dropdown)
       - new
       - current
       - maybe
@@ -105,8 +102,8 @@ We also define these types for my search for a new apartment:
     - first line:
       - left aligned:  name (with clickable url if present) 
       - right aligned: status as badge 
-    - second line (small, grey): 
-      - left aligned:  date
+    - second line (small, grey):
+      - left aligned:  date (YYYY-MM-DD)
       - right aligned: files_nr 
   - edit renderer: form in modal for editing all fields
 
@@ -133,7 +130,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - Button with gears icon on the right (currently has no function)
 - List (list group)
   - initially show the main entries (the data is from the first level of folders in /data)
-  - the list is sorted by last one first (field date)
+  - the list is sorted by last one first (field time)
   - when we double clicks or touches an entry this loads the the list of sub entries associated with the entry
   - list cells
     - all cells get an action menu on the right (dropdown, single entry: delete)
