@@ -19,22 +19,17 @@ I am making an app that can be used to manage a list of entries of different typ
 Different types of entries can be defined in a file structure like
 
 - /types
-  - def.yml global definition, contains: definitions of default data fields with basic validation
+  - def.yml global definition, contains: definitions of default data fields of instances of types
+    (same as the field definition in "type definition" sample below)
     - time (string, YYYY-MM-DD HH:MM:SS)
     - name (string)
     - description (string)
-    - The id isn't explicitly defined in def.yml but hardcoded
   - /MyType_1
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - list.php: cell renderer used to render the list cell
     - edit.php: renderer for the edit page
     - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
   - ...
-
-Deriving ids from field name:
-
-- convert each word to first character uppercase, then remove all non alpha numeric chars
-- sometimes we also add a additional string to the id to make it unique (see below)
 
 Type definition:
 
@@ -105,6 +100,10 @@ We also define these types for my search for a new apartment:
   - edit renderer: form in modal for editing all fields
 
 # Instances of entry types (data)
+
+The id isn't explicitly defined in global def.yml but hardcoded, derive it from
+the field "name": convert each word to first character uppercase, then remove all
+non alpha numeric chars
 
 - /data
   - /myApartmentSearch: this is an instance of type "Activity"
