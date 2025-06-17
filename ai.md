@@ -25,28 +25,32 @@ Deriving ids from field name:
 
 Different types of entries can be defined in a file structure like
 
-- /entries
-  - def.yml contains: definitions of default data fields with basic validation
+- /types
+  - def.yml global definition, contains: definitions of default data fields with basic validation
+    - time (string, YYYY-MM-DD HH:MM:SS)
+    - name (string)
+    - description (string)
+    - The id isn't explicitly defined in def.yml but hardcoded
   - /shared: shared entry types
     - /MyEntryType_1
-      - def.yml contains: definitions of default data fields with basic validation
+      - def.yml type definition, contains: definitions of special data fields for this type with basic validation
       - list.php: cell renderer used to render the list cell
       - edit.php: renderer for the edit page
-      - /ajax: possible ajax functions one file per function (ajax call forwarded by ajax.php)
+      - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
   - /MyEntryType_2
     - def.yml contains: data field definitions
     - /types: special sub types
       - /MyEntryType_3
-        - def.yml contains: definitions of special data fields with basic validation
+        - def.yml
         - same as above ...
 
-def.yml:
+type definition:
 
 ```yml
-id:   default_MyType  # unique id (derived from name, add "default" in front which is currently the only user)
+id:   default_MyType  # type unique id (derived from name, add "default" in front which is currently the only user)
 time:                 # created time YYYY-MM-DD HH:MM:SS
 
-name:                 # type name
+name: My Type         # type name
 description: |
   type description
 
@@ -66,14 +70,6 @@ fields:               # special fields for this type
       "My label": someValue 
   ...
 ```
-
-Default fields for all instances of a types (defined in entries/def.yml):
-
-- time (string, YYYY-MM-DD HH:MM:SS)
-- name (string)
-- description (string)
-
-The id isn't explicitly defined in def.yml but hardcoded
 
 ## Initial types
 
