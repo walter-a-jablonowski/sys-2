@@ -47,7 +47,7 @@ Different types of entries can be defined in a file structure like
 type definition:
 
 ```yml
-id:   default_MyType  # type unique id (derived from name, add "default" in front which is currently the only user)
+id:   MyType          # type unique id (derived from name, add "default" in front which is currently the only user)
 time:                 # created time YYYY-MM-DD HH:MM:SS
 
 name: My Type         # type name
@@ -73,14 +73,14 @@ fields:               # special fields for this type
 
 ## Initial types
 
-- Type "Activity" (default_Activity), special fields:
+- Type "Activity", special fields:
   - priority (int)
   - state (dropdown)
   - list renderer:
     - left aligned:  priority as badge and name
     - right aligned: state
   - edit renderer: form in modal for editing all fields
-- Type "Info" (default_Info)
+- Type "Info"
   - list renderer:
     - left aligned:  date (format MM-DD)
     - right aligned: name
@@ -88,7 +88,7 @@ fields:               # special fields for this type
 
 We also define these types for my search for a new apartment:
 
-- Type "Apartment" (default_Apartment)
+- Type "Apartment"
   - special fields:
     - state (dropdown)
       - new
