@@ -110,14 +110,16 @@ We also define these types for my search for a new apartment:
 
 # Instances of types (data)
 
+Sample for the data:
+
 - /data
   - /myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
     - /myApartment: this is an instance of type "Apartment"
       - "-this.md"
-      - some_image.jpg: resource files
-      - some-pdf.pdf
+      - some_image.jpg: all files that can't be identified as an instance of a type are "resource files" for the current instance
+      - /myFolder:      all folders that can't be identified as an instance of a type are "group folders" that may contain instances or resources
   - ,,,
 
 ## User Interface
