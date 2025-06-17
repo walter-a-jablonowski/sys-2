@@ -14,13 +14,6 @@ PC layout or tablets in widescreen: show the main list left and the details righ
 
 I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
-## Common
-
-Deriving ids from field name:
-
-- convert each word to first character uppercase, then remove all non alpha numeric chars
-- usually we also add a additional string to the id to make it unique (see below)
-
 ## Types
 
 Different types of entries can be defined in a file structure like
@@ -32,22 +25,27 @@ Different types of entries can be defined in a file structure like
     - description (string)
     - The id isn't explicitly defined in def.yml but hardcoded
   - /shared: shared entry types
-    - /MyEntryType_1
+    - /MyType_1
       - def.yml type definition, contains: definitions of special data fields for this type with basic validation
       - list.php: cell renderer used to render the list cell
       - edit.php: renderer for the edit page
       - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
-  - /MyEntryType_2
+  - /MyType_2
     - def.yml contains: data field definitions
     - /types: special sub types
-      - /MyEntryType_3
+      - /MyType_3
         - def.yml
         - same as above ...
 
-type definition:
+Deriving ids from field name:
+
+- convert each word to first character uppercase, then remove all non alpha numeric chars
+- sometimes we also add a additional string to the id to make it unique (see below)
+
+Type definition:
 
 ```yml
-id:   MyType          # type unique id (derived from name, add "default" in front which is currently the only user)
+id:   MyType          # type unique id (derived from name)
 time:                 # created time YYYY-MM-DD HH:MM:SS
 
 name: My Type         # type name
@@ -109,13 +107,11 @@ We also define these types for my search for a new apartment:
 
 # Instances of entry types (data)
 
-The ids for instances look like `myApartmentSearch_YYYY-MM-DD-HHMMSS`
-
 - /data
-  - /myApartmentSearch_YYYY-MM-DD-HHMMSS: this is an instance of type "Activity"
+  - /myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
-    - /myApartment_YYYY-MM-DD-HHMMSS: this is an instance of type "Apartment"
+    - /myApartment: this is an instance of type "Apartment"
       - "-this.md"
       - some_image.jpg: resource file
       - some-pdf.pdf
@@ -138,7 +134,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
     - default behaviour for navigating:
       - single click or touch: open a modal for editing the entry
 
-TASK: For apartments, also let me use the smartphones cam to add images that are saved in /data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files/FILES_NR/.
+TASK: For apartments, also let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/.
 
 ## Misc
 
