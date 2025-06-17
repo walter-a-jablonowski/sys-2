@@ -6,7 +6,7 @@ PC layout or tablets in widescreen: show the main list left and the details righ
 
  --
 
-I am making an app that can be used to manage a list of entries of different types. from each entry the user can navigate to a list of sub entries (hierarchical).
+I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
 ## Common
 
@@ -22,15 +22,15 @@ Different types of entries can be defined in a file structure like
 - /entries
   - def.yml contains: definitions of default data fields with basic validation
   - /shared: shared entry types
-    - /MY_ENTRY_TYPE
+    - /MyEntryType_1
       - def.yml contains: definitions of default data fields with basic validation
       - list.php: cell renderer used to render the list cell
       - edit.php: renderer for the edit page
       - /ajax: possible ajax functions one file per function (ajax call forwarded by ajax.php)
-  - /MY_ENTRY_TYPE
+  - /MyEntryType_2
     - def.yml contains: data field definitions
     - /types: special sub types
-      - /MY_ENTRY_TYPE
+      - /MyEntryType_3
         - def.yml contains: definitions of special data fields with basic validation
         - same as above ...
 
