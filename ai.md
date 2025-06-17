@@ -7,7 +7,7 @@ PC layout or tablets in widescreen: show the main list left and the details righ
   - dropdown on the left: can be used to switch main entries so that the user can quickly switch them
 
 - files_nr (string, 4 digits with leading zeros, incrementing)
-  - use a json file to remember the last id in data/myApartmentSearch_YYYY-MM-DD-HHMMSS/files_nr.json
+  - use a json file to remember the last id in data/myApartmentSearch/files_nr.json
 - files_nr.json
 
  --
@@ -24,18 +24,12 @@ Different types of entries can be defined in a file structure like
     - name (string)
     - description (string)
     - The id isn't explicitly defined in def.yml but hardcoded
-  - /shared: shared entry types
-    - /MyType_1
-      - def.yml type definition, contains: definitions of special data fields for this type with basic validation
-      - list.php: cell renderer used to render the list cell
-      - edit.php: renderer for the edit page
-      - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
-  - /MyType_2
-    - def.yml contains: data field definitions
-    - /types: special sub types
-      - /MyType_3
-        - def.yml
-        - same as above ...
+  - /MyType_1
+    - def.yml type definition, contains: definitions of special data fields for this type with basic validation
+    - list.php: cell renderer used to render the list cell
+    - edit.php: renderer for the edit page
+    - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
+  - ...
 
 Deriving ids from field name:
 
@@ -113,7 +107,7 @@ We also define these types for my search for a new apartment:
       field "description" which is the text content of the md file
     - /myApartment: this is an instance of type "Apartment"
       - "-this.md"
-      - some_image.jpg: resource file
+      - some_image.jpg: resource files
       - some-pdf.pdf
   - ,,,
 
@@ -134,7 +128,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
     - default behaviour for navigating:
       - single click or touch: open a modal for editing the entry
 
-TASK: For apartments, also let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/.
+TASK: For apartments, also let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/ as "resource files".
 
 ## Misc
 
