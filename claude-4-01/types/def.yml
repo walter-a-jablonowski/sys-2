@@ -1,0 +1,9 @@
+# Global type definition - default fields for all instances
+
+# Default fields that all instances have
+time: "string, YYYY-MM-DD HH:MM:SS"
+name: "string"
+description: "string"
+
+# Note: 'id' field is automatically generated from 'name' when instance is created
+# Format: TitleCase-Default-YYMMDDHHMMSS

@@ -1,0 +1,28 @@
+id: Apartment
+time: 2025-01-26 13:45:00
+name: Apartment
+description: |
+  Apartment type for managing apartment search entries
+
+# typeIdentification: (none - uses front matter fallback)
+allowedSubTypes: ["Info"]
+
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      "New": new
+      "Current": current
+      "Maybe": maybe
+      "Done": done
+  result:
+    type: string
+    required: false
+  files_nr:
+    type: string
+    required: true
+    format: "^\\d{4}$"
+  url:
+    type: hyperlink
+    required: false

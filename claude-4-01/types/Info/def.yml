@@ -1,0 +1,10 @@
+id: Info
+time: 2025-01-26 13:45:00
+name: Info
+description: |
+  Information type for storing notes and documentation
+
+typeIdentification: "^\\s*1\\s*-\\s*"
+allowedSubTypes: []
+
+fields:

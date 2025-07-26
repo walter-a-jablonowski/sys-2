@@ -1,0 +1,26 @@
+id: Activity
+time: 2025-01-26 13:45:00
+name: Activity
+description: |
+  Activity type for managing tasks and projects
+
+typeIdentification: "^\\s*2\\s*-\\s*"
+allowedSubTypes: ["*"]
+
+fields:
+  priority:
+    type: int
+    required: true
+    min: 1
+    max: 5
+  state:
+    type: string
+    required: true
+    values:
+      "New": new
+      "In Progress": progress
+      "Done": done
+  dueDate:
+    type: string
+    required: false
+    format: "^\\d{4}-\\d{2}-\\d{2}$"
