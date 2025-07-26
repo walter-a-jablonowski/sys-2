@@ -117,7 +117,7 @@ Sample for the data:
 
 - /data
   - /2 - MyInfo.md: this is some Info instance made as file
-  - /myApartmentSearch: this is an instance of type "Activity"
+  - /2 - myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
     - /myApartment: this contains instances of type "Apartment"
