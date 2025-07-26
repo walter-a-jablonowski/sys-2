@@ -136,16 +136,19 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
   - Button with gears icon on the right (currently has no function)
-- List (list group)
-  - Tool bar with sorting dropdown (e.g. by time, by name)
-  - initially show the main entries (the data is from the first level of folders in /data)
-  - the list is sorted by time (last one first)
-  - when we double clicks or double touches an entry this loads the the list of sub entries associated with the entry
-  - list cells
-    - all cells get an action menu on the right (dropdown, single action: delete)
-    - the cell content on the left side is rendered by the list cell renderer of the current type
-    - default behaviour for navigating:
-      - single click or touch: open a modal for editing the entry
+- Tabs
+  - List
+    - Tool bar with sorting dropdown (e.g. by time, by name)
+    - List (list group): initially show the data from the first level of /data,
+      the list is sorted by time (last one first)
+      - list cell
+        - layout
+          - the cell content is rendered by the list cell renderer of the current type
+          - all cells get an action menu on the right (dropdown, single action: delete)
+        - actions
+          - single click or touch: open a modal for editing the entry
+          - double click or double touch: loads the the list of sub entries associated with the entry
+  - Resources: list of "resource files" and "group folders" in the current directory
 
 TASK: For apartments, also let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/ as "resource files".
 
