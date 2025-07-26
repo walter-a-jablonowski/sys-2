@@ -156,7 +156,7 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
       - Tool bar with
         - sorting dropdown (e.g. by time, by name)
         - Add button (right aligned): brings up a modal that lets you select the type and set the name and description (currently no special fields)
-      - List (list group)
+      - List (use cards)
         - initially show the data from the first level of /data
         - the list is sorted by time (last one first)
         - list cell
