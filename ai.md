@@ -42,7 +42,7 @@ description: |
   type description
 
 typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
-allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list
+allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list, "*" for "all", empty for none
 
 fields:             # special fields for this type
   myField:          # name of the field
