@@ -22,7 +22,7 @@ Different types of entries can be defined in a file structure like
         - then remove all non alpha numeric chars
         - add a unique user and date behind, seperated by hyphen: "-Default-YYMMDDHHMMSS"
           (the user currently is "Default" only)
-  - /MyType_1
+  - /MyType
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
@@ -91,6 +91,7 @@ We also define these types for my search for a new apartment:
       - maybe
       - done
     - result (string)
+    - files_nr (string, 4 digits with leading zeros)
     - url (string)
   - allowedSubTypes: Info
   - list renderer:
@@ -99,11 +100,16 @@ We also define these types for my search for a new apartment:
       - right aligned: status as badge 
     - second line (small, grey):
       - left aligned:  date (YYYY-MM-DD)
-      - right aligned: files_nr 
+      - right aligned: files_nr
   - edit renderer: form in modal for editing all fields
-  - special feature:
-    - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
-    - for saving the file we add a special ajax function
+  - special features:
+    - making pictures
+      - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
+      - for saving the file we add a special ajax function
+    - provide a single additional numeric identifier "files_nr" for all Apartment instances (shared use)
+      - use a json file to remember the last id in types/Apartment/files_nr.json
+      - increment each time an apartment is created
+      - save the generated id in the new record in the "files_nr" field
 
 # Instances of types (data)
 
