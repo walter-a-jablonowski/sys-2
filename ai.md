@@ -160,10 +160,11 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
       - list cell
         - layout
           - the cell content is rendered by the list cell renderer of the current type
-          - all cells get an action menu on the right (dropdown, single action: delete)
+          - all cells get actions on the right of the cell (button group)
+            - edit button: open a modal for editing the entry
+            - dropdown: single action "delete"
         - actions
-          - single click or touch: open a modal for editing the entry
-          - double click or double touch: loads the the list of sub entries associated with the entry
+          - single click or touch: loads the the list of sub entries associated with the entry
   - Resources: list of "resource files" and "group folders" in the current directory
 
 ## Misc
