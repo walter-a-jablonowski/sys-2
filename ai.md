@@ -122,10 +122,13 @@ Sample for the data:
       field "description" which is the text content of the md file
     - /myApartment: this contains instances of type "Apartment"
       - "-this.md"
-      - some_image.jpg: all files that can't be identified as an instance of a type are "resource files" for the current instance
-      - /myFolder:      all folders that can't be identified as an instance of a type are "group folders" that may contain instances or resources
+      - some_image.jpg: all files that can't be identified as an instance of a type (by
+        trying any typeIdentification of all types) are "resource files" for the current
+        instance
+      - /myFolder:      all folders that can't be identified as an instance of a type are
+        "group folders" that may contain instances or resources
       - /images
-  - ,,,
+  - ...
 
 ## User Interface
 
