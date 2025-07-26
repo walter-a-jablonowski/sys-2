@@ -64,7 +64,7 @@ fields:             # special fields for this type
   - special fields:
     - priority (int)
     - state (dropdown), values: new (default), progress, done
-    - due to date (optional)
+    - dueDate (optional)
   - allowedSubTypes: all
   - list renderer:
     - left aligned:  priority as badge and name
