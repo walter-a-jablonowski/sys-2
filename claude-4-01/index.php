@@ -111,7 +111,7 @@ $currentInstance = $dataManager->getCurrentInstance($currentPath);
           </div>
 
           <!-- List -->
-          <div class="list-group" id="entryList">
+          <div class="list-group mb-4" id="entryList">
             <?php echo $dataManager->renderList($currentData['entries'] ?? []); ?>
           </div>
         </div>
@@ -119,7 +119,7 @@ $currentInstance = $dataManager->getCurrentInstance($currentPath);
         <!-- Resources Tab -->
         <div class="tab-pane fade" id="resources-pane" role="tabpanel">
           <div class="mt-3">
-            <div class="list-group" id="resourcesList">
+            <div class="list-group mb-4" id="resourcesList">
               <?php echo $dataManager->renderResources($currentData['resources'] ?? []); ?>
             </div>
           </div>
