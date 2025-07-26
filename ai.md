@@ -123,20 +123,23 @@ We also define these types for my search for a new apartment:
 
 # Instances of types (data)
 
-All instances can be stored in files or folders. Sample for the data:
+Instances of a type can be saved either as a single files or a folder with the file
+"-this.md" that may also have resource files and sub instances.
+
+Sample for the data:
 
 - /data
-  - /2 - MyInfo.md: this is some Info instance made as file
-  - /2 - myApartmentSearch: this is an instance of type "Activity"
+  - /2 - MyInfo.md: this is some Info instance saved as a single file
+  - /2 - myApartmentSearch: this is an instance of type "Activity" saved as folder
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
-    - /myApartment: this contains instances of type "Apartment"
+    - /myApartment: is a instance of type "Apartment" inside the apartment search
       - "-this.md"
       - some_image.jpg: all files that can't be identified as an instance of a type (by
-        trying any typeIdentification of all types) are "resource files" for the current
-        instance
+        trying any typeIdentification of all types or if text file: by looking for a front
+        matter field "type") are "resource files" for the current instance
       - /myFolder:      all folders that can't be identified as an instance of a type are
-        "group folders" that may contain instances or resources
+        "group folders" that may contain sub instances or resources
       - /images
   - ...
 
