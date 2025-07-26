@@ -22,6 +22,7 @@ Different types of entries can be defined in a file structure like
         - then remove all non alpha numeric chars
         - add a unique user and date behind, seperated by hyphen: "-Default-YYMMDDHHMMSS"
           (the user currently is "Default" only)
+    - each instance may also have a field "type" which isn't explicitly defined here
   - /MyType
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - ready_only.php: renders a read only version of the instance data
@@ -42,6 +43,7 @@ description: |
   type description
 
 typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
+                                           #   if no string is defined try to read the field type from the front matter
 allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list, "*" for "all", empty array for none
 
 fields:             # special fields for this type
@@ -65,6 +67,7 @@ fields:             # special fields for this type
     - priority (int)
     - state (dropdown), values: new (default), progress, done
     - dueDate (optional)
+  - typeIdentification: "^\\s*[1-5]\\s*-\\s*"
   - allowedSubTypes: all ("*")
   - list renderer:
     - left aligned:  priority as badge and name
@@ -74,6 +77,8 @@ fields:             # special fields for this type
 - Type "Info"
   - default fields: see above
   - no special fields
+  - typeIdentification: save "(i)" at the end of the file name to highlight it as Info
+    - make a regex that matches this
   - allowedSubTypes: none
   - list renderer:
     - left aligned:  date (format MM-DD)
@@ -93,6 +98,7 @@ We also define these types for my search for a new apartment:
     - result (string)
     - files_nr (string, 4 digits with leading zeros)
     - url (string)
+  - typeIdentification: the type is from the front matter in this case
   - allowedSubTypes: Info
   - list renderer:
     - first line:
