@@ -3,6 +3,8 @@ I am making an app that can be used to manage a list of entries of different typ
 
 ## Common
 
+config.yml
+
 ```yml
 dataFileName: "-this"  # name of the data file used in data (in principle can have any extension, but practically we use "md")
 ```
