@@ -41,7 +41,7 @@ Different types of entries can be defined in a file structure like
       - this is a php file that uses PHP's alternative syntax for rendering HTML
     - list.php: cell renderer used to render the list cell
     - edit.php: renderer for the edit page
-    - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
+    - /ajax:    default and special ajax functions one file per function (ajax call forwarded by ajax.php)
   - ...
 
 Type definition:
@@ -114,6 +114,9 @@ We also define these types for my search for a new apartment:
       - left aligned:  date (YYYY-MM-DD)
       - right aligned: files_nr 
   - edit renderer: form in modal for editing all fields
+  - special feature:
+    - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
+    - for saving the file we add a special ajax function
 
 # Instances of types (data)
 
@@ -124,10 +127,11 @@ Sample for the data:
   - /myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
-    - /myApartment: this is an instance of type "Apartment" that is a child of "myApartmentSearch"
+    - /myApartment: this contains instances of type "Apartment"
       - "-this.md"
       - some_image.jpg: all files that can't be identified as an instance of a type are "resource files" for the current instance
       - /myFolder:      all folders that can't be identified as an instance of a type are "group folders" that may contain instances or resources
+      - /images
   - ,,,
 
 ## User Interface
@@ -157,8 +161,6 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
           - single click or touch: open a modal for editing the entry
           - double click or double touch: loads the the list of sub entries associated with the entry
   - Resources: list of "resource files" and "group folders" in the current directory
-
-TASK: For apartments, also let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/ as "resource files".
 
 ## Misc
 
