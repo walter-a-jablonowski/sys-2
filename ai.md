@@ -29,7 +29,8 @@ Different types of entries can be defined in a file structure like
       - this is a php file that uses PHP's alternative syntax for rendering HTML
     - list.php: cell renderer used to render the list cell
     - edit.php: renderer for the edit page
-    - /ajax:    default and special ajax functions one file per function (ajax call forwarded by ajax.php)
+    - /ajax:         ajax functions one file per function (ajax call forwarded by ajax.php)
+    - controller.js: type specific js code
   - ...
 
 Type definition:
