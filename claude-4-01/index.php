@@ -37,7 +37,7 @@ $currentInstance = $dataManager->getCurrentInstance($currentPath);
 <body>
   <div class="container-fluid p-0">
     <!-- Header Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">
           <?php echo htmlspecialchars($currentData['levelName'] ?? 'Start'); ?>
