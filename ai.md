@@ -162,6 +162,7 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
 ## Misc
 
 - We currently use no login system
-- Add error handling for PHP and JavaScript errors
+- Add error handling for PHP and JavaScript errors with display to the user
 - Use simple code for input validation, ideally with no third party library
 - Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
+- Avoid using the __DIR__ constant, we can use relative paths cause we route everything over index.php oder ajax.php
