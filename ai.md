@@ -65,7 +65,7 @@ fields:             # special fields for this type
     - priority (int)
     - state (dropdown), values: new (default), progress, done
     - dueDate (optional)
-  - allowedSubTypes: all
+  - allowedSubTypes: all ("*")
   - list renderer:
     - left aligned:  priority as badge and name
     - right aligned: state
@@ -132,12 +132,13 @@ Sample for the data:
 
 ## User Interface
 
-We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a list of entries (list group).
+Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a scrollable content area.
 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
-  - Actions dropdown (right aligned): 
-    - Edit: edit the currently shown instance (inactive on the start page))
+    - we use no breadcrumbs for navigation, just the back button
+  - Actions dropdown (right aligned):
+    - Edit: edit the currently shown instance (inactive on the start page)
     - Delete: delete the currently shown instance
     - gears icon (for settings, currently has no function)
 - Read only rendering of the current entry (via ready_only.php, invisible on the start page)
@@ -160,5 +161,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 
 ## Misc
 
+- We currently use no login system
+- Add error handling for PHP and JavaScript errors
 - Use simple code for input validation, ideally with no third party library
 - Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
