@@ -116,7 +116,7 @@ We also define these types for my search for a new apartment:
 Sample for the data:
 
 - /data
-  - /MyInfo.md: this is some Info instance made as file
+  - /2 - MyInfo.md: this is some Info instance made as file
   - /myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
