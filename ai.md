@@ -135,7 +135,10 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
-  - Edit button (right aligned): edit the currently shown instance
+  - Actions dropdown (right aligned): 
+    - Edit: edit the currently shown instance
+    - Delete: delete the currently shown instance
+    - gears icon (for settings, currently has no function)
 - Tabs
   - List
     - Tool bar with
