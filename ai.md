@@ -106,6 +106,7 @@ We also define these types for my search for a new apartment:
     - making pictures
       - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
       - for saving the file we add a special ajax function
+      - file types: typically used image types provided by the smartphones cam (implement hardcoded)
     - provide a single additional numeric identifier "files_nr" for all Apartment instances (shared use)
       - use a json file to remember the last id in types/Apartment/files_nr.json
       - increment each time an apartment is created
