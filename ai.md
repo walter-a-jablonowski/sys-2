@@ -1,17 +1,4 @@
 
-removed:
-
-PC layout or tablets in widescreen: show the main list left and the details right. When the user clicks on a sub entry, show the sub entry details right.
-
-- Header bar
-  - dropdown on the left: can be used to switch main entries so that the user can quickly switch them
-
-- files_nr (string, 4 digits with leading zeros, incrementing)
-  - use a json file to remember the last id in data/myApartmentSearch/files_nr.json
-- files_nr.json
-
- --
-
 I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
 ## Common
