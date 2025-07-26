@@ -37,8 +37,9 @@ Different types of entries can be defined in a file structure like
           (the user currently is "Default" only)
   - /MyType_1
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
-    - list.php: cell renderer used to render the list cell
+    - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
+    - list.php: cell renderer used to render the list cell
     - edit.php: renderer for the edit page
     - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
   - ...
@@ -139,6 +140,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
     - Edit: edit the currently shown instance
     - Delete: delete the currently shown instance
     - gears icon (for settings, currently has no function)
+- Read only rendering of the current entry (via ready_only.php, invisible on the start page)
 - Tabs
   - List
     - Tool bar with
