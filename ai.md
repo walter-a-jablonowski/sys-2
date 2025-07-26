@@ -143,7 +143,7 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
-    - we use no breadcrumbs for navigation, just the back button
+    - we use no breadcrumbs for navigation, just the smartphone's back button
   - Actions dropdown (right aligned):
     - Edit: edit the currently shown instance (inactive on the start page)
     - Delete: delete the currently shown instance
