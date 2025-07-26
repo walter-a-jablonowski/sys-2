@@ -11,7 +11,7 @@ This system allows you to organize your data in a hierarchical structure with di
 
 **Available Types:**
 - **Activity**: For managing tasks and projects (with priority, state, due dates)
-- **Info**: For storing notes and documentation
+- **Info**: For storing info
 - **Apartment**: For managing apartment search entries (with state, files_nr, URL)
 
 **How to use:**
@@ -24,7 +24,7 @@ This system allows you to organize your data in a hierarchical structure with di
 **Features:**
 - Mobile-first responsive design
 - Type-specific renderers for list and detail views
-- File upload support for apartment photos
+- File upload support for apartment pic
 - Hierarchical navigation
 - Error handling and validation
 

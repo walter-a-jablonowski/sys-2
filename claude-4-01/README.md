@@ -6,10 +6,10 @@ A flexible, mobile-first web application for managing hierarchical data with con
 
 - **Type-based System**: Define custom data types with specific fields and validation
 - **Hierarchical Structure**: Navigate through nested data levels
-- **Mobile-first Design**: Optimized for smartphones with Bootstrap 5.3
+- **Mobile-first Design**: Optimized for smartphones with BS 5.3
 - **File-based Storage**: Uses YAML/Markdown files for data persistence
 - **Custom Renderers**: Type-specific list, read-only, and edit views
-- **Image Upload**: Camera support for apartment photos
+- **Image Upload**: Camera support for apartment oic
 - **Error Handling**: User-friendly error display for PHP and JavaScript
 
 ## Built-in Types
@@ -21,7 +21,7 @@ A flexible, mobile-first web application for managing hierarchical data with con
 - Allows all sub-types
 
 ### Info
-- Basic note-taking type
+- Basic type
 - No special fields
 - No sub-types allowed
 
@@ -29,8 +29,8 @@ A flexible, mobile-first web application for managing hierarchical data with con
 - State (New, Current, Maybe, Done)
 - Files Number (auto-incrementing 4-digit)
 - URL (optional link)
-- Result (outcome notes)
-- Camera photo upload
+- Result
+- Camera pic upload
 - Allows Info sub-types
 
 ## Installation
@@ -77,7 +77,7 @@ A flexible, mobile-first web application for managing hierarchical data with con
 ## Technical Details
 
 - **Backend**: PHP with custom type and data managers
-- **Frontend**: HTML, JavaScript, Bootstrap 5.3
+- **Frontend**: HTML, JavaScript, BS 5.3
 - **Storage**: File-based with YAML front matter
 - **Routing**: All requests through index.php and ajax.php
 - **Date Format**: YYYY-MM-DD HH:MM:SS for timestamps
@@ -95,6 +95,6 @@ To add new types:
 
 The system includes comprehensive error handling:
 - PHP errors are logged and displayed to users
-- JavaScript errors show toast notifications
+- JavaScript errors show toast
 - Form validation with field-specific messages
 - File upload validation for image types

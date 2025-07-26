@@ -54,16 +54,16 @@ $url = htmlspecialchars($instance['url'] ?? '');
   <div class="mb-3">
     <label for="result" class="form-label">Result</label>
     <textarea class="form-control" name="result" rows="2"><?php echo $result; ?></textarea>
-    <div class="form-text">Notes about the outcome or decision</div>
+    <div class="form-text">Info about the outcome or decision</div>
   </div>
   
   <!-- Camera upload section -->
   <div class="mb-3">
-    <label class="form-label">Photos</label>
+    <label class="form-label">Pic</label>
     <div>
       <button type="button" class="btn btn-outline-primary btn-sm" 
               onclick="uploadImage('<?php echo htmlspecialchars($instance['_path'] ?? ''); ?>')">
-        📷 Add Photo
+        📷 Add Pic
       </button>
       <div class="form-text">Use smartphone camera to add images</div>
     </div>

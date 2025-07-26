@@ -206,7 +206,7 @@ class DataManager
   {
     $instance = $this->getInstance($path);
     if( !$instance ) {
-      throw new Exception('Entry not found');
+      throw new Exception('Entry missing');
     }
     
     $type = $instance['type'];
@@ -245,7 +245,7 @@ class DataManager
     $entryPath = "data/$path";
     
     if( !file_exists($entryPath) ) {
-      throw new Exception('Entry not found');
+      throw new Exception('Entry missing');
     }
     
     // Recursive delete

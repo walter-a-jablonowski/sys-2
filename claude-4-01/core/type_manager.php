@@ -96,7 +96,7 @@ class TypeManager
           $value = trim(explode('#', $value)[0]);
         }
         
-        // Remove quotes
+        // Remove quo
         if( (substr($value, 0, 1) === '"' && substr($value, -1) === '"') ||
             (substr($value, 0, 1) === "'" && substr($value, -1) === "'") ) {
           $value = substr($value, 1, -1);
@@ -153,7 +153,7 @@ class TypeManager
   public function isTypeAllowed( $typeId, $currentPath )
   {
     if( empty($currentPath) ) {
-      return true; // All types allowed at root
+      return true;  // all types allowed in start page
     }
     
     // Get parent instance type

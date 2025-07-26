@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
   currentPath = urlParams.get('path') || '';
   
-  // Initialize tooltips and other Bootstrap components
+  // Initialize tooltips and misc BS components
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   tooltipTriggerList.map(function(tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
@@ -143,7 +143,7 @@ async function saveEntry()
     const form = document.getElementById('editForm');
     
     if( !form ) {
-      showError('Form not found');
+      showError('Form missing');
       return;
     }
     
@@ -188,7 +188,7 @@ async function saveEntry()
  */
 async function deleteEntry( entryPath )
 {
-  if( !confirm('Are you sure you want to delete this entry? This action cannot be undone.') ) {
+  if( !confirm("Are you sure you want to delete this entry? This action can't be undone.") ) {
     return;
   }
   
@@ -233,7 +233,7 @@ function editCurrentInstance()
 function deleteCurrentInstance()
 {
   if( currentPath ) {
-    if( confirm('Are you sure you want to delete this entry and navigate back? This action cannot be undone.') ) {
+    if( confirm("Are you sure you want to delete this entry and navigate back? This action can't be undone.") ) {
       deleteEntry(currentPath).then(() => {
         navigateBack();
       });
@@ -284,7 +284,7 @@ async function uploadImage( entryPath )
   try {
     // Check if device supports camera
     if( !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia ) {
-      showError('Camera not supported on this device');
+      showError('Camera unsupported on this device');
       return;
     }
     

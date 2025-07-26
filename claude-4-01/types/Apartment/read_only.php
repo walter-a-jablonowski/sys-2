@@ -55,7 +55,7 @@ $stateText = ucfirst($state);
     <!-- Camera button for image upload -->
     <div class="mt-3">
       <button class="btn btn-sm btn-outline-primary" onclick="uploadImage('<?php echo htmlspecialchars($instance['_path'] ?? ''); ?>')">
-        📷 Add Photo
+        📷 Add Pic
       </button>
     </div>
   </div>

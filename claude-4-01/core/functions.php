@@ -125,7 +125,7 @@ function parseFrontMatter( $content )
       $key = trim($key);
       $value = trim($value);
       
-      // Remove quotes if present
+      // Remove quo if present
       if( (substr($value, 0, 1) === '"' && substr($value, -1) === '"') ||
           (substr($value, 0, 1) === "'" && substr($value, -1) === "'") ) {
         $value = substr($value, 1, -1);
@@ -148,7 +148,7 @@ function createFrontMatter( $data, $content = '' )
   $yaml = "---\n";
   
   foreach( $data as $key => $value ) {
-    // Escape quotes in values
+    // Escape quo in values
     if( is_string($value) && (strpos($value, '"') !== false || strpos($value, "'") !== false) ) {
       $value = '"' . str_replace('"', '\\"', $value) . '"';
     }

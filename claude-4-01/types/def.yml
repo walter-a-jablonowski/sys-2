@@ -5,5 +5,5 @@ time: "string, YYYY-MM-DD HH:MM:SS"
 name: "string"
 description: "string"
 
-# Note: 'id' field is automatically generated from 'name' when instance is created
-# Format: TitleCase-Default-YYMMDDHHMMSS
+# 'id' field is automatically generated from 'name' when instance is created
+# TitleCase-Default-YYMMDDHHMMSS

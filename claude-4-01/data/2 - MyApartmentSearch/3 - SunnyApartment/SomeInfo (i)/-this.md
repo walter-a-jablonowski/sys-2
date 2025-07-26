@@ -1,5 +1,5 @@
 ---
-id: ViewingNotes-Default-250126135500
+id: SomeInfo-Default-250126135500
 time: 2025-01-26 13:55:00
 name: Viewing Notes
 type: Info

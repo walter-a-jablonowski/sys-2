@@ -182,7 +182,7 @@ body {
   font-size: 1.2rem;
 }
 
-/* Toast notifications */
+/* Toasts */
 .toast-container {
   z-index: 1060;
 }

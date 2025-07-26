@@ -12,7 +12,7 @@ function handleSaveEntry( $data, $typeManager, $dataManager )
   $instance = $dataManager->getInstance($path);
   
   if( !$instance ) {
-    throw new Exception('Entry not found');
+    throw new Exception('Entry missing');
   }
   
   // Update instance with new data

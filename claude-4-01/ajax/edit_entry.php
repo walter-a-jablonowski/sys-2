@@ -12,7 +12,7 @@ function handleEditEntry( $data, $typeManager, $dataManager )
   $instance = $dataManager->getInstance($path);
   
   if( !$instance ) {
-    throw new Exception('Entry not found');
+    throw new Exception('Entry missing');
   }
   
   $editForm = $dataManager->renderEditForm($instance);
