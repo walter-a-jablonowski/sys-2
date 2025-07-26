@@ -138,9 +138,12 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - Button with gears icon on the right (currently has no function)
 - Tabs
   - List
-    - Tool bar with sorting dropdown (e.g. by time, by name)
-    - List (list group): initially show the data from the first level of /data,
-      the list is sorted by time (last one first)
+    - Tool bar with
+      - sorting dropdown (e.g. by time, by name)
+      - Add button (right aligned): brings up a modal that lets you select the type and set the name and description (currently no special fields)
+    - List (list group)
+      - initially show the data from the first level of /data
+      - the list is sorted by time (last one first)
       - list cell
         - layout
           - the cell content is rendered by the list cell renderer of the current type
