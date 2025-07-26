@@ -45,14 +45,14 @@ Different types of entries can be defined in a file structure like
 Type definition:
 
 ```yml
-id:   MyType        # type unique id (derived from name)
+id:   MyType        # type unique id
 time:               # created time YYYY-MM-DD HH:MM:SS
 
 name: My Type       # type name
 description: |
   type description
 
-typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this agains file name)
+typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
 allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list
 
 fields:             # special fields for this type
@@ -71,18 +71,21 @@ fields:             # special fields for this type
 ## Initial types
 
 - Type "Activity"
-  - default fields see above
+  - default fields: see above
   - special fields:
     - priority (int)
     - state (dropdown), values: new (default), progress, done
     - due to date (optional)
+  - allowedSubTypes: all
   - list renderer:
     - left aligned:  priority as badge and name
     - right aligned: state
   - edit renderer: form in modal for editing all fields
 
 - Type "Info"
-  - uses default fields see above
+  - default fields: see above
+  - no special fields
+  - allowedSubTypes: none
   - list renderer:
     - left aligned:  date (format MM-DD)
     - right aligned: name
@@ -91,7 +94,7 @@ fields:             # special fields for this type
 We also define these types for my search for a new apartment:
 
 - Type "Apartment"
-  - default fields see above
+  - default fields: see above
   - special fields:
     - state (dropdown)
       - new
@@ -115,10 +118,11 @@ We also define these types for my search for a new apartment:
 Sample for the data:
 
 - /data
+  - /MyInfo.md: this is some Info instance made as file
   - /myApartmentSearch: this is an instance of type "Activity"
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
-    - /myApartment: this is an instance of type "Apartment"
+    - /myApartment: this is an instance of type "Apartment" that is a child of "myApartmentSearch"
       - "-this.md"
       - some_image.jpg: all files that can't be identified as an instance of a type are "resource files" for the current instance
       - /myFolder:      all folders that can't be identified as an instance of a type are "group folders" that may contain instances or resources
@@ -132,9 +136,10 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
   - Name of the current level in the hierarchcal list (initially "Start")
   - Button with gears icon on the right (currently has no function)
 - List (list group)
+  - Tool bar with sorting dropdown (e.g. by time, by name)
   - initially show the main entries (the data is from the first level of folders in /data)
-  - the list is sorted by last one first (field time)
-  - when we double clicks or touches an entry this loads the the list of sub entries associated with the entry
+  - the list is sorted by time (last one first)
+  - when we double clicks or double touches an entry this loads the the list of sub entries associated with the entry
   - list cells
     - all cells get an action menu on the right (dropdown, single action: delete)
     - the cell content on the left side is rendered by the list cell renderer of the current type
