@@ -25,15 +25,16 @@ dataFileName: "-this"  # name of the data file used in data
 Different types of entries can be defined in a file structure like
 
 - /types
-  - def.yml global definition, contains: definitions of default data fields of instances of types
-    (same as the field definition in "type definition" sample below)
+  - def.yml global definition, contains: definitions of default data fields of instances of all types
     - time (string, YYYY-MM-DD HH:MM:SS)
     - name (string)
     - description (string)
-    - TASK: id: the id isn't explicitly defined here, derive it from the field "name"
-       when an instance is created:
-       - convert each word to first character uppercase
-       - then remove all non alpha numeric chars
+    - each instance also has a field "id" which isn't explicitly defined here, derive it from the field "name"
+      when an instance is created:
+        - convert each word to first character uppercase
+        - then remove all non alpha numeric chars
+        - add a unique user and date behind, seperated by hyphen: "-Default-YYMMDDHHMMSS"
+          (the user currently is "Default" only)
   - /MyType_1
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - list.php: cell renderer used to render the list cell
@@ -56,7 +57,7 @@ allowedSubTypes:    ["Info"]               # list of type ids of allowed sub typ
 
 fields:             # special fields for this type
   myField:          # name of the field
-    type:           # string, int, float or bool
+    type:           # string, int, float, bool, hyperlink
     required:       # true | false
     format:         # regex (for strings)
     min:            # min, max, step (for numbers)
@@ -73,7 +74,8 @@ fields:             # special fields for this type
   - default fields see above
   - special fields:
     - priority (int)
-    - state (dropdown)
+    - state (dropdown), values: new (default), progress, done
+    - due to date (optional)
   - list renderer:
     - left aligned:  priority as badge and name
     - right aligned: state
