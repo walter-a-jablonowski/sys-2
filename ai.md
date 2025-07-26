@@ -142,31 +142,32 @@ All instances can be stored in files or folders. Sample for the data:
 
 Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a header bar and a scrollable content area.
 
-- Header bar
+- Header bar (fixed to the page)
   - Name of the current level in the hierarchcal list (initially "Start")
     - we use no breadcrumbs for navigation, just the smartphone's back button
   - Actions dropdown (right aligned):
     - Edit: edit the currently shown instance (inactive on the start page)
     - Delete: delete the currently shown instance
     - gears icon (for settings, currently has no function)
-- Read only rendering of the current entry (via ready_only.php, invisible on the start page)
-- Tabs
-  - List
-    - Tool bar with
-      - sorting dropdown (e.g. by time, by name)
-      - Add button (right aligned): brings up a modal that lets you select the type and set the name and description (currently no special fields)
-    - List (list group)
-      - initially show the data from the first level of /data
-      - the list is sorted by time (last one first)
-      - list cell
-        - layout
-          - the cell content is rendered by the list cell renderer of the current type
-          - all cells get actions on the right of the cell (button group)
-            - edit button: open a modal for editing the entry
-            - dropdown: single action "delete"
-        - actions
-          - single click or touch: loads the the list of sub entries associated with the entry
-  - Resources: list of "resource files" and "group folders" in the current directory
+- Content area (scrollable)
+  - Read only rendering of the current entry (via ready_only.php, invisible on the start page)
+  - Tabs
+    - List
+      - Tool bar with
+        - sorting dropdown (e.g. by time, by name)
+        - Add button (right aligned): brings up a modal that lets you select the type and set the name and description (currently no special fields)
+      - List (list group)
+        - initially show the data from the first level of /data
+        - the list is sorted by time (last one first)
+        - list cell
+          - layout
+            - the cell content is rendered by the list cell renderer of the current type
+            - all cells get actions on the right of the cell (button group)
+              - edit button: open a modal for editing the entry
+              - dropdown: single action "delete"
+          - actions
+            - single click or touch: loads the the list of sub entries associated with the entry
+    - Resources: list of "resource files" and "group folders" in the current directory
 
 ## Misc
 
