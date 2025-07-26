@@ -43,7 +43,7 @@ description: |
   type description
 
 typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
-                                           #   if no string is defined try to read the field type from the front matter
+                                           #   if no string is defined try to read the field type from the front matter (field type) as a fallback
 allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list, "*" for "all", empty array for none
 
 fields:             # special fields for this type
@@ -120,7 +120,7 @@ We also define these types for my search for a new apartment:
 
 # Instances of types (data)
 
-Sample for the data:
+All instances can be stored in files or folders. Sample for the data:
 
 - /data
   - /2 - MyInfo.md: this is some Info instance made as file
