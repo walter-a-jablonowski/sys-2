@@ -38,6 +38,7 @@ Different types of entries can be defined in a file structure like
   - /MyType_1
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
     - list.php: cell renderer used to render the list cell
+      - this is a php file that uses PHP's alternative syntax for rendering HTML
     - edit.php: renderer for the edit page
     - /ajax:    possible ajax functions one file per function (ajax call forwarded by ajax.php)
   - ...
