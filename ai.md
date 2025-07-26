@@ -134,7 +134,7 @@ We keep the user interface pretty simple. Use bootstrap 5.3 and optimize it for 
 - Header bar
   - Name of the current level in the hierarchcal list (initially "Start")
   - Actions dropdown (right aligned): 
-    - Edit: edit the currently shown instance
+    - Edit: edit the currently shown instance (inactive on the start page))
     - Delete: delete the currently shown instance
     - gears icon (for settings, currently has no function)
 - Read only rendering of the current entry (via ready_only.php, invisible on the start page)
