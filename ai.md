@@ -80,7 +80,7 @@ fields:             # special fields for this type
 - Type "Info"
   - default fields: see above
   - no special fields
-  - typeIdentification: save "(i)" at the end of the file name to highlight it as Info
+  - typeIdentification: date in front of the file or folder name like "260728 - SomeInfo"
     - make a regex that matches this
   - allowedSubTypes: none
   - list renderer:
@@ -129,12 +129,13 @@ Instances of a type can be saved either as a single files or a folder with the f
 Sample for the data:
 
 - /data
-  - /2 - MyInfo.md: this is some Info instance saved as a single file
+  - /260728 - MyInfo.md: this is some Info instance saved as a single file
   - /2 - myApartmentSearch: this is an instance of type "Activity" saved as folder
     - "-this.md" is the data file, contains data in front matter, except the
       field "description" which is the text content of the md file
     - /myApartment: is a instance of type "Apartment" inside the apartment search
       - "-this.md"
+      - 260728 - SomeInfo.md
       - some_image.jpg: all files that can't be identified as an instance of a type (by
         trying any typeIdentification of all types or if text file: by looking for a front
         matter field "type") are "resource files" for the current instance
