@@ -1,0 +1,13 @@
+{
+  "name": "user/hierarchical-app",
+  "description": "Hierarchical data management system with YAML/Markdown storage",
+  "type": "project",
+  "require": {
+    "symfony/yaml": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "core/"
+    }
+  }
+}
