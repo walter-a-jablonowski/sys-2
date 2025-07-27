@@ -1,0 +1,10 @@
+time:
+  type: string
+  format: 'YYYY-MM-DD HH:MM:SS'
+  description: 'Creation time'
+name:
+  type: string
+  description: 'Entry name'
+description:
+  type: string
+  description: 'Entry description'

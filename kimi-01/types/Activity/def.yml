@@ -1,0 +1,24 @@
+id: Activity
+time: '2025-07-27 16:47:00'
+
+name: Activity
+description: |
+  An activity entry that can contain sub-entries of any type
+
+priority:
+  type: string
+  enum: [low, medium, high]
+  description: 'Priority level'
+
+state:
+  type: string
+  enum: [open, in_progress, done, cancelled]
+  description: 'Current state'
+
+dueDate:
+  type: string
+  format: 'YYYY-MM-DD HH:MM:SS'
+  description: 'Due date'
+
+typeIdentification: "^\\s*2\\s*-\\s*"
+allowedSubTypes: ['*']

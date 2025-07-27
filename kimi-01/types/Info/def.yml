@@ -1,0 +1,9 @@
+id: Info
+time: '2025-07-27 16:47:00'
+
+name: Info
+description: |
+  Basic information entry with no subtypes
+
+typeIdentification: '^\d{6}\s*-\s*.*'
+allowedSubTypes: []

@@ -1,0 +1,26 @@
+id: Apartment
+time: '2025-07-27 16:47:00'
+
+name: Apartment
+description: |
+  Apartment search entry with camera image upload capability
+
+state:
+  type: string
+  enum: [searching, viewing, applied, rejected, accepted]
+  description: 'Current apartment search state'
+
+result:
+  type: string
+  description: 'Result or notes about the apartment'
+
+files_nr:
+  type: string
+  description: 'JSON string tracking uploaded files'
+
+url:
+  type: string
+  description: 'Apartment listing URL'
+
+# typeIdentification: '.*'  # has no type identification, front matter field "type" is used as fallback
+allowedSubTypes: ['Info']
