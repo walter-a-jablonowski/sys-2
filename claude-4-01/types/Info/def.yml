@@ -4,7 +4,7 @@ name: Info
 description: |
   Information type
 
-typeIdentification: "^\\s*1\\s*-\\s*"
+typeIdentification: "^\\d{6}\\s*-\\s*.*"
 allowedSubTypes: []
 
 fields:
