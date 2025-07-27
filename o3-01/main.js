@@ -49,10 +49,40 @@ function submitAdd(curPath) {
   }).catch(()=>toast('Network error'));
 }
 
+let _editData = null;
 function editEntry(relPath, ev) {
-  ev.stopPropagation();
-  toast('Edit not implemented yet','warning');
+  if(ev) ev.stopPropagation();
+  fetch('ajax.php?action=get', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({path: relPath})
+  }).then(r=>r.json()).then(j=>{
+    if(!j.success) { toast(j.error||'Error'); return; }
+    _editData = {path: relPath, yaml: j.yaml, body: j.body};
+
+    // fill simple fields (name, description)
+    document.getElementById('editName').value = _editData.yaml.name || '';
+    document.getElementById('editDesc').value = _editData.body || '';
+    document.getElementById('editPath').value = relPath;
+
+    const m = new bootstrap.Modal(document.getElementById('editModal'));
+    m.show();
+  }).catch(()=>toast('Network error'));
 }
+
+document.getElementById('editSaveBtn').addEventListener('click', ()=>{
+  if(!_editData) return;
+  _editData.yaml.name = document.getElementById('editName').value.trim();
+  _editData.body = document.getElementById('editDesc').value;
+  fetch('ajax.php?action=update', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(_editData)
+  }).then(r=>r.json()).then(j=>{
+    if(j.success) location.reload();
+    else toast(j.error||'Update failed');
+  }).catch(()=>toast('Network error'));
+});
 
 function deleteEntry(relPath, ev) {
   ev.stopPropagation();

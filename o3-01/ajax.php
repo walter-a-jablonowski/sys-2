@@ -16,6 +16,12 @@ switch( $action ) {
   case 'delete':
     handle_delete();
     break;
+  case 'get':
+    handle_get();
+    break;
+  case 'update':
+    handle_update();
+    break;
   default:
     echo json_encode(['error'=>'Unknown action']);
 }
@@ -87,6 +93,38 @@ function handle_delete() : void
     $f->isDir() ? rmdir($f->getPathname()) : unlink($f->getPathname());
   }
   rmdir($target);
+  echo json_encode(['success'=>true]);
+}
+
+function handle_get() : void
+{
+  $input = json_decode(file_get_contents('php://input'), true);
+  if( empty($input['path']) ) { echo json_encode(['error'=>'No path']); return; }
+  $rel = trim($input['path'], '/');
+  $full = DATA_DIR . '/' . $rel;
+  if( ! file_exists($full) ) { echo json_encode(['error'=>'Not found']); return; }
+
+  $cfg = app_config();
+  $file = is_dir($full) ? "$full/{$cfg['dataFileName']}.md" : $full;
+  if( ! file_exists($file) ) { echo json_encode(['error'=>'No data']); return; }
+  [$yaml,$body] = parse_front_matter(file_get_contents($file));
+  echo json_encode(['success'=>true,'yaml'=>$yaml,'body'=>$body]);
+}
+
+function handle_update() : void
+{
+  $input = json_decode(file_get_contents('php://input'), true);
+  if( empty($input['path']) || ! isset($input['yaml']) || ! isset($input['body']) ) {
+    echo json_encode(['error'=>'Bad input']); return;
+  }
+  $rel = trim($input['path'],'/');
+  $full = DATA_DIR . '/' . $rel;
+  if( ! file_exists($full) ) { echo json_encode(['error'=>'Not found']); return; }
+  $cfg = app_config();
+  $file = is_dir($full) ? "$full/{$cfg['dataFileName']}.md" : $full;
+  $yaml = $input['yaml'];
+  $body = $input['body'];
+  file_put_contents($file, build_front_matter($yaml, $body));
   echo json_encode(['success'=>true]);
 }
 

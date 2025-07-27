@@ -47,6 +47,10 @@ function dir_entries( string $dir, array $types ) : array
       }
       else {
         $type = detect_type($e, $types);
+        if( ! $type && preg_match('/\.md$/i', $e) ) {
+          [$yaml,] = parse_front_matter(file_get_contents($full));
+          if( ! empty($yaml['type']) ) $type = $yaml['type'];
+        }
       }
     }
     else {
@@ -144,6 +148,35 @@ $items = dir_entries($currentPath, $types);
       <div class='modal-footer'>
         <button class='btn btn-secondary btn-sm' data-bs-dismiss='modal'>Cancel</button>
         <button class='btn btn-primary btn-sm' onclick='submitAdd("<?= htmlspecialchars($path) ?>")'>Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class='modal fade' id='editModal' tabindex='-1'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title'>Edit Entry</h5>
+        <button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+      </div>
+      <div class='modal-body'>
+        <form id='editForm'>
+          <input type='hidden' id='editPath'>
+          <div class='mb-2'>
+            <label class='form-label small'>Name</label>
+            <input class='form-control form-control-sm' id='editName'>
+          </div>
+          <div class='mb-2'>
+            <label class='form-label small'>Description</label>
+            <textarea class='form-control form-control-sm' id='editDesc'></textarea>
+          </div>
+        </form>
+      </div>
+      <div class='modal-footer'>
+        <button class='btn btn-secondary btn-sm' data-bs-dismiss='modal'>Cancel</button>
+        <button class='btn btn-primary btn-sm' id='editSaveBtn'>Save</button>
       </div>
     </div>
   </div>
