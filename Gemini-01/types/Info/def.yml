@@ -1,0 +1,6 @@
+id: Info
+name: Info
+description: A piece of information.
+typeIdentification: "^\\d{6}\\s*-\\s*"
+allowedSubTypes: []
+fields: {}

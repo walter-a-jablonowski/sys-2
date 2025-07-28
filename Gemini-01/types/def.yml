@@ -1,0 +1,9 @@
+fields:
+  time:
+    type: string
+    format: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$'
+  name:
+    type: string
+    required: true
+  description:
+    type: string

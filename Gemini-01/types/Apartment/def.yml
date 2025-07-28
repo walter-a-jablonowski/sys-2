@@ -1,0 +1,25 @@
+id: Apartment
+name: Apartment
+description: An apartment listing.
+typeIdentification: ""
+allowedSubTypes: ["Info"]
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      'New': 'new'
+      'Current': 'current'
+      'Maybe': 'maybe'
+      'Done': 'done'
+    default: 'new'
+  result:
+    type: string
+    required: false
+  files_nr:
+    type: string
+    required: false
+    format: '^\\d{4}$'
+  url:
+    type: string
+    required: false
