@@ -74,22 +74,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (typeDef && typeDef.fields) {
-      typeDef.fields.forEach(field => {
+      Object.keys(typeDef.fields).forEach(fieldKey => {
+        const field = typeDef.fields[fieldKey];
         const formGroup = document.createElement('div');
         formGroup.className = 'mb-3';
 
         const label = document.createElement('label');
         label.className = 'form-label';
-        label.setAttribute('for', `${field.id}-${isEdit ? 'edit' : 'add'}`);
-        label.textContent = field.name;
+        label.setAttribute('for', `${fieldKey}-${isEdit ? 'edit' : 'add'}`);
+        label.textContent = fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1);
 
         const input = document.createElement('input');
         input.type = field.type;
         input.className = 'form-control';
-        input.id = `${field.id}-${isEdit ? 'edit' : 'add'}`;
-        input.name = field.id;
-        if (isEdit && entryData[field.id]) {
-          input.value = entryData[field.id];
+        input.id = `${fieldKey}-${isEdit ? 'edit' : 'add'}`;
+        input.name = fieldKey;
+        if (isEdit && entryData[fieldKey]) {
+          input.value = entryData[fieldKey];
         }
 
         formGroup.appendChild(label);
