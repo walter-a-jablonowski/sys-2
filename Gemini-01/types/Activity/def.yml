@@ -1,7 +1,7 @@
 id: Activity
 name: Activity
 description: A task or activity to be completed.
-typeIdentification: "^\\s*[1-5]\\s*-\\s*"
+typeIdentification: "/^\\s*[1-5]\\s*-\\s*/"
 allowedSubTypes: ["*"]
 fields:
   priority:
@@ -20,4 +20,4 @@ fields:
   dueDate:
     type: string
     required: false
-    format: '^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$'
+    format: '/^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$/'

@@ -19,7 +19,7 @@ fields:
   files_nr:
     type: string
     required: false
-    format: '^\\d{4}$'
+    format: '/^\\d{4}$/'
   url:
     type: string
     required: false
