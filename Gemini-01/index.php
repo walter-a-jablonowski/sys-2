@@ -147,10 +147,10 @@ foreach ($data as $item) {
     <div class="tab-content" id="main-tabs-content">
       <div class="tab-pane fade show active" id="list-content" role="tabpanel" aria-labelledby="list-tab">
         <div id="list-container" class="list-group">
-          <?php if (empty($typed_entries)): ?>
+          <?php if (empty($list_items)): ?>
             <div class="alert alert-info mt-2">No items found.</div>
           <?php else: ?>
-            <?php foreach ($typed_entries as $entry): ?>
+            <?php foreach ($list_items as $entry): ?>
               <?php
                 $renderer_path = $system->getRendererPath($entry['type'], 'list.php');
                 if ($renderer_path) {
@@ -200,7 +200,10 @@ foreach ($data as $item) {
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/main.js"></script>
+  <script>
+  const creatableTypes = <?php echo json_encode(array_values($creatable_types)); ?>;
+</script>
+<script src="js/main.js?v=<?= time() ?>"></script>
 
   <!-- Add Entry Modal -->
   <div class="modal fade" id="addEntryModal" tabindex="-1" aria-labelledby="addEntryModalLabel" aria-hidden="true">

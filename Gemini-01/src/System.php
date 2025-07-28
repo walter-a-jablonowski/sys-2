@@ -180,7 +180,7 @@ class System
 
   public function getRendererPath($typeId, $rendererName)
   {
-    $path = "types/{$typeId}/{$rendererName}.php";
+    $path = __DIR__ . "/../types/$typeId/$rendererName.php";
     if (file_exists($path)) {
         return $path;
     }
