@@ -27,6 +27,12 @@ body {
 .entry-card-body {
   padding: 0;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.entry-card-body > div {
+  width: 100%;
 }
 
 .entry-actions {
