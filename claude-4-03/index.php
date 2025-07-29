@@ -6,10 +6,10 @@
   <title>Entry Manager</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="styles.css" rel="stylesheet">
-  <link href="types/Activity/styles.css" rel="stylesheet">
-  <link href="types/Info/styles.css" rel="stylesheet">
-  <link href="types/Apartment/styles.css" rel="stylesheet">
+  <link href="styles.css?v=<?= time() ?>" rel="stylesheet">
+  <link href="types/Activity/styles.css?v=<?= time() ?>" rel="stylesheet">
+  <link href="types/Info/styles.css?v=<?= time() ?>" rel="stylesheet">
+  <link href="types/Apartment/styles.css?v=<?= time() ?>" rel="stylesheet">
 </head>
 <body>
   <!-- Header Bar -->
@@ -148,9 +148,9 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="controller.js"></script>
-  <script src="types/Activity/controller.js"></script>
-  <script src="types/Info/controller.js"></script>
-  <script src="types/Apartment/controller.js"></script>
+  <script src="controller.js?v=<?= time() ?>"></script>
+  <script src="types/Activity/controller.js?v=<?= time() ?>"></script>
+  <script src="types/Info/controller.js?v=<?= time() ?>"></script>
+  <script src="types/Apartment/controller.js?v=<?= time() ?>"></script>
 </body>
 </html>
