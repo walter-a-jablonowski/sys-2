@@ -1,13 +1,20 @@
 
 I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
-## Common
+## File struct
 
-config.yml
-
-```yml
-dataFileName: "-this"  # name of the data file used in data (in principle can have any extension, but practically we use "md")
-```
+- /ajax:  commonly used ajax functions one file per function (ajax call forwarded by ajax.php), see also type specific ajax calls below
+- /data:  see below
+- /lib:   commonly used classes and functions
+- /types: see below
+- index.php
+- styles.css: commonly used styles (see also type specific ajax calls below), prefer bootstrap classes
+- config.yml:
+  ```yml
+  dataFileName: "-this"  # name of the data file used in data (in principle can have any extension, but practically we use "md")
+  ```
+- composer.json: for Symfony Yaml 5.4
+- controller.js: commonly used s code (see also type specific js code below)
 
 ## Types
 
@@ -27,12 +34,14 @@ Different types of entries can be defined in a file structure like
     - each instance may also have a field "type" which isn't explicitly defined here
   - /MyType
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
+    - /ajax:         type specific ajax functions one file per function (ajax call forwarded by ajax.php)
+    - type.php:      type specific PHP code as class (if any)
+    - controller.js: type specific js code
     - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
-    - list.php: cell renderer used to render the list cell
-    - edit.php: renderer for the edit page
-    - /ajax:         ajax functions one file per function (ajax call forwarded by ajax.php)
-    - controller.js: type specific js code
+    - list.php:  cell renderer used to render the list cell
+    - edit.php:  renderer for the edit page
+    - styles.css: type specific styles (if any), prefer bootstrap classes
   - ...
 
 Type definition:
@@ -58,7 +67,7 @@ fields:             # special fields for this type
     max: 
     step: 
     values:         # for dropdown
-      "My label": someValue 
+      "My label": someValue
   ...
 ```
 
