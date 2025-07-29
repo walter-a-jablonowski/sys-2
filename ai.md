@@ -94,7 +94,7 @@ fields:             # special fields for this type
 - Type "Info"
   - default fields: see above
   - no special fields
-  - typeIdentification: "\\(\\s*i\\s*\\)" somewhere in the file or folder name
+  - typeIdentification: ".*\\(\\s*i\\s*\\).*" somewhere in the file or folder name
     - make a regex that matches this
   - allowedSubTypes: none
   - list renderer:
@@ -115,6 +115,10 @@ We also define these types for my search for a new apartment:
       - done
     - result (string)
     - files_nr (string, 4 digits with leading zeros)
+      - files_nr: a global counter for all apartments, auto-incrementing
+      - use a json file to remember the last id in user/Default/types/Apartment/files_nr.json
+      - increment each time an apartment is created
+      - save the generated id in the new record in the "files_nr" field
     - url (string)
   - typeIdentification: same as Activity
   - allowedSubTypes: Activity, Info
@@ -131,10 +135,6 @@ We also define these types for my search for a new apartment:
       - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
       - for saving the file we add a special ajax function
       - file types: typically used image types provided by the smartphones cam (implement hardcoded)
-    - provide a single additional numeric identifier "files_nr" for all Apartment instances (shared use)
-      - use a json file to remember the last id in types/Apartment/files_nr.json
-      - increment each time an apartment is created
-      - save the generated id in the new record in the "files_nr" field
 
 # Instances of types (data)
 
