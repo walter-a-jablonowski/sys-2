@@ -116,7 +116,7 @@ class EntryManager
   async loadTypes()
   {
     try {
-      const types = await this.apiCall('getTypes');
+      const types = await this.apiCall('getAllowedTypes', { path: this.currentPath });
       this.populateTypeSelect(types);
     }
     catch( error ) {
@@ -375,19 +375,30 @@ class EntryManager
     }
   }
 
-  displayCurrentEntry()
+  async displayCurrentEntry()
   {
     if( ! this.currentEntry ) return;
 
     const display = document.getElementById('currentEntryDisplay');
     const content = document.getElementById('currentEntryContent');
 
-    // Simple display for now - can be enhanced with type-specific renderers
-    content.innerHTML = `
-      <h5>${this.currentEntry.name}</h5>
-      <p class="text-muted mb-2">${this.currentEntry.time || ''}</p>
-      <p>${this.currentEntry.description || ''}</p>
-    `;
+    try {
+      // Use type-specific renderer if available
+      const result = await this.apiCall('getEntryRenderer', {
+        path: this.currentEntry.path,
+        renderer: 'read_only'
+      });
+      
+      content.innerHTML = result.html;
+    }
+    catch( error ) {
+      // Fallback to simple display
+      content.innerHTML = `
+        <h5>${this.currentEntry.name}</h5>
+        <p class="text-muted mb-2">${this.currentEntry.time || ''}</p>
+        <p>${this.currentEntry.description || ''}</p>
+      `;
+    }
 
     display.style.display = 'block';
   }
@@ -436,25 +447,36 @@ class EntryManager
     }
   }
 
-  showEditModal( entry )
+  async showEditModal( entry )
   {
     const modal = new bootstrap.Modal(document.getElementById('editEntryModal'));
     const content = document.getElementById('editEntryContent');
 
-    // Simple form for now - can be enhanced with type-specific editors
-    content.innerHTML = `
-      <form id="editEntryForm">
-        <input type="hidden" id="editEntryPath" value="${entry.path}">
-        <div class="mb-3">
-          <label for="editEntryName" class="form-label">Name</label>
-          <input type="text" class="form-control" id="editEntryName" value="${entry.name || ''}" required>
-        </div>
-        <div class="mb-3">
-          <label for="editEntryDescription" class="form-label">Description</label>
-          <textarea class="form-control" id="editEntryDescription" rows="3">${entry.description || ''}</textarea>
-        </div>
-      </form>
-    `;
+    try {
+      // Use type-specific edit renderer if available
+      const result = await this.apiCall('getEntryRenderer', {
+        path: entry.path,
+        renderer: 'edit'
+      });
+      
+      content.innerHTML = result.html;
+    }
+    catch( error ) {
+      // Fallback to simple form
+      content.innerHTML = `
+        <form id="editEntryForm">
+          <input type="hidden" id="editEntryPath" value="${entry.path}">
+          <div class="mb-3">
+            <label for="editEntryName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="editEntryName" value="${entry.name || ''}" required>
+          </div>
+          <div class="mb-3">
+            <label for="editEntryDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="editEntryDescription" rows="3">${entry.description || ''}</textarea>
+          </div>
+        </form>
+      `;
+    }
 
     modal.show();
   }
@@ -462,13 +484,52 @@ class EntryManager
   async saveEditedEntry()
   {
     const path = document.getElementById('editEntryPath').value;
-    const data = {
-      name: document.getElementById('editEntryName').value,
-      description: document.getElementById('editEntryDescription').value
-    };
+    const entryType = document.getElementById('editEntryType')?.value;
+    
+    let data = {};
+    
+    // Collect data based on entry type
+    if( entryType === 'Activity' )
+    {
+      data = {
+        name: document.getElementById('editActivityName').value,
+        description: document.getElementById('editActivityDescription').value,
+        priority: parseInt(document.getElementById('editActivityPriority').value),
+        state: document.getElementById('editActivityState').value,
+        dueDate: document.getElementById('editActivityDueDate').value || null
+      };
+    }
+    else if( entryType === 'Apartment' )
+    {
+      data = {
+        name: document.getElementById('editApartmentName').value,
+        description: document.getElementById('editApartmentDescription').value,
+        priority: parseInt(document.getElementById('editApartmentPriority').value),
+        state: document.getElementById('editApartmentState').value,
+        dueDate: document.getElementById('editApartmentDueDate').value || null,
+        result: document.getElementById('editApartmentResult').value,
+        url: document.getElementById('editApartmentUrl').value,
+        files_nr: document.getElementById('editApartmentFilesNr').value
+      };
+    }
+    else if( entryType === 'Info' )
+    {
+      data = {
+        name: document.getElementById('editInfoName').value,
+        description: document.getElementById('editInfoDescription').value
+      };
+    }
+    else
+    {
+      // Fallback to generic form
+      data = {
+        name: document.getElementById('editEntryName').value,
+        description: document.getElementById('editEntryDescription').value
+      };
+    }
 
     try {
-      await this.apiCall('updateEntry', { path, data });
+      await this.apiCall('updateEntry', { path, data, entryType });
       
       // Close modal and refresh
       bootstrap.Modal.getInstance(document.getElementById('editEntryModal')).hide();

@@ -1,0 +1,29 @@
+/* Activity-specific styles */
+
+.activity-readonly .priority-badge {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.activity-readonly .state-badge {
+  font-size: 0.875rem;
+  padding: 0.375rem 0.625rem;
+}
+
+#editActivityForm .form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+#editActivityForm .form-select,
+#editActivityForm .form-control {
+  border-radius: 0.375rem;
+}
+
+#editActivityForm .row .col-6:first-child {
+  padding-right: 0.5rem;
+}
+
+#editActivityForm .row .col-6:last-child {
+  padding-left: 0.5rem;
+}

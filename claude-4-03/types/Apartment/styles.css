@@ -1,0 +1,48 @@
+/* Apartment-specific styles */
+
+.apartment-readonly .priority-badge {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.apartment-readonly .state-badge {
+  font-size: 0.875rem;
+  padding: 0.375rem 0.625rem;
+}
+
+.apartment-readonly a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.apartment-readonly a:hover {
+  text-decoration: underline;
+}
+
+#editApartmentForm .form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+#editApartmentForm .form-select,
+#editApartmentForm .form-control {
+  border-radius: 0.375rem;
+}
+
+#editApartmentForm .row .col-6:first-child {
+  padding-right: 0.5rem;
+}
+
+#editApartmentForm .row .col-6:last-child {
+  padding-left: 0.5rem;
+}
+
+#apartmentImageUpload {
+  border: 2px dashed #dee2e6;
+  border-radius: 0.375rem;
+}
+
+#apartmentImageUpload:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
