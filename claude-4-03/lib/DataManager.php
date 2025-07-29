@@ -40,28 +40,38 @@ class DataManager
     $name = basename($path);
     $isDir = is_dir($path);
     
-    // Try to identify type
-    $type = TypeManager::identifyType($name);
-    
     $entry = [
       'name' => $name,
       'path' => $path,
       'isDir' => $isDir,
-      'type' => $type
+      'type' => null
     ];
     
-    // Load data from file
+    // Load data from file first to get potential front matter type
+    $frontMatterType = null;
     if( $isDir )
     {
       $dataFile = $path . '/' . Config::get('dataFileName') . '.md';
       if( file_exists($dataFile) )
-        $entry = array_merge($entry, self::parseDataFile($dataFile));
+      {
+        $fileData = self::parseDataFile($dataFile);
+        $entry = array_merge($entry, $fileData);
+        $frontMatterType = $fileData['type'] ?? null;
+      }
     }
     else
     {
       if( pathinfo($path, PATHINFO_EXTENSION) === 'md' )
-        $entry = array_merge($entry, self::parseDataFile($path));
+      {
+        $fileData = self::parseDataFile($path);
+        $entry = array_merge($entry, $fileData);
+        $frontMatterType = $fileData['type'] ?? null;
+      }
     }
+    
+    // Try to identify type using name patterns and front matter fallback
+    $type = TypeManager::identifyType($name, $frontMatterType);
+    $entry['type'] = $type;
     
     return $entry;
   }

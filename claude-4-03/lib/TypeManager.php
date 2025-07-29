@@ -62,10 +62,11 @@ class TypeManager
     return self::$globalDef;
   }
 
-  public static function identifyType( $name )
+  public static function identifyType( $name, $frontMatterType = null )
   {
     self::loadTypes();
     
+    // First try to identify by regex patterns
     foreach( self::$types as $typeId => $typeDef )
     {
       if( isset($typeDef['typeIdentification']) )
@@ -81,6 +82,10 @@ class TypeManager
         }
       }
     }
+    
+    // Fallback to front matter type field if no pattern matches
+    if( $frontMatterType && isset(self::$types[$frontMatterType]) )
+      return $frontMatterType;
     
     return null;
   }

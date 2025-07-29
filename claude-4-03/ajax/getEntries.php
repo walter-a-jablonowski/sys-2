@@ -1,6 +1,6 @@
 <?php
 
-require_once '../lib/DataManager.php';
+require_once 'lib/DataManager.php';
 
 $path = $input['path'] ?? 'data';
 $entries = DataManager::getEntries($path);

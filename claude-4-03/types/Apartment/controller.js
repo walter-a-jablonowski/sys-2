@@ -42,18 +42,7 @@ class ApartmentController
     formData.append('apartmentPath', apartmentPath);
     
     try {
-      const response = await fetch('ajax.php', {
-        method: 'POST',
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify({
-          action: 'Apartment_uploadImage',
-          apartmentPath: apartmentPath
-        })
-      });
-      
-      // For file upload, we need to use FormData and a different approach
+      // Use the proper AJAX forwarding system
       const uploadResponse = await fetch('types/Apartment/ajax/uploadImage.php', {
         method: 'POST',
         body: formData
@@ -64,6 +53,7 @@ class ApartmentController
       if( ! result.success )
         throw new Error(result.error);
         
+      return result;
     }
     catch( error ) {
       entryManager.showError('Failed to upload image: ' + error.message);

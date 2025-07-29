@@ -604,11 +604,38 @@ class EntryManager
     
     const bsToast = new bootstrap.Toast(toast);
     bsToast.show();
+    
+    // Also log to console for debugging
+    console.error('Error:', message);
   }
 
   showSuccess( message )
   {
-    // Simple success feedback - could be enhanced with a success toast
+    // Create success toast if it doesn't exist
+    let successToast = document.getElementById('successToast');
+    if( ! successToast )
+    {
+      const toastContainer = document.querySelector('.toast-container');
+      successToast = document.createElement('div');
+      successToast.id = 'successToast';
+      successToast.className = 'toast';
+      successToast.setAttribute('role', 'alert');
+      successToast.innerHTML = `
+        <div class="toast-header bg-success text-white">
+          <strong class="me-auto">Success</strong>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+        </div>
+        <div class="toast-body" id="successMessage"></div>
+      `;
+      toastContainer.appendChild(successToast);
+    }
+    
+    const messageEl = document.getElementById('successMessage');
+    messageEl.textContent = message;
+    
+    const bsToast = new bootstrap.Toast(successToast);
+    bsToast.show();
+    
     console.log('Success:', message);
   }
 }
