@@ -14,6 +14,14 @@ class EntryManager
   init()
   {
     this.bindEvents();
+    
+    // Set initial browser history state
+    history.replaceState(
+      { path: this.currentPath, entry: this.currentEntry },
+      '',
+      `?path=${encodeURIComponent(this.currentPath)}`
+    );
+    
     this.loadEntries();
     this.loadTypes();
   }
@@ -50,21 +58,35 @@ class EntryManager
       this.deleteCurrentEntry();
     });
 
-    // Tab changes
-    document.getElementById('resources-tab').addEventListener('click', () => {
-      this.loadResources();
-    });
-
-    // Browser back button
+    // Browser back/forward button support
     window.addEventListener('popstate', (event) => {
+      console.log('Popstate event triggered:', event.state);
+      
       if( event.state )
       {
-        this.currentPath = event.state.path;
-        this.currentEntry = event.state.entry;
+        console.log('Navigating back to:', event.state.path);
+        this.currentPath = event.state.path || 'data';
+        this.currentEntry = event.state.entry || null;
+        this.updateUI();
+        this.loadEntries();
+      }
+      else
+      {
+        console.log('No state found, resetting to root');
+        this.currentPath = 'data';
+        this.currentEntry = null;
         this.updateUI();
         this.loadEntries();
       }
     });
+
+    // Handle initial page load with URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const pathParam = urlParams.get('path');
+    if( pathParam )
+    {
+      this.currentPath = pathParam;
+    }
   }
 
   async apiCall( action, data = {} )
@@ -144,15 +166,40 @@ class EntryManager
   createEntryCard( entry )
   {
     const card = document.createElement('div');
-    card.className = 'card entry-card';
-
+    card.className = 'card mb-2 entry-card';
+    
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body d-flex justify-content-between align-items-center';
 
     const content = document.createElement('div');
     content.className = 'flex-grow-1 entry-card-body';
-    content.addEventListener('click', () => {
-      this.navigateToEntry(entry);
+    
+    // Add visual indicator for navigable entries
+    if( entry.isDir )
+    {
+      content.style.cursor = 'pointer';
+      content.title = 'Click to navigate into this entry';
+    }
+    else
+    {
+      content.style.cursor = 'default';
+      content.title = 'This is a single file entry';
+    }
+    
+    // Improved click event handling
+    content.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      if( entry.isDir )
+      {
+        console.log('Card clicked, navigating to:', entry.name);
+        this.navigateToEntry(entry);
+      }
+      else
+      {
+        console.log('File entry clicked, no navigation:', entry.name);
+      }
     });
 
     // Render based on type
@@ -173,6 +220,15 @@ class EntryManager
       content.innerHTML = this.renderDefaultCard(entry);
     }
 
+    // Add navigation indicator for directories
+    if( entry.isDir )
+    {
+      const navIndicator = document.createElement('small');
+      navIndicator.className = 'text-muted ms-2';
+      navIndicator.innerHTML = '<i class="bi bi-chevron-right"></i>';
+      content.appendChild(navIndicator);
+    }
+
     const actions = document.createElement('div');
     actions.className = 'entry-actions';
     actions.innerHTML = `
@@ -185,7 +241,7 @@ class EntryManager
             <i class="bi bi-three-dots"></i>
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); entryManager.deleteEntry('${entry.path}')">
+            <li><a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); event.stopPropagation(); entryManager.deleteEntry('${entry.path}')">
               <i class="bi bi-trash"></i> Delete
             </a></li>
           </ul>
@@ -324,7 +380,14 @@ class EntryManager
 
   navigateToEntry( entry )
   {
-    if( ! entry.isDir ) return;
+    // Only navigate if entry is a directory
+    if( ! entry.isDir ) 
+    {
+      console.log('Cannot navigate to file:', entry.name);
+      return;
+    }
+
+    console.log('Navigating to:', entry.path);
 
     // Push current state to navigation stack
     this.navigationStack.push({
@@ -337,10 +400,11 @@ class EntryManager
     this.currentEntry = entry;
 
     // Update browser history
+    const url = `?path=${encodeURIComponent(this.currentPath)}`;
     history.pushState(
       { path: this.currentPath, entry: this.currentEntry },
       '',
-      `?path=${encodeURIComponent(this.currentPath)}`
+      url
     );
 
     this.updateUI();
