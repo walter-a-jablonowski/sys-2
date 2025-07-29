@@ -184,12 +184,22 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
             - single click or touch: loads the the list of sub entries associated with the entry
     - Resources: list of "resource files" and "group folders" in the current directory
 
-## Misc
+## Misc functions
 
 - We currently use no login system
 - Add error handling for PHP and JavaScript errors with display to the user
+
+## Code
+
 - Use simple code for input validation, ideally with no third party library
 - Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
 - Avoid using the __DIR__ constant, we can use relative paths cause we route everything over index.php oder ajax.php
-- Make sure that the bootstrap layout looks good and prefer classes over own styles
+
+### Design
+
+- Make sure that the bootstrap layout looks good and prefer bootstrap classes over own styles
 - Make the layout work on all devices
+
+### Demo data
+
+- Also add demo files under /data as descriped above
