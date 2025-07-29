@@ -40,7 +40,7 @@ Different types of entries can be defined in a file structure like
     - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
     - list.php:  cell renderer used to render the list cell
-    - edit.php:  renderer for the edit page
+    - edit.php:  renderer for the edit form
     - styles.css: type specific styles (if any), prefer bootstrap classes
   - ...
 
