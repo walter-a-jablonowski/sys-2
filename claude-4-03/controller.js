@@ -193,12 +193,7 @@ class EntryManager
       
       if( entry.isDir )
       {
-        console.log('Card clicked, navigating to:', entry.name);
         this.navigateToEntry(entry);
-      }
-      else
-      {
-        console.log('File entry clicked, no navigation:', entry.name);
       }
     });
 
