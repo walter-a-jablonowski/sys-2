@@ -227,7 +227,7 @@ class EntryManager
     const actions = document.createElement('div');
     actions.className = 'entry-actions';
     actions.innerHTML = `
-      <div class="btn-group-vertical btn-group-sm">
+      <div class="btn-group btn-group-sm">
         <button class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation(); entryManager.editEntry('${entry.path}')">
           <i class="bi bi-pencil"></i>
         </button>
