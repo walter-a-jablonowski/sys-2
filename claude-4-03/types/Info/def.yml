@@ -1,0 +1,12 @@
+id: Info
+time: 
+name: Info
+derivedFrom: 
+description: |
+  Info type for basic information entries with no special fields
+
+typeIdentification: ".*\\(\\s*i\\s*\\).*"
+
+allowedSubTypes: []
+
+fields: {}

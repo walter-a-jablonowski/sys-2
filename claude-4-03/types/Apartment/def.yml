@@ -1,0 +1,35 @@
+id: Apartment
+time: 
+name: Apartment
+derivedFrom: Activity
+description: |
+  Apartment type for managing apartment search with state, result, files_nr, and url
+
+typeIdentification: 
+  - "^\\s*[1-5]\\s*-\\s*"
+  - "^\\d{6}\\s*-\\s*"
+
+allowedSubTypes: ["Activity", "Info"]
+
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      "New": "new"
+      "Current": "current"
+      "Maybe": "maybe"
+      "Done": "done"
+      
+  result:
+    type: string
+    required: false
+    
+  files_nr:
+    type: string
+    required: true
+    format: "^\\d{4}$"
+    
+  url:
+    type: string
+    required: false

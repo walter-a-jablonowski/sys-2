@@ -1,0 +1,32 @@
+id: Activity
+time: 
+name: Activity
+derivedFrom: 
+description: |
+  Activity type for managing tasks and activities with priority, state, and due dates
+
+typeIdentification: 
+  - "^\\s*[1-5]\\s*-\\s*"
+  - "^\\d{6}\\s*-\\s*"
+
+allowedSubTypes: ["*"]
+
+fields:
+  priority:
+    type: int
+    required: true
+    min: 1
+    max: 5
+    
+  state:
+    type: string
+    required: true
+    values:
+      "New": "new"
+      "In Progress": "progress" 
+      "Done": "done"
+      
+  dueDate:
+    type: string
+    required: false
+    format: "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
