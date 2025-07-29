@@ -1,20 +1,13 @@
 
 I am making an app that can be used to manage a list of entries of different types. From each entry the user can navigate to a list of sub entries (hierarchical).
 
-## File struct
+## Common
 
-- /ajax:  commonly used ajax functions one file per function (ajax call forwarded by ajax.php), see also type specific ajax calls below
-- /data:  see below
-- /lib:   commonly used classes and functions
-- /types: see below
-- index.php
-- styles.css: commonly used styles (see also type specific ajax calls below), prefer bootstrap classes
-- config.yml:
-  ```yml
-  dataFileName: "-this"  # name of the data file used in data (in principle can have any extension, but practically we use "md")
-  ```
-- composer.json: for Symfony Yaml 5.4
-- controller.js: commonly used s code (see also type specific js code below)
+config.yml
+
+```yml
+dataFileName: "-this"  # name of the data file used in data (in principle can have any extension, but practically we use "md")
+```
 
 ## Types
 
@@ -34,14 +27,12 @@ Different types of entries can be defined in a file structure like
     - each instance may also have a field "type" which isn't explicitly defined here
   - /MyType
     - def.yml type definition, contains: definitions of special data fields for this type with basic validation
-    - /ajax:         type specific ajax functions one file per function (ajax call forwarded by ajax.php)
-    - type.php:      type specific PHP code as class (if any)
-    - controller.js: type specific js code
     - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
-    - list.php:  cell renderer used to render the list cell
-    - edit.php:  renderer for the edit page
-    - styles.css: type specific styles (if any), prefer bootstrap classes
+    - list.php: cell renderer used to render the list cell
+    - edit.php: renderer for the edit page
+    - /ajax:         ajax functions one file per function (ajax call forwarded by ajax.php)
+    - controller.js: type specific js code
   - ...
 
 Type definition:
@@ -51,14 +42,11 @@ id:   MyType        # type unique id
 time:               # created time YYYY-MM-DD HH:MM:SS
 
 name: My Type       # type name
-derivedFrom:        # id of the type this type is derived from
-
 description: |
   type description
 
 typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
-                                           #   this may also be an array of multiple type dentification strings
-                                           #   if no string is defined read the field type from the front matter (field type) as a fallback
+                                           #   if no string is defined try to read the field type from the front matter (field type) as a fallback
 allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list, "*" for "all", empty array for none
 
 fields:             # special fields for this type
@@ -70,7 +58,7 @@ fields:             # special fields for this type
     max: 
     step: 
     values:         # for dropdown
-      "My label": someValue
+      "My label": someValue 
   ...
 ```
 
@@ -79,12 +67,10 @@ fields:             # special fields for this type
 - Type "Activity"
   - default fields: see above
   - special fields:
-    - priority (int), values: 1-5
+    - priority (int)
     - state (dropdown), values: new (default), progress, done
     - dueDate (optional)
-  - typeIdentification
-    - either: "^\\s*[1-5]\\s*-\\s*" for an active activity (the number is the same as the priority and must be updated in the file/folder name when the priority changes)
-    - or: "^\\d{6}\\s*-\\s*" for an activity that was closed ("d{6}" is the date when the activity gets state closed)
+  - typeIdentification: "^\\s*[1-5]\\s*-\\s*"
   - allowedSubTypes: all ("*")
   - list renderer:
     - left aligned:  priority as badge and name
@@ -94,7 +80,7 @@ fields:             # special fields for this type
 - Type "Info"
   - default fields: see above
   - no special fields
-  - typeIdentification: "\\(\\s*i\\s*\\)" somewhere in the file or folder name
+  - typeIdentification: date in front of the file or folder name like "260728 - SomeInfo"
     - make a regex that matches this
   - allowedSubTypes: none
   - list renderer:
@@ -105,10 +91,9 @@ fields:             # special fields for this type
 We also define these types for my search for a new apartment:
 
 - Type "Apartment"
-  - derivedFrom: Activity
   - default fields: see above
   - special fields:
-    - state (dropdown) has different values than activity
+    - state (dropdown)
       - new
       - current
       - maybe
@@ -116,8 +101,8 @@ We also define these types for my search for a new apartment:
     - result (string)
     - files_nr (string, 4 digits with leading zeros)
     - url (string)
-  - typeIdentification: same as Activity
-  - allowedSubTypes: Activity, Info
+  - typeIdentification: the type is from the front matter in this case
+  - allowedSubTypes: Info
   - list renderer:
     - first line:
       - left aligned:  name (with clickable url if present) 
@@ -144,23 +129,19 @@ Instances of a type can be saved either as a single files or a folder with the f
 Sample for the data:
 
 - /data
-  - /(i) MyInfo.md: this is some Info instance saved as a single file
+  - /260728 - MyInfo.md: this is some Info instance saved as a single file
   - /2 - myApartmentSearch: this is an instance of type "Activity" saved as folder
     - "-this.md" is the data file, contains data in front matter, except the
-                 field "description" which is the text content of the md file
-    - /2 - myApartment: is a instance of type "Apartment" inside the apartment search
+      field "description" which is the text content of the md file
+    - /myApartment: is a instance of type "Apartment" inside the apartment search
       - "-this.md"
-      - 2 - Some activity.md
-      - 260728 - Some closed activity.md
+      - 260728 - SomeInfo.md
       - some_image.jpg: all files that can't be identified as an instance of a type (by
-                        trying any typeIdentification of all types or if text file: by
-                        looking for a front matter field "type") are "resource files" for
-                        the current instance
+        trying any typeIdentification of all types or if text file: by looking for a front
+        matter field "type") are "resource files" for the current instance
       - /myFolder:      all folders that can't be identified as an instance of a type are
-                        "group folders" that may contain sub instances or resources
+        "group folders" that may contain sub instances or resources
       - /images
-    - /260720 - myApartment 2: a closed apartment
-      - ...
   - ...
 
 ## User Interface
@@ -194,22 +175,12 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
             - single click or touch: loads the the list of sub entries associated with the entry
     - Resources: list of "resource files" and "group folders" in the current directory
 
-## Misc functions
+## Misc
 
 - We currently use no login system
 - Add error handling for PHP and JavaScript errors with display to the user
-
-## Code
-
 - Use simple code for input validation, ideally with no third party library
 - Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
 - Avoid using the __DIR__ constant, we can use relative paths cause we route everything over index.php oder ajax.php
-
-### Design
-
-- Make sure that the bootstrap layout looks good and prefer bootstrap classes over own styles
+- Make sure that the bootstrap layout looks good and prefer classes over own styles
 - Make the layout work on all devices
-
-### Demo data
-
-- Also add demo files under /data as descriped above
