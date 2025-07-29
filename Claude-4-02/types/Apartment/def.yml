@@ -1,0 +1,32 @@
+id: Apartment
+time: 2025-01-29 10:31:32
+
+name: Apartment
+description: |
+  Apartment type for apartment search management
+
+typeIdentification: ""  # type is from front matter
+allowedSubTypes: ["Info"]
+
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      "New": new
+      "Current": current
+      "Maybe": maybe
+      "Done": done
+  
+  result:
+    type: string
+    required: false
+  
+  files_nr:
+    type: string
+    required: true
+    format: "^\\d{4}$"
+  
+  url:
+    type: string
+    required: false

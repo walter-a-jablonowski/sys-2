@@ -1,0 +1,11 @@
+id: Info
+time: 2025-01-29 10:31:32
+
+name: Info
+description: |
+  Info type for basic information entries
+
+typeIdentification: "^\\d{6}\\s*-\\s*"
+allowedSubTypes: []
+
+fields: {}
