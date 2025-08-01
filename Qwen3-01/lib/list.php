@@ -107,6 +107,70 @@ function getItemsAtPath($path, $dataFileName, $types) {
   return $items;
 }
 
+// Function to get resource files and group folders at a path
+function getResourcesAtPath($path, $dataFileName) {
+  $resources = [];
+  $fullPath = 'data/' . $path;
+  
+  if( !file_exists($fullPath) || !is_dir($fullPath) ) {
+    return $resources;
+  }
+  
+  // Scan directory
+  $entries = scandir($fullPath);
+  
+  foreach( $entries as $entry ) {
+    // Skip . and ..
+    if( $entry === '.' || $entry === '..' ) {
+      continue;
+    }
+    
+    $entryPath = $fullPath . '/' . $entry;
+    
+    // Check if it's a file or directory
+    if( is_file($entryPath) ) {
+      // Check if it's NOT a data file (resource file)
+      if( !(pathinfo($entry, PATHINFO_FILENAME) === $dataFileName && pathinfo($entry, PATHINFO_EXTENSION) === 'md') ) {
+        $resources[] = [
+          'name' => $entry,
+          'path' => $path . '/' . $entry,
+          'type' => 'resource',
+          'size' => filesize($entryPath),
+          'modified' => filemtime($entryPath)
+        ];
+      }
+    } elseif( is_dir($entryPath) ) {
+      // Check if directory does NOT contain a data file (group folder)
+      $dataFile = $entryPath . '/' . $dataFileName . '.md';
+      
+      if( !file_exists($dataFile) ) {
+        $resources[] = [
+          'name' => $entry,
+          'path' => $path . '/' . $entry,
+          'type' => 'group',
+          'size' => 0, // Size of directory is not relevant
+          'modified' => filemtime($entryPath)
+        ];
+      }
+    }
+  }
+  
+  return $resources;
+}
+
+// Function to format file size
+function formatFileSize($bytes) {
+  if( $bytes < 1024 ) {
+    return $bytes . ' B';
+  } elseif( $bytes < 1048576 ) {
+    return round($bytes / 1024, 2) . ' KB';
+  } elseif( $bytes < 1073741824 ) {
+    return round($bytes / 1048576, 2) . ' MB';
+  } else {
+    return round($bytes / 1073741824, 2) . ' GB';
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -235,10 +299,38 @@ function getItemsAtPath($path, $dataFileName, $types) {
       <!-- Resources tab -->
       <div class="tab-pane fade" id="resources" role="tabpanel" aria-labelledby="resources-tab">
         <div class="resources-container">
-          <!-- Resources would be listed here -->
-          <div class="text-center text-muted mt-3">
-            No resources found
-          </div>
+          <?php
+          // Get resources at current path
+          $resources = getResourcesAtPath($path, $config['dataFileName']);
+          
+          if( empty($resources) ): ?>
+            <div class="text-center text-muted mt-3">
+              No resources found
+            </div>
+          <?php else: ?>
+            <div class="list-group">
+              <?php foreach( $resources as $resource ): ?>
+                <div class="list-group-item">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                      <i class="fas fa-<?php echo $resource['type'] === 'group' ? 'folder' : 'file'; ?> me-2"></i>
+                      <?php echo htmlspecialchars($resource['name']); ?>
+                    </div>
+                    <div class="text-muted small">
+                      <?php if( $resource['type'] === 'resource' ): ?>
+                        <?php echo formatFileSize($resource['size']); ?>
+                      <?php else: ?>
+                        Group Folder
+                      <?php endif; ?>
+                    </div>
+                  </div>
+                  <div class="small text-muted mt-1">
+                    Modified: <?php echo date('Y-m-d H:i:s', $resource['modified']); ?>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
@@ -367,8 +459,43 @@ function getItemsAtPath($path, $dataFileName, $types) {
     
     // Save entry
     function saveEntry() {
-      // This would need to be implemented based on the specific type
-      alert('Save functionality would be implemented here');
+      // Get form data
+      const form = document.getElementById('editModalBody').querySelector('form');
+      if( !form ) {
+        alert('No form found');
+        return;
+      }
+      
+      const formData = new FormData(form);
+      const data = {};
+      for( let [key, value] of formData.entries() ) {
+        data[key] = value;
+      }
+      
+      // Add time if not present
+      if( !data.time ) {
+        data.time = formatDateTime(new Date());
+      }
+      
+      // Add ID if not present
+      if( !data.id ) {
+        data.id = generateId(data.name || 'entry');
+      }
+      
+      // Call appropriate save function based on type
+      const type = data.type || 'Entry';
+      const action = 'save' + type.charAt(0).toUpperCase() + type.slice(1);
+      
+      ajaxCall(action, data, function(error, result) {
+        if( error ) {
+          alert('Error: ' + error);
+        } else {
+          // Close modal and reload
+          const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+          modal.hide();
+          location.reload();
+        }
+      });
     }
     
     // Delete entry
@@ -387,15 +514,46 @@ function getItemsAtPath($path, $dataFileName, $types) {
     
     // Edit current entry
     function editCurrentEntry() {
-      // Implementation would depend on current context
-      alert('Edit current entry functionality would be implemented here');
+      // Get current path
+      const path = '<?php echo htmlspecialchars($path); ?>';
+      if( !path ) {
+        alert('No current entry to edit');
+        return;
+      }
+      
+      // Load edit form for the entry type
+      ajaxCall('loadEditForm', { path: path }, function(error, result) {
+        if( error ) {
+          alert('Error: ' + error);
+        } else {
+          document.getElementById('editModalBody').innerHTML = result.html;
+          const modal = new bootstrap.Modal(document.getElementById('editModal'));
+          modal.show();
+        }
+      });
     }
     
     // Delete current entry
     function deleteCurrentEntry() {
+      // Get current path
+      const path = '<?php echo htmlspecialchars($path); ?>';
+      if( !path ) {
+        alert('No current entry to delete');
+        return;
+      }
+      
       if( confirm('Are you sure you want to delete this entry?') ) {
-        // Implementation would depend on current context
-        alert('Delete current entry functionality would be implemented here');
+        ajaxCall('deleteEntry', { path: path }, function(error, result) {
+          if( error ) {
+            alert('Error: ' + error);
+          } else {
+            // Go back to parent directory
+            const pathParts = path.split('/');
+            pathParts.pop();
+            const parentPath = pathParts.join('/');
+            window.location.href = '?path=' + encodeURIComponent(parentPath);
+          }
+        });
       }
     }
   </script>

@@ -44,24 +44,25 @@ function formatDateTime(date) {
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-// Utility to generate ID
+// Utility to generate ID as YYMMDDHHMMSS
 function generateId(name) {
-  // Convert each word to first character uppercase
-  let idName = name.replace(/\b\w/g, function(char) {
-    return char.toUpperCase();
-  });
+  const date = new Date();
+  const year = String(date.getFullYear()).slice(-2);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
   
-  // Remove all non-alphanumeric characters
-  idName = idName.replace(/[^a-zA-Z0-9]/g, '');
+  // Create a simple hash of the name
+  let hash = 0;
+  for( let i = 0; i < name.length; i++ ) {
+    hash = ((hash << 5) - hash) + name.charCodeAt(i);
+    hash = hash & hash; // Convert to 32-bit integer
+  }
   
-  // Add unique user and date
-  const now = new Date();
-  const year = String(now.getFullYear()).slice(-2);
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
+  // Use last 2 digits of hash as additional identifier
+  const hashSuffix = Math.abs(hash) % 100;
   
-  return `${idName}-Default-${year}${month}${day}${hours}${minutes}${seconds}`;
+  return `${year}${month}${day}${hours}${minutes}${seconds}${String(hashSuffix).padStart(2, '0')}`;
 }

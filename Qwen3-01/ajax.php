@@ -4,6 +4,14 @@
  * AJAX handler - forwards calls to appropriate handlers
  */
 
+// Include Composer autoloader
+require_once 'vendor/autoload.php';
+
+use Symfony\Component\Yaml\Yaml;
+
+// Include utility functions
+require_once 'lib/utils.php';
+
 header('Content-Type: application/json');
 
 // Check if this is a file upload
@@ -66,30 +74,76 @@ try {
 
 // Function to save activity
 function saveActivity($data) {
-  // Implementation would save the activity data
-  // For now, just return success
-  return ['message' => 'Activity saved'];
+  // Use the generic save function
+  return saveEntry($data);
 }
 
 // Function to save info
 function saveInfo($data) {
-  // Implementation would save the info data
-  // For now, just return success
-  return ['message' => 'Info saved'];
+  // Use the generic save function
+  return saveEntry($data);
 }
 
 // Function to save apartment
 function saveApartment($data) {
-  // Implementation would save the apartment data
-  // For now, just return success
-  return ['message' => 'Apartment saved'];
+  // Use the generic save function
+  return saveEntry($data);
 }
 
 // Function to save generic entry
 function saveEntry($data) {
-  // Implementation would save the entry data
-  // For now, just return success
-  return ['message' => 'Entry saved'];
+  $type = $data['type'] ?? '';
+  $name = $data['name'] ?? '';
+  $time = $data['time'] ?? '';
+  $id = $data['id'] ?? '';
+  
+  if( empty($type) || empty($name) || empty($time) || empty($id) ) {
+    throw new Exception('Missing required fields');
+  }
+  
+  // Create directory if it doesn't exist
+  $dir = 'data';
+  if( !file_exists($dir) ) {
+    mkdir($dir, 0777, true);
+  }
+  
+  // Create filename
+  $filename = $name . '/' . '-this.md';
+  $filepath = $dir . '/' . $filename;
+  
+  // Create directory for the entry
+  $entryDir = dirname($filepath);
+  if( !file_exists($entryDir) ) {
+    mkdir($entryDir, 0777, true);
+  }
+  
+  // Prepare front matter
+  $frontMatter = [
+    'type' => $type,
+    'name' => $name,
+    'id' => $id,
+    'time' => $time
+  ];
+  
+  // Add other fields
+  foreach( $data as $key => $value ) {
+    if( !in_array($key, ['type', 'name', 'id', 'time']) && !empty($value) ) {
+      $frontMatter[$key] = $value;
+    }
+  }
+  
+  // Convert to YAML
+  $yaml = Yaml::dump($frontMatter);
+  
+  // Create content
+  $content = "---\n" . $yaml . "\n---\n\n";
+  
+  // Save file
+  if( !file_put_contents($filepath, $content) ) {
+    throw new Exception('Failed to save entry');
+  }
+  
+  return ['message' => 'Entry saved successfully'];
 }
 
 // Function to load edit form
@@ -100,10 +154,36 @@ function loadEditForm($data) {
     throw new Exception('Path is required');
   }
   
-  // In a real implementation, this would load the appropriate edit form
-  // based on the entry type at the given path
+  // Load type definitions
+  $types = loadTypeDefinitions();
   
-  return ['html' => '<p>Edit form would be loaded here for: ' . htmlspecialchars($path) . '</p>'];
+  // Get item data
+  $config = ['dataFileName' => '-this'];
+  $item = getItemAtPath($path, $config['dataFileName'], $types);
+  
+  if( !$item ) {
+    throw new Exception('Item not found');
+  }
+  
+  $type = $item['type'];
+  $itemData = $item['data'];
+  
+  // Check if type has edit renderer
+  $editFile = "types/{$type}/edit.php";
+  if( !file_exists($editFile) ) {
+    throw new Exception('Edit form not available for this type');
+  }
+  
+  // Start output buffering
+  ob_start();
+  
+  // Include the edit form
+  include $editFile;
+  
+  // Get the content
+  $html = ob_get_clean();
+  
+  return ['html' => $html];
 }
 
 // Function to delete entry
@@ -114,9 +194,48 @@ function deleteEntry($data) {
     throw new Exception('Path is required');
   }
   
-  // In a real implementation, this would delete the entry at the given path
+  // Full path to the entry
+  $fullPath = 'data/' . $path;
   
-  return ['message' => 'Entry deleted'];
+  if( !file_exists($fullPath) ) {
+    throw new Exception('Entry not found');
+  }
+  
+  // Check if it's a file or directory
+  if( is_file($fullPath) ) {
+    // Delete the file
+    if( !unlink($fullPath) ) {
+      throw new Exception('Failed to delete entry');
+    }
+  } elseif( is_dir($fullPath) ) {
+    // Delete the directory and all its contents
+    deleteDirectory($fullPath);
+  }
+  
+  return ['message' => 'Entry deleted successfully'];
+}
+
+// Helper function to delete a directory recursively
+function deleteDirectory($dir) {
+  if( !file_exists($dir) ) {
+    return true;
+  }
+  
+  if( !is_dir($dir) ) {
+    return unlink($dir);
+  }
+  
+  foreach( scandir($dir) as $item ) {
+    if( $item == '.' || $item == '..' ) {
+      continue;
+    }
+    
+    if( !deleteDirectory($dir . DIRECTORY_SEPARATOR . $item) ) {
+      return false;
+    }
+  }
+  
+  return rmdir($dir);
 }
 
 // Function to get next file number for apartments
