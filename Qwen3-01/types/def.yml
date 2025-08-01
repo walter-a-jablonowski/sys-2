@@ -1,0 +1,15 @@
+# Global definition for all types
+
+time:               # created time YYYY-MM-DD HH:MM:SS
+  type: string
+  format: "^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"
+  
+name:               # name of the instance
+  type: string
+  required: true
+  
+description:        # description of the instance
+  type: string
+  
+# Each instance also has a field "id" which isn't explicitly defined here
+# Each instance may also have a field "type" which isn't explicitly defined here

@@ -1,0 +1,36 @@
+id: Apartment
+name: Apartment
+ derivedFrom: Activity
+description: |
+  An apartment entry for apartment hunting
+
+typeIdentification: 
+  - "^\s*[1-5]\s*-\s*"           # Same as Activity
+  - "^\d{6}\s*-\s*"             # Same as Activity
+  
+allowedSubTypes: 
+  - "Activity"
+  - "Info"
+
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      "new": new
+      "current": current
+      "maybe": maybe
+      "done": done
+      
+  result:
+    type: string
+    required: false
+    
+  files_nr:
+    type: string
+    format: "^\\d{4}$"
+    required: false
+    
+  url:
+    type: string
+    required: false
