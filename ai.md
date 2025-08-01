@@ -57,8 +57,8 @@ description: |
   type description
 
 typeIdentification: "^\\s*[1-5]\\s*-\\s*"  # identify the type of a file or folder in /data (match this against name)
-                                           #   this may also be an array of multiple type dentification strings
-                                           #   if no string is defined read the field type from the front matter (field type) as a fallback
+                                           #   this may also be an array of multiple type identification strings
+                                           #   if no string or if a field "type" is in the front matter use this as the type
 allowedSubTypes:    ["Info"]               # list of type ids of allowed sub types for the list, "*" for "all", empty array for none
 
 fields:             # special fields for this type
@@ -120,7 +120,7 @@ We also define these types for my search for a new apartment:
       - increment each time an apartment is created
       - save the generated id in the new record in the "files_nr" field
     - url (string)
-  - typeIdentification: same as Activity
+  - typeIdentification: same as Activity, also uses a field "type" in the front matter of instances because we must differentiate this type from Activity
   - allowedSubTypes: Activity, Info
   - list renderer:
     - first line:
