@@ -11,6 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 // Include utility functions
 require_once 'lib/utils.php';
+require_once 'lib/list.php';
 
 header('Content-Type: application/json');
 
