@@ -108,7 +108,7 @@ We also define these types for my search for a new apartment:
   - derivedFrom: Activity
   - default fields: see above
   - special fields:
-    - state (dropdown) has different values than activity
+    - state (dropdown) has different values then activity
       - new
       - current
       - maybe
