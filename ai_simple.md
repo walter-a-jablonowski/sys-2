@@ -199,6 +199,7 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
 ## Code
 
 - Use simple code for input validation, ideally with no third party library
+- Perfer making (simple) classes over functions for better code organization
 - Indent all codes with 2 spaces, put the { on the next line and use Symfony yml.
 - Avoid using the __DIR__ constant, we can use relative paths cause we route everything over index.php oder ajax.php
 
