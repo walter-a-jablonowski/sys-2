@@ -2,7 +2,7 @@
 
 time:               # created time YYYY-MM-DD HH:MM:SS
   type: string
-  format: "^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$"
+  format: "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$"
   
 name:               # name of the instance
   type: string

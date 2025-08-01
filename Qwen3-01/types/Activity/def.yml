@@ -4,8 +4,8 @@ description: |
   An activity entry with priority, state and optional due date
 
 typeIdentification: 
-  - "^\s*[1-5]\s*-\s*"           # Active activity (number is priority)
-  - "^\d{6}\s*-\s*"             # Closed activity (date when closed)
+  - "^\\s*[1-5]\\s*-\\s*"           # Active activity (number is priority)
+  - "^\\d{6}\\s*-\\s*"             # Closed activity (date when closed)
   
 allowedSubTypes: "*"              # All types allowed
 
@@ -26,5 +26,5 @@ fields:
       
   dueDate:
     type: string
-    format: "^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$"
+    format: "^\\d{4}-\\d{2}-\\d{2}( \\d{2}:\\d{2}:\\d{2})?$"
     required: false

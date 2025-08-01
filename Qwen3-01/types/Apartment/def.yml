@@ -1,12 +1,12 @@
 id: Apartment
 name: Apartment
- derivedFrom: Activity
+derivedFrom: Activity
 description: |
   An apartment entry for apartment hunting
 
 typeIdentification: 
-  - "^\s*[1-5]\s*-\s*"           # Same as Activity
-  - "^\d{6}\s*-\s*"             # Same as Activity
+  - "^\\s*[1-5]\\s*-\\s*"           # Same as Activity
+  - "^\\d{6}\\s*-\\s*"             # Same as Activity
   
 allowedSubTypes: 
   - "Activity"
