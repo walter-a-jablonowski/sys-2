@@ -31,7 +31,7 @@ Read ai.md and create an improved version in ai_improved.md. Requirements:
 
 ### Long
 
-```
+```markdown
 # Prompt Enhancement Instructions
 
 ## Primary Task
@@ -61,10 +61,10 @@ Systematically identify and fix these common prompt issues:
 - **Specificity**: Replace vague terms with concrete, measurable requirements
 
 ### 4. Strict Constraints
-- **DO NOT** add new features unless they're essential to fix identified problems
-- **DO NOT** change the core purpose or scope of the original prompt
-- **DO NOT** remove any existing requirements, even if they seem redundant
-- **DO NOT** alter the intended user experience or system behavior
+- **DON'T** add new features unless they're essential to fix identified problems
+- **DON'T** change the core purpose or scope of the original prompt
+- **DON'T** remove any existing requirements, even if they seem redundant
+- **DON'T** alter the intended user experience or system behavior
 
 ## Process Steps
 1. **Read and understand** the complete original prompt
