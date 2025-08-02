@@ -52,7 +52,7 @@ fields:
   description:  # Detailed description (stored as markdown content)
     type: string
     required: false
-  # Auto-generated fields (not explicitly defined):
+  # Auto-generated fields (no explicit definition):
   # - id: Generated from name + user + timestamp
   # - type: Type identifier (optional override)
 ```
@@ -197,7 +197,7 @@ fields:
 ├── -this.md                  # Instance data file
 ├── resource_file.pdf         # Resource files
 ├── /images/                  # Group folder
-│   └── photo.jpg
+│   └── image.jpg
 ├── /3 - SubActivity/         # Sub-instance
 │   └── -this.md
 └── (i) SubInfo.md           # Sub-instance as file
@@ -288,7 +288,7 @@ Apartment Name [🔗]                   [Current]
 #### Resources Tab
 - Lists resource files with icons, size, modified date
 - Lists group folders
-- Files not matching any type pattern are resources
+- Files with no matching a type pattern are resources
 
 ### Navigation
 - Single click/touch: Navigate into sub-level
@@ -376,7 +376,7 @@ if( ! in_array($item, $array) )
 ## Security Considerations
 - Input validation on all user data
 - File type restrictions for uploads
-- Path traversal protection
+- Path traversal proection
 - No authentication system (current requirement)
 
 ## Demo Data Structure
@@ -390,7 +390,7 @@ if( ! in_array($item, $array) )
 │   │   ├── /images/
 │   │   │   ├── exterior.jpg
 │   │   │   └── interior.jpg
-│   │   └── (i) Viewing Notes.md
+│   │   └── (i) Viewing info.md
 │   └── /3 - Suburb Apartment/
 │       └── -this.md
 └── /2 - Work Projects/
@@ -400,7 +400,7 @@ if( ! in_array($item, $array) )
     └── (i) Project Guidelines.md
 ```
 
-## Implementation Notes
+## Implementation
 
 ### Apartment Special Features
 1. **Files Counter**: 
