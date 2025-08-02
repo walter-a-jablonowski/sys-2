@@ -61,6 +61,7 @@ $resources = $dataManager->getResourcesAtPath($path);
         $typeRenderer = $dataManager->getTypeRenderer($currentLevel['type'], 'read_only');
         if( $typeRenderer )
         {
+          $entry = $currentLevel; // Set entry variable for type renderer
           include $typeRenderer;
         }
         else
