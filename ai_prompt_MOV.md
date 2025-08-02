@@ -1,5 +1,5 @@
 
-Can be used to finish prompts that in principle have all requirements but need some improvements (maybe).
+Can be used to finish prompts that in principle have all important information but also gaps => less work writing detailed prompts (maybe).
 
  --
 
