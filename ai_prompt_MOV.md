@@ -3,4 +3,4 @@ Please read the prompt in ai.md and make a new improved prompt from it in ai_imp
 
 If you find problems in the original prompt (e.g. feature gaps, logical problems or something else), please fix the problems in the new prompt so that the overall system most likely will work as intended.
 
-Don't add unnecessary features that aren't in the original prompt, except if you need that to fix problems.
+Don't add features that aren't in the original prompt (especially unnecessary features), except if you need to change something to fix problems.
