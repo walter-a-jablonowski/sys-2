@@ -132,7 +132,7 @@ We also define these types for my search for a new apartment:
   - edit renderer: form in modal for editing all fields
   - special features:
     - making pictures
-      - let me use the smartphones cam to add images that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
+      - let me use the smartphones to make images for each apartment that are saved in e.g. /data/myApartmentSearch/myApartment/images as "resource files"
       - for saving the file we add a special ajax function
       - file types: typically used image types provided by the smartphones cam (implement hardcoded)
 
@@ -153,12 +153,12 @@ Sample for the data:
       - `2 - Some activity.md`: Some sub activity
       - `260728 - Some closed activity.md`
       - `/(i) Some info.md`: some info instance inside the apartment search
-      - `some_image.jpg`: all files that can't be identified as an instance of a type (by
-                          trying any typeIdentification of all types or if text file: by
-                          looking for a front matter field "type") are "resource files" for
-                          the current instance
-      - `myFolder`:       all folders that can't be identified as an instance of a type are
-                          "group folders" that may contain sub instances or resources
+      - `some_file.txt`: all files that can't be identified as an instance of a type (by
+                         trying any typeIdentification of all types or if text file: by
+                         looking for a front matter field "type") are "resource files" for
+                         the current instance
+      - `myFolder`:      all folders that can't be identified as an instance of a type are
+                         "group folders" that may contain sub instances or resources
       - `/images`
     - `/260720 - myApartment 2`: a closed apartment
       - ...
