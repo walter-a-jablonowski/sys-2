@@ -1,0 +1,12 @@
+id: Info
+time: 2025-08-02 14:39:00
+name: Info
+description: |
+  Simple informational entries without complex state management
+
+typeIdentification:
+  - ".*\\(\\s*i\\s*\\).*"
+
+allowedSubTypes: []
+
+# No additional fields beyond global defaults

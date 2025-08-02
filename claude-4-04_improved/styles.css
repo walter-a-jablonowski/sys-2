@@ -1,0 +1,54 @@
+/* Global Styles */
+body {
+  padding-top: 70px; /* Account for fixed navbar */
+}
+
+.content-area {
+  padding-bottom: 2rem;
+}
+
+/* Entry Cards */
+.entry-card {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.entry-card:hover {
+  background-color: #f8f9fa;
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 576px) {
+  .container-fluid {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .card {
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Type-specific styling placeholders */
+.priority-1 { border-left: 4px solid #dc3545; }
+.priority-2 { border-left: 4px solid #fd7e14; }
+.priority-3 { border-left: 4px solid #ffc107; }
+.priority-4 { border-left: 4px solid #20c997; }
+.priority-5 { border-left: 4px solid #6c757d; }
+
+.state-new { background-color: #e7f3ff; }
+.state-progress { background-color: #fff3cd; }
+.state-done { background-color: #d1edff; }
+
+.type-info {
+  border-left: 4px solid #0dcaf0;
+}
+
+.type-apartment {
+  border-left: 4px solid #6f42c1;
+}

@@ -1,0 +1,32 @@
+id: Apartment
+time: 2025-08-02 14:40:00
+name: Apartment
+derivedFrom: Activity
+description: |
+  Specialized activity type for apartment hunting with file management
+
+typeIdentification:
+  - "^\\s*[1-5]\\s*-\\s*"
+  - "^\\d{6}\\s*-\\s*"
+
+allowedSubTypes: ["Activity", "Info"]
+
+fields:
+  state:
+    type: string
+    required: true
+    values:
+      "New": new
+      "Current": current
+      "Maybe": maybe
+      "Done": done
+  result:
+    type: string
+    required: false
+  files_nr:
+    type: string
+    required: true
+    format: "^\\d{4}$"
+  url:
+    type: hyperlink
+    required: false
