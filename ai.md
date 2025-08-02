@@ -173,7 +173,8 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
     - we use no breadcrumbs for navigation, just the smartphone's back button
   - Actions dropdown (right aligned):
     - Edit: edit the currently shown instance (inactive on the start page)
-    - Delete: delete the currently shown instance
+    - Delete: delete the currently shown instance (inactive on the start page)
+      - go back to previous loaded instance or start page when the instance was deleted
     - gears icon (for settings, currently has no function)
 - Content area (scrollable)
   - Read only rendering of the current entry (via ready_only.php, invisible on the start page)
