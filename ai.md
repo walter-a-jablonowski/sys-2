@@ -40,7 +40,7 @@ Different types of entries can be defined in a file structure like
     - ready_only.php: renders a read only version of the instance data
       - this is a php file that uses PHP's alternative syntax for rendering HTML
     - list.php:  cell renderer used to render the list cell
-    - edit.php:  renderer for the edit form
+    - edit.php:  form for editing all fields from a type (will be displayed inside modal dialoges)
     - styles.css: type specific styles (if any), prefer bootstrap classes
   - ...
 
@@ -183,8 +183,9 @@ Use bootstrap 5.3 and optimize it for smartphones. The app UI consists of a head
       - Tool bar with
         - sorting dropdown (e.g. by time, by name)
         - Add button (right aligned)
-          - brings up and modal that lets you select the type
-          - when the type is selected the controls for entering the data is visible (including type specifix fields)
+          - brings up and modal that lets you select the type from a dropdown (read available types from folder /types)
+          - when the type is selected the controls for entering the data is visible (including type specific fields)
+          - the controls basically are defined per type in edit.php so we need a mechanism for switching the controls
       - List (use cards)
         - initially show the data from the first level of /data
         - the list is sorted by time (last one first)
