@@ -143,23 +143,24 @@ Instances of a type can be saved either as a single files or a folder with the f
 
 Sample for the data:
 
-- /data
-  - /(i) MyInfo.md: this is some Info instance saved as a single file
-  - /2 - myApartmentSearch: this is an instance of type "Activity" saved as folder
-    - "-this.md" is the data file, contains data in front matter, except the
+- `/data`
+  - `/(i) MyInfo.md`: this is some Info instance saved as a single file
+  - `/2 - myApartmentSearch`: this is an instance of type "Activity" saved as folder
+    - `-this.md` is the data file, contains data in front matter, except the
                  field "description" which is the text content of the md file
-    - /2 - myApartment: is a instance of type "Apartment" inside the apartment search
-      - "-this.md"
-      - 2 - Some activity.md
-      - 260728 - Some closed activity.md
-      - some_image.jpg: all files that can't be identified as an instance of a type (by
-                        trying any typeIdentification of all types or if text file: by
-                        looking for a front matter field "type") are "resource files" for
-                        the current instance
-      - /myFolder:      all folders that can't be identified as an instance of a type are
-                        "group folders" that may contain sub instances or resources
-      - /images
-    - /260720 - myApartment 2: a closed apartment
+    - `/2 - myApartment`: is a instance of type "Apartment" inside the apartment search
+      - `-this.md`
+      - `2 - Some activity.md`: Some sub activity
+      - `260728 - Some closed activity.md`
+      - `/(i) Some info.md`: some info instance inside the apartment search
+      - `some_image.jpg`: all files that can't be identified as an instance of a type (by
+                          trying any typeIdentification of all types or if text file: by
+                          looking for a front matter field "type") are "resource files" for
+                          the current instance
+      - `myFolder`:       all folders that can't be identified as an instance of a type are
+                          "group folders" that may contain sub instances or resources
+      - `/images`
+    - `/260720 - myApartment 2`: a closed apartment
       - ...
   - ...
 
