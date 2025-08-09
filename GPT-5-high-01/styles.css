@@ -1,0 +1,17 @@
+body {
+  padding-top: 56px;
+}
+
+#list-items .list-group-item,
+#resource-items .list-group-item {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.card-title a {
+  text-decoration: none;
+}
+
+.badge.text-uppercase {
+  text-transform: uppercase;
+}

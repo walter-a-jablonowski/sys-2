@@ -1,0 +1,5 @@
+# Global default fields definition (informational)
+# Instances implicitly have:
+# - time: string, format YYYY-MM-DD HH:MM:SS
+# - name: string
+# - description: string (stored as markdown body)

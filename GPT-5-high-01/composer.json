@@ -1,0 +1,16 @@
+{
+  "name": "hj/sys-2-hierarchical-data-manager",
+  "description": "Hierarchical data management app with PHP backend and YAML/Markdown storage",
+  "type": "project",
+  "require": {
+    "php": ">=7.4",
+    "symfony/yaml": "^5.4"
+  },
+  "autoload": {
+    "files": [
+      "lib/Util.php",
+      "lib/TypeManager.php",
+      "lib/DataManager.php"
+    ]
+  }
+}
