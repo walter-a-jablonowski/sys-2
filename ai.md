@@ -41,7 +41,7 @@ Different types of entries can be defined in a file structure like
       - this is a php file that uses PHP's alternative syntax for rendering HTML
     - list.php:  cell renderer used to render the list cell
     - edit.php:  form for editing all fields from a type (will be displayed inside modal dialoges)
-    - styles.css: type specific styles (if any), prefer bootstrap classes
+    - styles.css: type specific styles (if any), prefer BS classes
   - ...
 
 Type definition:
