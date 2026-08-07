@@ -2,6 +2,8 @@
 
 Supersedes `idea.md`. v1 scope: **one database (`/data/demo`), no auth, no users.**
 
+**Closed 2026-08-07** — v1 is built and this file describes what exists. Open items live in `open.md`.
+
 ---
 
 ## 1. Gaps + conflicts in idea.md, and how they are resolved
@@ -416,8 +418,8 @@ Save state is app level and rendered at the **right end** of `FOO_2` ("saved 12:
 +------------------+---------------------------+----------------------+
 | FOO              | FOO_2  (full content width)                      |  28px  footer
 +------------------+--------------------------------------------------+
-       320px                flex, min 480px            360px
-   (280 .. 420, resiz.)                              (foldable)
+       380px                flex, min 480px            360px
+  (300 .. 560, draggable)                            (foldable)
 ```
 
 Header and footer are **two segments**, not three: nav column | content area.
@@ -434,6 +436,8 @@ Header and footer are **two segments**, not three: nav column | content area.
 - `[:]` = vertical dots dropdown: type entries from `config.menu` -> divider -> common entries (rename, move, delete, reveal path).
 - The editor may carry **its own tab row** below the app header if the type declares `detailTabs` — independent of the nav column tabs.
 - The shell is built as a **generic column stack**, not as three hardcoded areas: `[nav] [content ...] [aux]`. Adding further foldable columns later (main app functions, left or right) is then a matter of registering a column, not a rewrite.
+- The line between the nav column and the content area is a **drag handle** (300 .. 560px, double click resets). Both bands read the same `--nav-w`, so the segments follow the columns by themselves.
+- The editor fills its column and only starts centring past **1040px**, so nothing is left blank next to the AI column; beyond that width the slack is split evenly instead of piling up on the right.
 
 ### 5.2 Breakpoints
 
@@ -618,17 +622,6 @@ Covers: nesting, both file forms, implicit group, links, resource, spaces in nam
 
 ---
 
-## 9. Deferred
+## 9. Open items
 
-| Topic | Decision |
-|---|---|
-| Upload | v2. Resource files are placed in the folder manually, incl. the demo data |
-| Manual order, sort menu | v2, with its own mechanism — no `order` field is written in v1. v1 sorts newest first, nothing else |
-| Index storage | `.sys/index.json` for now, possibly SQLite later. Only the `Index` class touches the format |
-| Type `requires` | v2. The "requirements e.g. libraries" idea — no mechanism designed yet |
-| Breadcrumb | Later. Placement open: dropdown on the left header title, footer band, or not at all |
-| Markdown rendering | Later. The body is edited as plain text in v1, there is no rendered preview |
-| AI backend | Later. Sessions proposed in `/data/demo/.sys/ai/` |
-| Search | Later. The index already carries path (= name) + type, so a name search is cheap; full text needs a real store |
-| More foldable columns | Later, for main app functions (left or right). Prepared for by the generic column stack in §5.1, nothing built in v1 |
-| Multi DB, users, auth | Out of v1 scope by decision |
+Moved to **`open.md`**. Everything described above is built.
