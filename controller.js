@@ -378,6 +378,27 @@
     el.saveState.className = 'save-state' + (kind ? ' is-' + kind : '');
   }
 
+  /**
+   * Tabs inside the editor, declared by the type as "detailTabs".
+   */
+  function showPane( button )
+  {
+    const form = button.closest('.editor');
+
+    if( ! form )
+      return;
+
+    form.querySelectorAll('.editor-tab').forEach(function ( node )
+    {
+      node.classList.toggle('is-active', node === button);
+    });
+
+    form.querySelectorAll('.editor-pane').forEach(function ( node )
+    {
+      node.classList.toggle('is-active', node.dataset.pane === button.dataset.pane);
+    });
+  }
+
   function replaceCard( path, html )
   {
     const card = el.nav.querySelector('[data-path="' + cssEscape(path) + '"]');
@@ -965,6 +986,7 @@
     const action = event.target.closest('[data-action]');
     const card = event.target.closest('.card, .cell');
     const tab = event.target.closest('.tab');
+    const pane = event.target.closest('.editor-tab');
     const more = event.target.closest('.load-more');
 
     if( ! event.target.closest('.dropdown'))
@@ -973,6 +995,12 @@
     if( action )
     {
       handleAction(action, event);
+      return;
+    }
+
+    if( pane )
+    {
+      showPane(pane);
       return;
     }
 
