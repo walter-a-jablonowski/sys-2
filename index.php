@@ -77,6 +77,8 @@ $theme     = (string) $app->config->app('theme', 'default');
       <?php require __DIR__ . '/view/nav.php' ?>
     </nav>
 
+    <div class="col-resizer" data-role="navResizer" role="separator" aria-orientation="vertical" title="Drag to resize"></div>
+
     <main class="col col-editor" data-role="editor">
       <div class="editor-empty">
         <svg class="icon icon-big" aria-hidden="true"><use href="styles/icons.svg#entry"></use></svg>

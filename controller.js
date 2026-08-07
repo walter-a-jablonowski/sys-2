@@ -41,6 +41,7 @@
     listState: document.querySelector('[data-role="listState"]'),
     containerTitle: document.querySelector('[data-role="containerTitle"]'),
     back: document.querySelector('[data-action="back"]'),
+    navResizer: document.querySelector('[data-role="navResizer"]'),
     dropdown: document.querySelector('[data-role="dropdown"]'),
     dialog: document.querySelector('[data-role="dialog"]'),
     toast: document.querySelector('[data-role="toast"]')
@@ -1209,6 +1210,51 @@
       event.preventDefault();
       el.aiComposer.requestSubmit ? el.aiComposer.requestSubmit() : el.aiComposer.dispatchEvent(new Event('submit'));
     }
+  });
+
+  /*
+    Dragging the line between the navigation column and the content area.
+    Both bands read the same variable, so they follow along by themselves.
+  */
+
+  el.navResizer.addEventListener('pointerdown', function ( event )
+  {
+    if( state.mode === 'mobile' )
+      return;
+
+    const styles = getComputedStyle(el.html);
+    const min = parseInt(styles.getPropertyValue('--nav-min'), 10) || 300;
+    const max = parseInt(styles.getPropertyValue('--nav-max'), 10) || 560;
+
+    event.preventDefault();
+    el.navResizer.setPointerCapture(event.pointerId);
+    el.navResizer.classList.add('is-dragging');
+    document.body.style.userSelect = 'none';
+
+    function onMove( move )
+    {
+      const width = Math.max(min, Math.min(max, move.clientX));
+
+      el.html.style.setProperty('--nav-w', width + 'px');
+    }
+
+    function onUp()
+    {
+      el.navResizer.classList.remove('is-dragging');
+      document.body.style.userSelect = '';
+      el.navResizer.removeEventListener('pointermove', onMove);
+      el.navResizer.removeEventListener('pointerup', onUp);
+    }
+
+    el.navResizer.addEventListener('pointermove', onMove);
+    el.navResizer.addEventListener('pointerup', onUp);
+  });
+
+  // Double click returns to the width the theme defines
+
+  el.navResizer.addEventListener('dblclick', function ()
+  {
+    el.html.style.removeProperty('--nav-w');
   });
 
   window.addEventListener('popstate', function ()
