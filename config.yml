@@ -1,0 +1,5 @@
+# Application configuration
+
+dbPath: 'data/demo'
+theme: 'default'
+appName: 'Sys'

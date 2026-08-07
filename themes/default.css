@@ -1,0 +1,53 @@
+/*
+  Default theme: warm neutral dark with a gold accent.
+  Tokens only. No component rules live here, so a second theme is one file.
+*/
+
+:root
+{
+  /* Surfaces, layered instead of shadowed */
+  --bg:         #141312;
+  --bg-2:       #1a1917;
+  --bg-3:       #211f1d;
+  --bg-4:       #2a2724;
+
+  --line:       #2e2b27;
+  --line-soft:  #232120;
+
+  /* Text */
+  --fg:         #ece8e1;
+  --fg-dim:     #a39d94;
+  --fg-faint:   #6f6a63;
+
+  /* Accent */
+  --accent:      #e0a233;
+  --accent-hi:   #f3bd5c;
+  --accent-tint: rgba(224, 162, 51, .14);
+  --accent-line: rgba(224, 162, 51, .45);
+
+  /* Semantic, green only where it means success */
+  --ok:        #6fae6a;
+  --ok-line:   rgba(111, 174, 106, .45);
+  --warn:      #d1762e;
+  --danger:    #d0574e;
+  --danger-tint: rgba(208, 87, 78, .12);
+
+  /* Metrics */
+  --r-1: 4px;
+  --r-2: 6px;
+  --r-3: 10px;
+
+  --head-h: 48px;
+  --row-h:  36px;
+  --foot-h: 28px;
+
+  --nav-w: 320px;
+  --ai-w:  360px;
+
+  --font: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace;
+
+  --shadow: 0 12px 32px rgba(0, 0, 0, .45), 0 2px 6px rgba(0, 0, 0, .35);
+
+  --speed: 120ms;
+}

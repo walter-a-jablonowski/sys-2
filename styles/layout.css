@@ -1,0 +1,308 @@
+/*
+  The shell: two bands and a generic column stack between them.
+  Columns are registered, not hardcoded, so further ones can join later.
+*/
+
+.app
+{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Bands: nav segment and content segment, the content one spans editor + AI */
+
+.band
+{
+  display: flex;
+  flex: 0 0 auto;
+  background: var(--bg);
+}
+
+.band-head
+{
+  height: var(--head-h);
+  border-bottom: 1px solid var(--line);
+}
+
+.band-foot
+{
+  height: var(--foot-h);
+  border-top: 1px solid var(--line);
+}
+
+.seg
+{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 0 8px 0 12px;
+}
+
+.seg-nav
+{
+  flex: 0 0 var(--nav-w);
+  width: var(--nav-w);
+  border-right: 1px solid var(--line);
+}
+
+.seg-content
+{
+  flex: 1 1 auto;
+}
+
+.nav-title
+{
+  flex: 1 1 auto;
+  font-weight: 600;
+  font-size: 13.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.head-slot
+{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.head-title
+{
+  font-weight: 600;
+  font-size: 13.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.head-type,
+.head-empty
+{
+  color: var(--fg-faint);
+  font-size: 11.5px;
+}
+
+.head-icon
+{
+  color: var(--fg-dim);
+  display: flex;
+}
+
+/* Sits outside the segments, so it stays pinned to the very right edge */
+
+.head-actions
+{
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  padding: 0 10px 0 4px;
+}
+
+/* Only the phone layers need a back button in the content segment */
+
+.back-layer
+{
+  display: none;
+}
+
+/* Footer segments */
+
+.list-state
+{
+  color: var(--fg-faint);
+  font-size: 11.5px;
+}
+
+.foot-slot
+{
+  flex: 1 1 auto;
+  color: var(--fg-faint);
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.save-state
+{
+  flex: 0 0 auto;
+  color: var(--fg-faint);
+  font-size: 11.5px;
+}
+
+.save-state.is-saving  { color: var(--fg-dim); }
+.save-state.is-saved   { color: var(--ok); }
+.save-state.is-error   { color: var(--danger); }
+
+/* Columns */
+
+.cols
+{
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.col
+{
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--bg-2);
+}
+
+.col-nav
+{
+  flex: 0 0 var(--nav-w);
+  width: var(--nav-w);
+  border-right: 1px solid var(--line);
+}
+
+.col-editor
+{
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+}
+
+.col-ai
+{
+  flex: 0 0 var(--ai-w);
+  width: var(--ai-w);
+  border-left: 1px solid var(--line);
+}
+
+.col-ai[hidden]
+{
+  display: none;
+}
+
+/* A row inside a column, same height as the bands so lines keep aligning */
+
+.row
+{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  height: var(--row-h);
+  padding: 0 6px 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Editor placeholder */
+
+.editor-empty
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 100%;
+  color: var(--fg-faint);
+  padding: 24px;
+  text-align: center;
+}
+
+/*
+  Tablet: the AI column takes its space from the editor. When that would make
+  the editor too narrow, the navigation column steps aside instead.
+*/
+
+@media (max-width: 1199px)
+{
+  :root
+  {
+    --nav-w: 288px;
+    --ai-w: 320px;
+  }
+
+  html[data-ai="1"] .col-nav,
+  html[data-ai="1"] .seg-nav
+  {
+    display: none;
+  }
+}
+
+/*
+  Phone: one column. The editor and the AI column become full screen layers
+  over the list, driven by data-view on <html>.
+*/
+
+@media (max-width: 899px)
+{
+  :root
+  {
+    --nav-w: 100%;
+    --ai-w: 100%;
+  }
+
+  .cols
+  {
+    position: relative;
+  }
+
+  .col
+  {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: 0;
+    transform: translateX(100%);
+    transition: transform 200ms ease;
+    visibility: hidden;
+  }
+
+  .col-nav
+  {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  html[data-view="editor"] .col-editor,
+  html[data-view="ai"] .col-ai
+  {
+    transform: translateX(0);
+    visibility: visible;
+    z-index: 2;
+  }
+
+  html[data-view="editor"] .col-nav,
+  html[data-view="ai"] .col-nav
+  {
+    transform: translateX(-12%);
+  }
+
+  .col-ai[hidden]
+  {
+    display: flex;
+  }
+
+  /* Each band shows the segment of the layer on top */
+
+  .seg
+  {
+    flex: 1 1 100%;
+    width: 100%;
+    border: 0;
+  }
+
+  html[data-view="list"] .seg-content,
+  html[data-view="editor"] .seg-nav,
+  html[data-view="ai"] .seg-nav
+  {
+    display: none;
+  }
+
+  html:not([data-view="list"]) .back-layer
+  {
+    display: inline-flex;
+  }
+}

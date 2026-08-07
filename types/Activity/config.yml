@@ -1,0 +1,63 @@
+# Activity: a step in a process
+
+name: 'Activity'
+label: 'Activity'
+description: 'A step in a process, may contain further steps'
+idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
+icon: 'activity'
+
+fields:
+  title:
+    type: 'text'
+    required: true
+  status:
+    type: 'select'
+    options: ['open', 'running', 'done']
+  body:
+    type: 'markdown'
+    label: 'Description'
+  schedule:
+    label: 'Schedule'
+    tab: 'schedule'
+    fields:
+      start:
+        type: 'date'
+      end:
+        type: 'date'
+
+# Tabs of the navigation column: each one filters the children
+tabs:
+  entries:
+    label: 'Entries'
+    types: ['Activity', 'Info', 'Group']
+    include: ['inline', 'link']
+    tools: true
+  participants:
+    label: 'Participants'
+    types: ['Person']
+    include: ['link', 'inline']
+  resources:
+    label: 'Resources'
+    types: ['File']
+    include: ['inline']
+
+create:
+  entries: ['Activity', 'Info']
+  participants: ['__link:Person']
+  resources: []
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'schedule'
+    label: 'Schedule'
+  - id: 'raw'
+    label: 'Front matter'
+
+menu:
+  - id: 'setDone'
+    label: 'Mark as done'
+    ajax: 'set_done'

@@ -1,0 +1,139 @@
+/* Navigation column: tabs, tools row, the scrolling list */
+
+.row-tabs
+{
+  padding-left: 6px;
+}
+
+.tabs
+{
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  flex: 1 1 auto;
+  height: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar
+{
+  display: none;
+}
+
+.tab
+{
+  position: relative;
+  padding: 0 8px;
+  color: var(--fg-faint);
+  font-size: 12.5px;
+  white-space: nowrap;
+  transition: color var(--speed) ease;
+}
+
+.tab:hover
+{
+  color: var(--fg-dim);
+}
+
+.tab.is-active
+{
+  color: var(--fg);
+}
+
+/* The underline rests on the bottom border of the row */
+
+.tab.is-active::after
+{
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
+
+/* Tools row */
+
+.filter
+{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1 1 auto;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--r-2);
+  color: var(--fg-faint);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--speed) ease, background var(--speed) ease;
+}
+
+.filter:hover
+{
+  background: var(--bg-3);
+}
+
+.filter:focus-within
+{
+  background: var(--bg-3);
+  border-bottom-color: var(--accent);
+}
+
+.filter-input
+{
+  flex: 1 1 auto;
+  min-width: 0;
+  background: none;
+  border: 0;
+  color: var(--fg);
+  font: inherit;
+  font-size: 12.5px;
+}
+
+.filter-input:focus
+{
+  outline: none;
+}
+
+.filter-input::-webkit-search-cancel-button
+{
+  filter: grayscale(1) opacity(.6);
+}
+
+/* List */
+
+.list
+{
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.load-more
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 38px;
+  color: var(--fg-dim);
+  font-size: 12.5px;
+  border-bottom: 1px solid var(--line-soft);
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.load-more:hover
+{
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
+.load-more-rest
+{
+  color: var(--fg-faint);
+  font-size: 11.5px;
+}

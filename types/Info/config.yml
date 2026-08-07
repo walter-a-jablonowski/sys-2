@@ -1,0 +1,38 @@
+# Info: a plain text entry
+
+name: 'Info'
+label: 'Info'
+description: 'A text entry with a headline and a description'
+idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
+icon: 'info'
+
+fields:
+  title:
+    type: 'text'
+    required: true
+  body:
+    type: 'markdown'
+    label: 'Description'
+
+tabs:
+  entries:
+    label: 'Entries'
+    include: ['inline', 'link']
+    tools: true
+  resources:
+    label: 'Resources'
+    types: ['File']
+    include: ['inline']
+
+create:
+  entries: ['Info', 'Activity']
+  resources: []
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'raw'
+    label: 'Front matter'

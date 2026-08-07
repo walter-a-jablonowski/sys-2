@@ -1,0 +1,202 @@
+/* Dropdowns, dialogs and the toast — the only places with a shadow */
+
+.dropdown
+{
+  position: fixed;
+  z-index: 60;
+  min-width: 190px;
+  max-height: 70vh;
+  overflow-y: auto;
+  background: var(--bg-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  box-shadow: var(--shadow);
+  padding: 4px;
+}
+
+.dropdown[hidden]
+{
+  display: none;
+}
+
+.menu-item
+{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 6px 9px;
+  border-radius: var(--r-1);
+  color: var(--fg-dim);
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.menu-item:hover
+{
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
+.menu-item.is-danger:hover
+{
+  background: var(--danger-tint);
+  color: var(--danger);
+}
+
+.menu-divider
+{
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--line);
+}
+
+.menu-label
+{
+  padding: 6px 9px 4px;
+  color: var(--fg-faint);
+  font-size: 10.5px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* Dialog */
+
+.dialog-backdrop
+{
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .5);
+}
+
+.dialog-backdrop[hidden]
+{
+  display: none;
+}
+
+.dialog
+{
+  width: 100%;
+  max-width: 460px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  box-shadow: var(--shadow);
+}
+
+.dialog-head
+{
+  padding: 14px 16px 10px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.dialog-body
+{
+  padding: 0 16px 4px;
+  overflow-y: auto;
+  color: var(--fg-dim);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.dialog-body b
+{
+  color: var(--fg);
+}
+
+.dialog-foot
+{
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 16px;
+}
+
+/* Hierarchy picker inside a dialog */
+
+.tree
+{
+  display: flex;
+  flex-direction: column;
+  margin: 8px 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  overflow: hidden;
+}
+
+.tree-item
+{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  color: var(--fg-dim);
+  font-size: 12.5px;
+  text-align: left;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.tree-item:last-child
+{
+  border-bottom: 0;
+}
+
+.tree-item:hover
+{
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
+.tree-item.is-current
+{
+  color: var(--accent);
+}
+
+.tree-up
+{
+  color: var(--fg-faint);
+}
+
+.warn-line
+{
+  color: var(--warn);
+}
+
+/* Toast */
+
+.toast
+{
+  position: fixed;
+  left: 50%;
+  bottom: 46px;
+  transform: translateX(-50%);
+  z-index: 80;
+  background: var(--bg-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  box-shadow: var(--shadow);
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: var(--fg);
+  max-width: 80vw;
+}
+
+.toast[hidden]
+{
+  display: none;
+}
+
+.toast.is-error
+{
+  border-color: var(--danger);
+  color: var(--danger);
+}

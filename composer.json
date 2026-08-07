@@ -1,0 +1,17 @@
+{
+  "name": "walter/sys",
+  "description": "Markdown hierarchy app",
+  "type": "project",
+  "require": {
+    "php": ">=8.0",
+    "symfony/yaml": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sys\\": "lib/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true
+  }
+}

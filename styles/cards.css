@@ -1,0 +1,253 @@
+/*
+  Cards run edge to edge: no outer padding, no gap, one separator line.
+  All inner padding belongs to the card itself.
+*/
+
+.card
+{
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  width: 100%;
+  padding: 10px 12px 10px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  cursor: default;
+  transition: background var(--speed) ease;
+}
+
+.card:hover
+{
+  background: var(--bg-3);
+}
+
+.card.is-selected
+{
+  background: var(--bg-3);
+}
+
+/* Gold strip on the left edge marks the selection */
+
+.card.is-selected::before
+{
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--accent);
+}
+
+.card-icon
+{
+  display: flex;
+  margin-top: 1px;
+  color: var(--fg-faint);
+}
+
+.card.is-selected .card-icon
+{
+  color: var(--accent);
+}
+
+.card-body
+{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.card-line
+{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.card-title
+{
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card:hover .card-title,
+.card.is-selected .card-title
+{
+  color: var(--fg);
+}
+
+.card-badges
+{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.card-linkmark
+{
+  display: flex;
+  color: var(--fg-faint);
+}
+
+.card-meta
+{
+  margin-top: 2px;
+  color: var(--fg-faint);
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-meta .icon
+{
+  width: 12px;
+  height: 12px;
+  vertical-align: -2px;
+}
+
+.card-tail
+{
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  align-self: center;
+}
+
+.card-action
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-1);
+  color: var(--fg-faint);
+  opacity: 0;
+  transition: opacity var(--speed) ease, background var(--speed) ease;
+}
+
+.card:hover .card-action,
+.card:focus-within .card-action
+{
+  opacity: 1;
+}
+
+.card-action:hover
+{
+  background: var(--bg-4);
+  color: var(--fg);
+}
+
+.card-chevron
+{
+  display: flex;
+  color: var(--fg-faint);
+}
+
+/* Children unfolded inline below their parent */
+
+.card.is-child
+{
+  padding-left: 32px;
+}
+
+.card.is-child::after
+{
+  content: '';
+  position: absolute;
+  left: 21px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+
+.card.is-open .card-chevron
+{
+  transform: rotate(90deg);
+}
+
+.status-broken
+{
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+/* Mobile cell */
+
+.cell
+{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 12px 12px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  min-height: 56px;
+}
+
+.cell:active
+{
+  background: var(--bg-3);
+}
+
+.cell.is-selected
+{
+  background: var(--bg-3);
+}
+
+.cell-icon
+{
+  display: flex;
+  color: var(--fg-faint);
+}
+
+.cell-body
+{
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.cell-title
+{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-title .icon
+{
+  width: 12px;
+  height: 12px;
+  color: var(--fg-faint);
+}
+
+.cell-meta
+{
+  margin-top: 2px;
+  color: var(--fg-faint);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-chevron
+{
+  display: flex;
+  color: var(--fg-faint);
+}

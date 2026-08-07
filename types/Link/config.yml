@@ -1,0 +1,18 @@
+# Link: stub pointing at another object
+#
+# A link is rendered by its target's renderers, this type is only used when
+# the target is gone (broken link).
+
+name: 'Link'
+label: 'Link'
+description: 'Points at an object living somewhere else in the hierarchy'
+icon: 'link'
+
+fields:
+  title:
+    type: 'text'
+    label: 'Label'
+    required: true
+
+header: true
+footer: false

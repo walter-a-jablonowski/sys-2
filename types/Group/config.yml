@@ -1,0 +1,38 @@
+# Group: pure grouping folder
+
+name: 'Group'
+label: 'Group'
+description: 'Groups objects without carrying content of its own'
+idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
+icon: 'folder'
+
+fields:
+  title:
+    type: 'text'
+    required: true
+  body:
+    type: 'markdown'
+    label: 'Description'
+
+tabs:
+  entries:
+    label: 'Entries'
+    include: ['inline', 'link']
+    tools: true
+  resources:
+    label: 'Resources'
+    types: ['File']
+    include: ['inline']
+
+create:
+  entries: ['Activity', 'Info', 'Person', 'Group']
+  resources: []
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'raw'
+    label: 'Front matter'

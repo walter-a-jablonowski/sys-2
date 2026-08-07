@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+
+  <symbol id="activity" viewBox="0 0 16 16">
+    <path d="M2 8h3l2-4 2.5 8L12 8h2"/>
+  </symbol>
+
+  <symbol id="info" viewBox="0 0 16 16">
+    <path d="M3 3h10v8H7l-3 3v-3H3z"/>
+  </symbol>
+
+  <symbol id="person" viewBox="0 0 16 16">
+    <circle cx="8" cy="5.5" r="2.5"/>
+    <path d="M3 13.5c0-2.5 2.2-4 5-4s5 1.5 5 4"/>
+  </symbol>
+
+  <symbol id="file" viewBox="0 0 16 16">
+    <path d="M4 2h5l3 3v9H4z"/>
+    <path d="M9 2v3h3"/>
+  </symbol>
+
+  <symbol id="folder" viewBox="0 0 16 16">
+    <path d="M2 4h4l1.5 2H14v7H2z"/>
+  </symbol>
+
+  <symbol id="link" viewBox="0 0 16 16">
+    <path d="M6.5 9.5a2.5 2.5 0 0 0 3.5 0l2-2a2.5 2.5 0 0 0-3.5-3.5l-.8.8"/>
+    <path d="M9.5 6.5a2.5 2.5 0 0 0-3.5 0l-2 2a2.5 2.5 0 0 0 3.5 3.5l.8-.8"/>
+  </symbol>
+
+  <symbol id="entry" viewBox="0 0 16 16">
+    <rect x="2.5" y="2.5" width="11" height="11" rx="2"/>
+    <path d="M5 6h6M5 9h4"/>
+  </symbol>
+
+  <symbol id="more" viewBox="0 0 16 16">
+    <circle cx="8" cy="3.5" r=".9" fill="currentColor" stroke="none"/>
+    <circle cx="8" cy="8" r=".9" fill="currentColor" stroke="none"/>
+    <circle cx="8" cy="12.5" r=".9" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <symbol id="chevron" viewBox="0 0 16 16">
+    <path d="M6 3.5 10.5 8 6 12.5"/>
+  </symbol>
+
+  <symbol id="chevron-down" viewBox="0 0 16 16">
+    <path d="M3.5 6 8 10.5 12.5 6"/>
+  </symbol>
+
+  <symbol id="back" viewBox="0 0 16 16">
+    <path d="M10 3.5 5.5 8 10 12.5"/>
+  </symbol>
+
+  <symbol id="plus" viewBox="0 0 16 16">
+    <path d="M8 3.5v9M3.5 8h9"/>
+  </symbol>
+
+  <symbol id="search" viewBox="0 0 16 16">
+    <circle cx="7" cy="7" r="4"/>
+    <path d="M10 10l3 3"/>
+  </symbol>
+
+  <symbol id="send" viewBox="0 0 16 16">
+    <path d="M2.5 8h10M8.5 4l4 4-4 4"/>
+  </symbol>
+
+  <symbol id="copy" viewBox="0 0 16 16">
+    <rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/>
+    <path d="M10.5 5.5v-1a1.5 1.5 0 0 0-1.5-1.5H4a1.5 1.5 0 0 0-1.5 1.5v5A1.5 1.5 0 0 0 4 11h1"/>
+  </symbol>
+
+  <symbol id="calendar" viewBox="0 0 16 16">
+    <rect x="2.5" y="3.5" width="11" height="10" rx="1.5"/>
+    <path d="M2.5 6.5h11M5.5 2v3M10.5 2v3"/>
+  </symbol>
+
+  <symbol id="warn" viewBox="0 0 16 16">
+    <path d="M8 2.5 14 13H2z"/>
+    <path d="M8 6.5v3M8 11.2v.1"/>
+  </symbol>
+
+</svg>

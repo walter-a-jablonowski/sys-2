@@ -5,10 +5,14 @@
 
 each instance of a type is a new markdown file with yml front matter
 
-Files and folders are the same: MY_ENTRY.md can be written as MY_ENTRY/-this.md (used when it has sub objects)
+Type instances/Objects: Files and folders are the same: MY_ENTRY.md can be written as MY_ENTRY/-this.md (used when it has sub objects)
 ("-this" is defined in data/demo/.sys/config.yml, could be renamed)
 
-Entries in the hierarchie may also be included (linked) in a different place in the hierarchie
+Objects in the hierarchie may also be included (linked) in a different place in the hierarchie
+
+Resource files: All files that are no markdown files or have no front matter which identifies the type are "resource files"
+
+All objects and resource files may be further grouped by file system folders. Folders with no -this file are grouping folders. Explicit: add a -this.md with type: Group
 
 Initial data
 
@@ -58,12 +62,12 @@ Initial types
 |                |                       |            |
 |                |                       |            |
 |                |                       |            |
-|----------------|                       |------------|
-| FOO            |                       | [     ][ ] |  <-- Input and send button
+|                |                       |------------|
+|                |                       | [     ][ ] |  <-- Input and send button
+|----------------|------------------------------------|
+| FOO            | FOO_2                              |
 -------------------------------------------------------
 ```
-
-3 col content area layout:
 
 - In principle the layout use a 2 main columns layout
   - Left col: navigation
@@ -72,7 +76,7 @@ Initial types
     - Right col: AI sidebar
 
 - "App header"
-  - The app header line has the same design over all main columns
+  - The app header "line" has the same design over all main columns
   - Its content is column specific
   - Commonly used things in app header
     - [AI] = unfold AI sidebar
@@ -81,12 +85,17 @@ Initial types
       - devider
       - commonly used entries
 
+- FOO: small fooder area (low height), column specific content (visually one line similar app header)
+  - Empty in AI sidebar
+
+- Later we may want to add more foldable left or right colums when we have more functions e.g. for accessing main app functions
+
 - Left column
   - Layout
     - In app header line: Name of the currenly visible entry form the hierarchie (edit button right aligned)
     - TABS:
       - Which tabs are available is defined in the type of the currently visible object
-        - for type "Activity" it is: "Entries" (sub entries), "Participants", "Resources" (files)
+        - for type "Activity" it is: "Entries" (sub entries), "Participants", "Resources" (for Resource files)
       - aligned to the right: Add dropdown for new entry
     - TOOLS: Visible for tab "Entries" only: toolbar e.g. filters for the list
     - List of rendered entries
@@ -100,9 +109,11 @@ Initial types
     - third and deeper levels in herarchie: navigate to sub level on click or touch
 - Mid column: rendered detail editor per type
   - in app header:
-    - this area has a default rendering: NAME_2 is name of currently selected entry ("Current" in case "[edit]" was clicked)
-  - EDIT: Remaining Edit content area rendered by type renderer
-    - may also support tabs or have a fooder area
+    - default rendering: NAME_2 is name of currently selected entry ("Current" in case "[edit]" was clicked)
+    - additional elements if defined in type
+  - EDIT: Edit content area rendered by type renderer
+    - may also support tabs
+  - FOO_2: Fooder area filled if defined in type
 - AI sidebar: UI dummy for now, implementation later, unfoldable with [AI]
   - second (small) header below app header (plus = new session, "v" = unfold session list)
   - Input and send area

@@ -1,0 +1,9 @@
+# Database settings
+
+thisFile: '-this'
+linkMarker: ' (lnk)'
+defaultType: 'Info'
+pageSize: 8
+sort:
+  by: 'created'
+  dir: 'desc'

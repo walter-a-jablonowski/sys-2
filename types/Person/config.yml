@@ -1,0 +1,40 @@
+# Person: someone taking part
+
+name: 'Person'
+label: 'Person'
+description: 'A participant, usually linked into an activity'
+idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
+icon: 'person'
+
+fields:
+  title:
+    type: 'text'
+    label: 'Name'
+    required: true
+  role:
+    type: 'text'
+  email:
+    type: 'email'
+  phone:
+    type: 'tel'
+  body:
+    type: 'markdown'
+    label: 'Notes'
+
+tabs:
+  resources:
+    label: 'Resources'
+    types: ['File']
+    include: ['inline']
+
+create:
+  resources: []
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Person'
+  - id: 'raw'
+    label: 'Front matter'

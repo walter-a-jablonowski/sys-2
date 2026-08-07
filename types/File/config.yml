@@ -1,0 +1,28 @@
+# File: handler for resource files
+
+name: 'File'
+label: 'File'
+description: 'A resource file, any file without front matter'
+idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
+icon: 'file'
+
+# Fields live in the optional sidecar "NAME.ext.md"
+fields:
+  title:
+    type: 'text'
+    label: 'File name'
+    required: true
+  source:
+    type: 'text'
+  body:
+    type: 'markdown'
+    label: 'Notes'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'File'
+  - id: 'raw'
+    label: 'Front matter'
