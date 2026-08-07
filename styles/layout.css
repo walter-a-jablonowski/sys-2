@@ -164,6 +164,24 @@
   border-right: 1px solid var(--line);
 }
 
+/* Sits on the line between the two columns, wider than the line it covers */
+
+.col-resizer
+{
+  flex: 0 0 1px;
+  margin: 0 -3px;
+  width: 7px;
+  z-index: 3;
+  cursor: col-resize;
+  background: none;
+}
+
+.col-resizer:hover,
+.col-resizer.is-dragging
+{
+  background: var(--accent-line);
+}
+
 .col-editor
 {
   flex: 1 1 auto;
@@ -220,7 +238,7 @@
 {
   :root
   {
-    --nav-w: 288px;
+    --nav-w: 320px;
     --ai-w: 320px;
   }
 
@@ -247,6 +265,11 @@
   .cols
   {
     position: relative;
+  }
+
+  .col-resizer
+  {
+    display: none;
   }
 
   .col

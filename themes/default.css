@@ -41,8 +41,12 @@
   --row-h:  36px;
   --foot-h: 28px;
 
-  --nav-w: 320px;
+  --nav-w: 380px;
   --ai-w:  360px;
+
+  /* Range the navigation column can be dragged to */
+  --nav-min: 300px;
+  --nav-max: 560px;
 
   --font: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace;
