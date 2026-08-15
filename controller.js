@@ -1110,13 +1110,7 @@
     if( isContainer && state.mode === 'mobile' )
       return goTo(card.dataset.path, '');
 
-    if( isContainer )
-    {
-      unfold(card);
-      select(card.dataset.path);
-      return;
-    }
-
+    // Unfolding is the chevron's job, the card itself only opens the editor
     select(card.dataset.path);
   }
 
