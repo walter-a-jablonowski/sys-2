@@ -2,7 +2,7 @@
 id: workshop-2026-08-03-1030-1
 type: Activity
 created: '2026-08-03T10:30:00+02:00'
-modified: '2026-08-03T16:20:00+02:00'
+modified: '2026-08-07T22:04:24+02:00'
 status: running
 schedule:
   start: '2026-08-12'

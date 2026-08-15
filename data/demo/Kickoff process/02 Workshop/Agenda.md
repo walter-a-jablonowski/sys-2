@@ -1,8 +1,8 @@
 ---
-id: 'agenda-2026-08-03-1040'
-type: 'Info'
+id: agenda-2026-08-03-1040
+type: Info
 created: '2026-08-03T10:40:00+02:00'
-modified: '2026-08-03T10:40:00+02:00'
+modified: '2026-08-07T22:07:28+02:00'
 ---
 
 09:00 Arrival
