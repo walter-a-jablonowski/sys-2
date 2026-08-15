@@ -14,6 +14,9 @@
   border-bottom: 1px solid var(--line-soft);
   cursor: default;
   transition: background var(--speed) ease;
+
+  /* Double click goes one level deeper, it must not select a word */
+  user-select: none;
 }
 
 .card:hover
@@ -193,6 +196,10 @@
   padding: 12px 12px 12px 14px;
   border-bottom: 1px solid var(--line-soft);
   min-height: 56px;
+  user-select: none;
+
+  /* No waiting for a possible double tap, nothing is bound to one */
+  touch-action: manipulation;
 }
 
 .cell:active

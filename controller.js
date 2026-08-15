@@ -203,8 +203,12 @@
     card.classList.remove('is-open');
   }
 
-  async function select( path )
+  async function select( path, force )
   {
+    // Already open: the second click of a double click must not fetch again
+    if( ! force && path === state.selected && el.editor.querySelector('.editor'))
+      return;
+
     await flushSave();
 
     const data = await api('detail', { path: path });
@@ -328,7 +332,7 @@
       ).then(function ( reload )
       {
         if( reload )
-          select(state.selected);
+          select(state.selected, true);
       });
 
       return;
@@ -1101,17 +1105,42 @@
     const isChild = card.classList.contains('is-child');
     const onChevron = !! event.target.closest('.card-chevron, .cell-chevron');
 
-    // The chevron is the only way deeper: one level unfolds inline, an
-    // already unfolded child navigates into it
-    if( isContainer && onChevron )
-      return isChild ? goTo(card.dataset.path, '') : unfold(card);
-
-    // On a phone the whole row navigates, the chevron is too small to aim at
+    // Phone: a row with a chevron navigates, that is what a list on a phone
+    // does everywhere. The container's own editor is one [edit] away then.
     if( isContainer && state.mode === 'mobile' )
       return goTo(card.dataset.path, '');
 
+    // Desktop: the chevron goes deeper, one level unfolds inline, an already
+    // unfolded child navigates into it
+    if( isContainer && onChevron )
+      return isChild ? goTo(card.dataset.path, '') : unfold(card);
+
     select(card.dataset.path);
   }
+
+  /*
+    Double click does what the chevron does, so both gestures mean the same
+    thing: go one step deeper. No timer is needed, the first click has already
+    selected the entry and the second one only adds the step.
+  */
+
+  document.addEventListener('dblclick', function ( event )
+  {
+    const card = event.target.closest('.card');
+
+    if( ! card || card.dataset.container !== '1' || state.mode === 'mobile' )
+      return;
+
+    // The chevron handles itself, a double click on it would undo its own work
+    if( event.target.closest('.card-chevron'))
+      return;
+
+    event.preventDefault();
+
+    card.classList.contains('is-child')
+      ? goTo(card.dataset.path, '')
+      : unfold(card);
+  });
 
   document.addEventListener('input', function ( event )
   {
