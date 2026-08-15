@@ -1101,16 +1101,15 @@
     const isChild = card.classList.contains('is-child');
     const onChevron = !! event.target.closest('.card-chevron, .cell-chevron');
 
-    if( isContainer && isChild )
-      return goTo(card.dataset.path, '');
-
+    // The chevron is the only way deeper: one level unfolds inline, an
+    // already unfolded child navigates into it
     if( isContainer && onChevron )
-      return unfold(card);
+      return isChild ? goTo(card.dataset.path, '') : unfold(card);
 
+    // On a phone the whole row navigates, the chevron is too small to aim at
     if( isContainer && state.mode === 'mobile' )
       return goTo(card.dataset.path, '');
 
-    // Unfolding is the chevron's job, the card itself only opens the editor
     select(card.dataset.path);
   }
 
