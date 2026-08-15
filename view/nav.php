@@ -27,14 +27,14 @@ $current = $tabs[$tab] ?? reset($tabs);
   </div>
   <?php $options = $type->createOptions($tab) ?>
   <button type="button" class="icon-btn add" data-action="add" title="Add"<?= $options ? '' : ' disabled' ?>>
-    <svg class="icon" aria-hidden="true"><use href="styles/icons.svg#plus"></use></svg>
+    <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#plus"></use></svg>
   </button>
 </div>
 
 <?php if( $current['tools'] ?? false ): ?>
   <div class="row row-tools">
     <label class="filter">
-      <svg class="icon" aria-hidden="true"><use href="styles/icons.svg#search"></use></svg>
+      <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#search"></use></svg>
       <input type="search" class="filter-input" placeholder="Filter" aria-label="Filter entries">
     </label>
   </div>

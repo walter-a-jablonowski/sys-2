@@ -21,6 +21,7 @@ $tab       = (string) array_key_first($tabs);
 $result    = $query->run($container->path, $tabs[$tab]);
 $mode      = 'list';
 $theme     = (string) $app->config->app('theme', 'default');
+$icons     = $app->asset('styles/icons.svg');
 
 ?><!doctype html>
 <html lang="en" data-ai="0" data-view="list">
@@ -29,18 +30,21 @@ $theme     = (string) $app->config->app('theme', 'default');
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="dark">
   <title><?= htmlspecialchars($container->title, ENT_QUOTES) ?> — <?= htmlspecialchars((string) $app->config->app('appName', 'Sys'), ENT_QUOTES) ?></title>
-  <link rel="stylesheet" href="themes/<?= htmlspecialchars($theme, ENT_QUOTES) ?>.css">
-  <link rel="stylesheet" href="styles/base.css">
-  <link rel="stylesheet" href="styles/layout.css">
-  <link rel="stylesheet" href="styles/nav.css">
-  <link rel="stylesheet" href="styles/cards.css">
-  <link rel="stylesheet" href="styles/editor.css">
-  <link rel="stylesheet" href="styles/ai.css">
-  <link rel="stylesheet" href="styles/dialog.css">
-  <?php foreach( $app->types->all() as $type ): ?>
-    <?php if( $type->hasStyles()): ?>
-      <link rel="stylesheet" href="types/<?= htmlspecialchars($type->name, ENT_QUOTES) ?>/styles.css">
-    <?php endif ?>
+  <?php
+    $sheets = [
+      "themes/{$theme}.css",
+      'styles/base.css', 'styles/layout.css', 'styles/nav.css',
+      'styles/cards.css', 'styles/editor.css', 'styles/ai.css', 'styles/dialog.css'
+    ];
+
+    foreach( $app->types->all() as $type )
+    {
+      if( $type->hasStyles())
+        $sheets[] = "types/{$type->name}/styles.css";
+    }
+  ?>
+  <?php foreach( $sheets as $sheet ): ?>
+    <link rel="stylesheet" href="<?= htmlspecialchars($app->asset($sheet), ENT_QUOTES) ?>">
   <?php endforeach ?>
 </head>
 <body>
@@ -50,14 +54,14 @@ $theme     = (string) $app->config->app('theme', 'default');
   <header class="band band-head">
     <div class="seg seg-nav">
       <button type="button" class="icon-btn back" data-action="back" title="Back" hidden>
-        <svg class="icon" aria-hidden="true"><use href="styles/icons.svg#back"></use></svg>
+        <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#back"></use></svg>
       </button>
       <span class="nav-title" data-role="containerTitle"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
       <button type="button" class="btn-quiet edit" data-action="editContainer" title="Open this entry">edit</button>
     </div>
     <div class="seg seg-content">
       <button type="button" class="icon-btn back-layer" data-action="backLayer" title="Back">
-        <svg class="icon" aria-hidden="true"><use href="styles/icons.svg#back"></use></svg>
+        <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#back"></use></svg>
       </button>
       <div class="head-slot" data-role="headerSlot">
         <span class="head-empty">No entry selected</span>
@@ -66,7 +70,7 @@ $theme     = (string) $app->config->app('theme', 'default');
     <div class="head-actions">
       <button type="button" class="btn-quiet" data-action="toggleAi" title="AI sidebar">AI</button>
       <button type="button" class="icon-btn" data-action="objMenu" title="Menu" aria-haspopup="menu">
-        <svg class="icon" aria-hidden="true"><use href="styles/icons.svg#more"></use></svg>
+        <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#more"></use></svg>
       </button>
     </div>
   </header>
@@ -81,7 +85,7 @@ $theme     = (string) $app->config->app('theme', 'default');
 
     <main class="col col-editor" data-role="editor">
       <div class="editor-empty">
-        <svg class="icon icon-big" aria-hidden="true"><use href="styles/icons.svg#entry"></use></svg>
+        <svg class="icon icon-big" aria-hidden="true"><use href="<?= $icons ?>#entry"></use></svg>
         <p>Select an entry on the left, or press <b>edit</b> to open this one.</p>
       </div>
     </main>
@@ -115,10 +119,10 @@ $theme     = (string) $app->config->app('theme', 'default');
     pageSize: <?= (int) $app->config->db('pageSize', 50) ?>
   };
 </script>
-<script src="controller.js"></script>
+<script src="<?= htmlspecialchars($app->asset('controller.js'), ENT_QUOTES) ?>"></script>
 <?php foreach( $app->types->all() as $type ): ?>
   <?php if( $type->hasScript()): ?>
-    <script src="types/<?= htmlspecialchars($type->name, ENT_QUOTES) ?>/controller.js"></script>
+    <script src="<?= htmlspecialchars($app->asset("types/{$type->name}/controller.js"), ENT_QUOTES) ?>"></script>
   <?php endif ?>
 <?php endforeach ?>
 

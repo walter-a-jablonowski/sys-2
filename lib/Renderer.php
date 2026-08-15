@@ -38,7 +38,9 @@ abstract class Renderer
 
   protected function icon( string $name ) : string
   {
-    return '<svg class="icon" aria-hidden="true"><use href="styles/icons.svg#' . $this->esc($name) . '"></use></svg>';
+    $sprite = $this->esc($this->app->asset('styles/icons.svg'));
+
+    return '<svg class="icon" aria-hidden="true"><use href="' . $sprite . '#' . $this->esc($name) . '"></use></svg>';
   }
 
   protected function excerpt( string $text, int $max = 90 ) : string

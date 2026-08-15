@@ -15,6 +15,8 @@ class App
   public Index $index;
   public TypeRegistry $types;
 
+  private array $assets = [];
+
   private static ?App $instance = null;
 
   private function __construct( string $root )
@@ -30,6 +32,22 @@ class App
     $this->store  = new ObjStore($this->db, $this->path, $this->config);
     $this->index  = new Index($this->db, $this->store);
     $this->types  = new TypeRegistry("{$this->root}/types", $this->config);
+  }
+
+  /**
+   * Url of an own asset with a cache busting stamp, so an edited file is
+   * never served from the browser cache. Resolved once per file per request.
+   */
+  public function asset( string $rel ) : string
+  {
+    if( ! isset($this->assets[$rel]))
+    {
+      $file = "{$this->root}/{$rel}";
+
+      $this->assets[$rel] = $rel . '?v=' . (is_file($file) ? filemtime($file) : 0);
+    }
+
+    return $this->assets[$rel];
   }
 
   /**

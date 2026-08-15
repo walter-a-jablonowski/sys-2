@@ -32,6 +32,7 @@ return [
   'create' => $app->types->forObj($container)->createOptions($tab),
   'html'   => View::render("{$app->root}/view/nav.php", [
     'app'       => $app,
+    'icons'     => $app->asset('styles/icons.svg'),
     'container' => $container,
     'tabs'      => $tabs,
     'tab'       => $tab,
