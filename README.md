@@ -66,7 +66,9 @@ Objects without an id are invisible to search, Recent and Pinned.
 - Everything is files under `/data`, no database
 - **Title = file name.** Renaming renames the file or folder
 - `MY_ENTRY.md` and `MY_ENTRY/-this.md` are the **same object**
-  - a folder gets a `-this.md` when it needs content of its own
+  - a folder gets its `-this.md` the first time it is saved
+  - folders made outside the app have none until then
+- The **database root is not an entry** — it cannot be opened or saved
 - `(lnk)` in a name marks a **link stub**
   - opening a link opens its target
   - pinning a link pins the stub, not the target

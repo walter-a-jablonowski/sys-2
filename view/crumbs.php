@@ -52,10 +52,18 @@ foreach( $slots as $i => $slot ):
           data-skipped="<?= htmlspecialchars(json_encode($skipped, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES) ?>">…</button>
 <?php
   elseif( $i === $last ):
+
+    // The database itself is not an entry, so the root only names itself
+    if( $slot['obj']->path === '' ):
+?>
+  <span class="crumb is-current"><?= htmlspecialchars($slot['obj']->title, ENT_QUOTES) ?></span>
+<?php
+    else:
 ?>
   <button type="button" class="crumb is-current" data-action="editContainer"
           title="Open this container"><?= htmlspecialchars($slot['obj']->title, ENT_QUOTES) ?></button>
 <?php
+    endif;
   else:
 ?>
   <button type="button" class="crumb" data-action="goPath"

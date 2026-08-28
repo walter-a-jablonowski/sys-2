@@ -178,6 +178,18 @@ class ObjStore
   {
     $file = $obj->isResource ? $this->path->sidecarOf($obj->path) : $obj->file;
 
+    /*
+      A folder made outside the app carries no file of its own. Saving is
+      what gives it one: "-this" is where the content of a folder object
+      lives, so it is written the moment there is content to write.
+    */
+
+    if( $file === '' && $obj->isFolder && $obj->path !== '' )
+      $file = "{$obj->path}/{$this->path->thisFileName()}";
+
+    if( $file === '' )
+      throw Failure::invalid('The database itself is not an entry');
+
     if( $mtime !== null && $obj->mtime !== 0 && $obj->mtime !== $mtime )
       throw Failure::conflict('The file changed since it was loaded', ['mtime' => $obj->mtime]);
 

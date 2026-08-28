@@ -63,6 +63,10 @@ if( $renamed )
 if( $type !== '' && $type !== $obj->type && $app->types->has($type))
   $obj->type = $type;
 
+// Written for the first time: without an id the index cannot find it again
+if( $obj->id === '' )
+  $obj->id = $app->types->forObj($obj)->newId($obj->title);
+
 $saved = $app->store->save($obj, $data, $body, $renamed ? null : $mtime);
 
 $app->index->invalidate();

@@ -142,7 +142,10 @@
   async function enter( path )
   {
     await goTo(path, '');
-    await select(path);
+
+    // The database itself is not an entry, there is nothing to open
+    if( path !== '' )
+      await select(path);
   }
 
   async function loadList( options )
