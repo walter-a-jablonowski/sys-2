@@ -52,14 +52,79 @@
   flex: 1 1 auto;
 }
 
-.nav-title
+/*
+  The trail from the root to the current container. It replaces a plain
+  title: naming where you are and getting you anywhere above is the same
+  job, so it is the same element.
+*/
+
+.crumbs
 {
+  display: flex;
+  align-items: center;
   flex: 1 1 auto;
-  font-weight: 600;
+  min-width: 0;
+}
+
+.crumb
+{
+  flex: 0 1 auto;
+  min-width: 0;
+  padding: 2px 4px;
+  border-radius: var(--r-1);
+  color: var(--fg-dim);
   font-size: 13.5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.crumb:hover
+{
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
+/* Where you are: named, but nothing to click, you are already there */
+
+.crumb.is-current
+{
+  font-weight: 600;
+  color: var(--fg);
+}
+
+.crumb-more
+{
+  flex: 0 0 auto;
+  color: var(--fg-faint);
+}
+
+/* Opens the level above the segment it points at */
+
+.crumb-sep
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 20px;
+  border-radius: var(--r-1);
+  color: var(--fg-faint);
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.crumb-sep:hover
+{
+  background: var(--bg-3);
+  color: var(--fg-dim);
+}
+
+.crumb-sep .icon
+{
+  width: 12px;
+  height: 12px;
 }
 
 .head-slot

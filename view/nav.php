@@ -43,3 +43,19 @@ $current = $tabs[$tab] ?? reset($tabs);
 <div class="list" data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" data-tab="<?= htmlspecialchars($tab, ENT_QUOTES) ?>">
   <?php require __DIR__ . '/list.php' ?>
 </div>
+
+<?php
+  /*
+    Sources of the list. Recent and pinned reach across the whole tree, so
+    they only make sense where the list shows entries: 'entries' is the tab
+    id every type uses for that. Arriving at a container always means main,
+    which is why no active source has to be passed in here.
+  */
+?>
+<?php if( $tab === 'entries' ): ?>
+  <div class="row-modes">
+    <button type="button" class="pill is-active" data-source="children">Main</button>
+    <button type="button" class="pill" data-source="recent">Recent</button>
+    <button type="button" class="pill" data-source="pinned">Pinned</button>
+  </div>
+<?php endif ?>

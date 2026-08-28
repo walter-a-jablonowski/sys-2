@@ -34,6 +34,7 @@ class ListRenderer extends Renderer
         <?php if( $meta !== '' ): ?>
           <div class="card-meta"><?= $meta ?></div>
         <?php endif ?>
+        <?= $this->contextBlock() ?>
       </div>
       <div class="card-tail">
         <button class="card-action" data-action="menu" title="Actions" aria-label="Actions"><?= $this->icon('more') ?></button>

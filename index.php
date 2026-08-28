@@ -17,6 +17,7 @@ $app = App::boot(__DIR__);
 $container = $app->store->get((string) ($_GET['path'] ?? '')) ?? $app->store->get('');
 $query     = new ChildQuery($app);
 $tabs      = $query->tabs($container);
+$trail     = $app->store->trail($container->path);
 $tab       = (string) array_key_first($tabs);
 $result    = $query->run($container->path, $tabs[$tab]);
 $mode      = 'list';
@@ -34,7 +35,8 @@ $icons     = $app->asset('styles/icons.svg');
     $sheets = [
       "themes/{$theme}.css",
       'styles/base.css', 'styles/layout.css', 'styles/nav.css',
-      'styles/cards.css', 'styles/editor.css', 'styles/ai.css', 'styles/dialog.css'
+      'styles/cards.css', 'styles/editor.css', 'styles/ai.css', 'styles/dialog.css',
+      'styles/palette.css'
     ];
 
     foreach( $app->types->all() as $type )
@@ -56,7 +58,9 @@ $icons     = $app->asset('styles/icons.svg');
       <button type="button" class="icon-btn back" data-action="back" title="Back" hidden>
         <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#back"></use></svg>
       </button>
-      <span class="nav-title" data-role="containerTitle"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
+      <nav class="crumbs" data-role="crumbs" aria-label="Location">
+        <?php require __DIR__ . '/view/crumbs.php' ?>
+      </nav>
       <button type="button" class="btn-quiet edit" data-action="editContainer" title="Open this entry">edit</button>
     </div>
     <div class="seg seg-content">
@@ -68,6 +72,9 @@ $icons     = $app->asset('styles/icons.svg');
       </div>
     </div>
     <div class="head-actions">
+      <button type="button" class="icon-btn" data-action="openSearch" title="Search (Ctrl K)">
+        <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#search"></use></svg>
+      </button>
       <button type="button" class="btn-quiet" data-action="toggleAi" title="AI sidebar">AI</button>
       <button type="button" class="icon-btn" data-action="objMenu" title="Menu" aria-haspopup="menu">
         <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#more"></use></svg>
@@ -105,6 +112,8 @@ $icons     = $app->asset('styles/icons.svg');
   </footer>
 
 </div>
+
+<?php require __DIR__ . '/view/palette.php' ?>
 
 <div class="dropdown" data-role="dropdown" hidden></div>
 <div class="dialog-backdrop" data-role="dialog" hidden></div>

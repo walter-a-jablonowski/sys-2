@@ -137,3 +137,64 @@
   color: var(--fg-faint);
   font-size: 11.5px;
 }
+
+/*
+  Sources of the list, at the foot of the column. The active tab above owns
+  the accent, so the active pill is marked by a neutral fill instead: two
+  accent marks in one column would compete for the same meaning.
+*/
+
+.row-modes
+{
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+  height: 32px;
+  padding: 0 6px;
+  border-top: 1px solid var(--line);
+}
+
+.pill
+{
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--r-1);
+  color: var(--fg-faint);
+  font-size: 12.5px;
+  white-space: nowrap;
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.pill:hover
+{
+  background: var(--bg-3);
+  color: var(--fg-dim);
+}
+
+.pill.is-active
+{
+  background: var(--bg-4);
+  color: var(--fg);
+}
+
+/* Container an entry lives in, shown by the lists that reach across the tree */
+
+.card-path
+{
+  display: block;
+  max-width: 100%;
+  margin-top: 2px;
+  color: var(--fg-faint);
+  font-size: 11.5px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--speed) ease;
+}
+
+.card-path:hover
+{
+  color: var(--accent);
+}

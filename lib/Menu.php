@@ -26,6 +26,10 @@ class Menu
     if( $entries )
       $entries[] = ['divider' => true];
 
+    // An object without an id cannot be pinned: the list stores ids
+    if( $obj->id !== '' )
+      $entries[] = ['id' => 'pin', 'label' => $app->pinned->has($obj->id) ? 'Unpin' : 'Pin'];
+
     $entries[] = ['id' => 'rename', 'label' => 'Rename'];
     $entries[] = ['id' => 'move',   'label' => 'Move to…'];
 

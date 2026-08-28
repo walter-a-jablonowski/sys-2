@@ -78,6 +78,34 @@ class ObjStore
   }
 
   /**
+   * The way from the root down to a path, the root first and the object
+   * itself last. Segments that resolve to nothing are skipped, so a stale
+   * path still yields the part of the trail that exists.
+   *
+   * @return Obj[]
+   */
+  public function trail( string $rel ) : array
+  {
+    $rel   = $this->db->clean($rel);
+    $out   = [$this->rootObj()];
+    $walk  = '';
+
+    if( $rel === '' )
+      return $out;
+
+    foreach( explode('/', $rel) as $segment )
+    {
+      $walk = $walk === '' ? $segment : "{$walk}/{$segment}";
+      $obj  = $this->get($walk);
+
+      if( $obj !== null )
+        $out[] = $obj;
+    }
+
+    return $out;
+  }
+
+  /**
    * Counts children without reading them, for the meta line of a card.
    */
   public function countChildren( string $rel ) : int

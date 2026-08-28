@@ -25,6 +25,7 @@ class MobileRenderer extends Renderer
         <?php if( $meta !== '' ): ?>
           <div class="cell-meta"><?= $meta ?></div>
         <?php endif ?>
+        <?= $this->contextBlock() ?>
       </div>
       <?php if( $shown->isFolder ): ?>
         <span class="cell-chevron"><?= $this->icon('chevron') ?></span>

@@ -20,6 +20,8 @@ if( $obj->isLink && $obj->target !== '' )
     $obj = $target;
 }
 
+$app->recent->push($obj->id);
+
 $type = $app->types->forObj($obj);
 
 return [

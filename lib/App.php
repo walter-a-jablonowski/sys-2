@@ -14,6 +14,8 @@ class App
   public ObjStore $store;
   public Index $index;
   public TypeRegistry $types;
+  public ObjList $recent;
+  public ObjList $pinned;
 
   private array $assets = [];
 
@@ -32,6 +34,8 @@ class App
     $this->store  = new ObjStore($this->db, $this->path, $this->config);
     $this->index  = new Index($this->db, $this->store);
     $this->types  = new TypeRegistry("{$this->root}/types", $this->config);
+    $this->recent = new ObjList($this->db, $this->index, 'recent', 50);
+    $this->pinned = new ObjList($this->db, $this->index, 'pinned');
   }
 
   /**

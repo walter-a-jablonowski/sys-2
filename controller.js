@@ -16,6 +16,7 @@
     selected: null,
     mtime: 0,
     filter: '',
+    source: 'children',
     offset: 0,
     total: 0,
     create: window.SYS.create || [],
@@ -23,6 +24,7 @@
     ai: false,
     view: 'list',
     saveTimer: null,
+    paletteTimer: null,
     saving: false,
     savePending: false,
     menu: []
@@ -39,12 +41,15 @@
     footerSlot: document.querySelector('[data-role="footerSlot"]'),
     saveState: document.querySelector('[data-role="saveState"]'),
     listState: document.querySelector('[data-role="listState"]'),
-    containerTitle: document.querySelector('[data-role="containerTitle"]'),
+    crumbs: document.querySelector('[data-role="crumbs"]'),
     back: document.querySelector('[data-action="back"]'),
     navResizer: document.querySelector('[data-role="navResizer"]'),
     dropdown: document.querySelector('[data-role="dropdown"]'),
     dialog: document.querySelector('[data-role="dialog"]'),
-    toast: document.querySelector('[data-role="toast"]')
+    toast: document.querySelector('[data-role="toast"]'),
+    palette: document.querySelector('[data-role="palette"]'),
+    paletteInput: document.querySelector('[data-role="paletteInput"]'),
+    paletteHits: document.querySelector('[data-role="paletteHits"]')
   };
 
   // Server
@@ -105,13 +110,14 @@
 
     state.path = data.path;
     state.tab = data.tab;
+    state.source = 'children';
     state.offset = 0;
     state.filter = '';
     state.total = data.total;
     state.create = data.create || [];
 
     el.nav.innerHTML = data.html;
-    el.containerTitle.textContent = data.title;
+    el.crumbs.innerHTML = data.crumbs;
     el.back.hidden = data.isRoot;
     el.back.dataset.parent = data.parent;
     setListState(data.total);
@@ -128,6 +134,7 @@
     const data = await api('list', {
       path: state.path,
       tab: state.tab,
+      source: state.source,
       offset: offset,
       filter: state.filter
     });
@@ -154,6 +161,27 @@
     state.total = data.total;
     setListState(data.total);
     markSelected();
+  }
+
+  /*
+    Recent and pinned are not bound to the container, so switching only
+    reloads the list: the header keeps naming where the main list would be.
+  */
+
+  function setSource( source )
+  {
+    if( source === state.source )
+      return;
+
+    state.source = source;
+    state.offset = 0;
+
+    el.nav.querySelectorAll('.pill').forEach(function ( node )
+    {
+      node.classList.toggle('is-active', node.dataset.source === source);
+    });
+
+    loadList();
   }
 
   function setListState( total )
@@ -478,6 +506,27 @@
     el.dropdown.style.left = Math.max(8, Math.min(box.left, window.innerWidth - width - 8)) + 'px';
   }
 
+  /*
+    Both crumb controls end in the same thing: a list of containers, and
+    picking one navigates there.
+  */
+
+  function crumbDropdown( anchor, places )
+  {
+    if( ! places.length )
+      return toast('Nothing to open at this level');
+
+    const entries = places.map(function ( place )
+    {
+      return { id: 'crumb', path: place.path, label: place.title };
+    });
+
+    openDropdown(anchor, entries, function ( entry )
+    {
+      goTo(entry.path, '');
+    });
+  }
+
   function closeDropdown()
   {
     el.dropdown.hidden = true;
@@ -669,6 +718,18 @@
         handler(path);
       else
         toast('No handler for ' + entry.js, true);
+
+      return;
+    }
+
+    if( entry.id === 'pin' )
+    {
+      const data = await api('pin', { path: path }, 'POST');
+
+      toast(data.pinned ? 'Pinned' : 'Unpinned');
+
+      if( state.source === 'pinned' )
+        loadList();
 
       return;
     }
@@ -968,6 +1029,88 @@
       setView(state.ai ? 'ai' : 'list', true);
   }
 
+  /*
+    Search overlay.
+
+    The only surface that reaches across the whole hierarchy at once. With
+    an empty field it shows what was opened last, so it is useful before a
+    single character is typed.
+  */
+
+  function openPalette()
+  {
+    closeDropdown();
+
+    el.palette.hidden = false;
+    el.paletteInput.value = '';
+    el.paletteInput.focus();
+
+    loadHits('');
+  }
+
+  function closePalette()
+  {
+    clearTimeout(state.paletteTimer);
+    el.palette.hidden = true;
+  }
+
+  async function loadHits( query )
+  {
+    const data = await api('search', { q: query });
+
+    // A slow answer to an old query must never overwrite a newer one
+    if( el.palette.hidden || el.paletteInput.value.trim() !== query )
+      return;
+
+    el.paletteHits.innerHTML = data.html;
+    markHit(el.paletteHits.querySelector('.hit'));
+  }
+
+  function markHit( row )
+  {
+    const open = el.paletteHits.querySelector('.hit.is-active');
+
+    if( open )
+      open.classList.remove('is-active');
+
+    if( ! row )
+      return;
+
+    row.classList.add('is-active');
+    row.scrollIntoView({ block: 'nearest' });
+  }
+
+  function moveHit( step )
+  {
+    const rows = Array.from(el.paletteHits.querySelectorAll('.hit'));
+
+    if( ! rows.length )
+      return;
+
+    const at = rows.indexOf(el.paletteHits.querySelector('.hit.is-active'));
+
+    markHit(rows[(Math.max(at, 0) + step + rows.length) % rows.length]);
+  }
+
+  /*
+    A container is a place, so it is opened. Anything else is an entry: the
+    column moves to where it lives and the entry itself goes into the editor.
+  */
+
+  async function pickHit( row )
+  {
+    if( ! row )
+      return;
+
+    closePalette();
+
+    if( row.dataset.container === '1' )
+      return goTo(row.dataset.path, '');
+
+    await goTo(row.dataset.parent, '');
+    await select(row.dataset.path);
+  }
+
   // Helpers
 
   function escapeHtml( text )
@@ -993,9 +1136,23 @@
     const tab = event.target.closest('.tab');
     const pane = event.target.closest('.editor-tab');
     const more = event.target.closest('.load-more');
+    const pill = event.target.closest('.pill');
+    const hit = event.target.closest('.hit');
 
     if( ! event.target.closest('.dropdown'))
       closeDropdown();
+
+    if( event.target === el.palette )
+    {
+      closePalette();
+      return;
+    }
+
+    if( hit )
+    {
+      pickHit(hit);
+      return;
+    }
 
     if( action )
     {
@@ -1017,6 +1174,12 @@
         node.classList.toggle('is-active', node === tab);
       });
       goTo(state.path, state.tab);
+      return;
+    }
+
+    if( pill )
+    {
+      setSource(pill.dataset.source);
       return;
     }
 
@@ -1047,6 +1210,31 @@
           runMenuEntry(entry, card.dataset.path, data.type);
         });
       });
+      return;
+    }
+
+    if( name === 'openSearch' )
+      return openPalette();
+
+    if( name === 'crumbLevel' )
+    {
+      api('tree', { path: node.dataset.path, pick: 'container' }).then(function ( data )
+      {
+        crumbDropdown(node, data.items.filter(function ( item ) { return item.isFolder; }));
+      });
+      return;
+    }
+
+    if( name === 'crumbSkipped' )
+    {
+      crumbDropdown(node, JSON.parse(node.dataset.skipped));
+      return;
+    }
+
+    // The path line of a recent or pinned entry leads to its container
+    if( name === 'goPath' )
+    {
+      goTo(node.dataset.path, '');
       return;
     }
 
@@ -1179,6 +1367,32 @@
 
   document.addEventListener('keydown', function ( event )
   {
+    if(( event.ctrlKey || event.metaKey ) && ( event.key === 'k' || event.key === 'K' ))
+    {
+      event.preventDefault();
+      return el.palette.hidden ? openPalette() : closePalette();
+    }
+
+    if( ! el.palette.hidden )
+    {
+      if( event.key === 'Escape' )
+        return closePalette();
+
+      if( event.key === 'ArrowDown' || event.key === 'ArrowUp' )
+      {
+        event.preventDefault();
+        return moveHit(event.key === 'ArrowDown' ? 1 : -1);
+      }
+
+      if( event.key === 'Enter' )
+      {
+        event.preventDefault();
+        return pickHit(el.paletteHits.querySelector('.hit.is-active'));
+      }
+
+      return;
+    }
+
     if( event.key === 'Escape' )
       closeDropdown();
 
@@ -1189,6 +1403,26 @@
       event.preventDefault();
       field.blur();
     }
+  });
+
+  el.paletteInput.addEventListener('input', function ()
+  {
+    const query = el.paletteInput.value.trim();
+
+    clearTimeout(state.paletteTimer);
+
+    state.paletteTimer = setTimeout(function ()
+    {
+      loadHits(query);
+    }, 140);
+  });
+
+  el.paletteHits.addEventListener('mousemove', function ( event )
+  {
+    const row = event.target.closest('.hit');
+
+    if( row && ! row.classList.contains('is-active'))
+      markHit(row);
   });
 
   el.nav.addEventListener('input', function ( event )

@@ -8,18 +8,30 @@
  * @var array   $result   result of ChildQuery::run()
  * @var int     $offset
  * @var string  $mode     'list' or 'mobile'
+ * @var bool    $showPath   name the container each entry lives in
+ * @var string  $emptyHint  what to say when the list has nothing to show
  */
+
+$showPath  = $showPath ?? false;
+$emptyHint = $emptyHint ?? 'Nothing here yet.';
 
 if( ! $result['items'] ):
 ?>
   <div class="empty-hint">
-    <?= $filter ?? '' ? 'Nothing matches the filter.' : 'Nothing here yet.' ?>
+    <?= $filter ?? '' ? 'Nothing matches the filter.' : $emptyHint ?>
   </div>
 <?php
 else:
 
   foreach( $result['items'] as $child )
-    $app->renderer($mode, $child)->render();
+  {
+    $renderer = $app->renderer($mode, $child);
+
+    if( $showPath )
+      $renderer->withContext($child->parentPath());
+
+    $renderer->render();
+  }
 
   if( $result['hasMore'] ):
 ?>

@@ -20,6 +20,7 @@ if( ! isset($tabs[$tab]))
   $tab = (string) array_key_first($tabs);
 
 $result = $query->run($container->path, $tabs[$tab]);
+$icons  = $app->asset('styles/icons.svg');
 
 return [
   'path'   => $container->path,
@@ -30,9 +31,14 @@ return [
   'isRoot' => $container->path === '',
   'total'  => $result['total'],
   'create' => $app->types->forObj($container)->createOptions($tab),
+  'crumbs' => View::render("{$app->root}/view/crumbs.php", [
+    'app'   => $app,
+    'icons' => $icons,
+    'trail' => $app->store->trail($container->path)
+  ]),
   'html'   => View::render("{$app->root}/view/nav.php", [
     'app'       => $app,
-    'icons'     => $app->asset('styles/icons.svg'),
+    'icons'     => $icons,
     'container' => $container,
     'tabs'      => $tabs,
     'tab'       => $tab,

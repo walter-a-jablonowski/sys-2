@@ -12,6 +12,9 @@ abstract class Renderer
   protected Type $type;
   protected Obj $obj;
 
+  // Parent path, set only by lists that show entries from anywhere
+  protected ?string $context = null;
+
   public function __construct( App $app, Type $type, Obj $obj )
   {
     $this->app  = $app;
@@ -20,6 +23,17 @@ abstract class Renderer
   }
 
   abstract public function render() : void;
+
+  /**
+   * Tells the renderer to name the container the object lives in. Needed
+   * by the recent and pinned lists, where the title alone says too little.
+   */
+  public function withContext( string $parentPath ) : self
+  {
+    $this->context = $parentPath;
+
+    return $this;
+  }
 
   public function html() : string
   {
@@ -41,6 +55,22 @@ abstract class Renderer
     $sprite = $this->esc($this->app->asset('styles/icons.svg'));
 
     return '<svg class="icon" aria-hidden="true"><use href="' . $sprite . '#' . $this->esc($name) . '"></use></svg>';
+  }
+
+  /**
+   * The container an object lives in, as a line under its title. Empty
+   * unless a list asked for it, so any render() can emit it unguarded.
+   * An object at the top level is named by the database itself.
+   */
+  protected function contextBlock() : string
+  {
+    if( $this->context === null )
+      return '';
+
+    $label = $this->app->db->pathLabel($this->context);
+
+    return '<button type="button" class="card-path" data-action="goPath" title="Go to this container" data-path="'
+      . $this->esc($this->context) . '">' . $this->esc($label) . '</button>';
   }
 
   protected function excerpt( string $text, int $max = 90 ) : string

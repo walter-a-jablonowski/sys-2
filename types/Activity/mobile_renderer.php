@@ -21,6 +21,7 @@ class ActivityMobileRenderer extends \Sys\MobileRenderer
       <div class="cell-body">
         <div class="cell-title"><?= $this->esc($obj->title) ?></div>
         <div class="cell-meta"><?= $this->meta() ?></div>
+        <?= $this->contextBlock() ?>
       </div>
       <?php if( $shown->isFolder ): ?>
         <span class="cell-chevron"><?= $this->icon('chevron') ?></span>

@@ -1,10 +1,11 @@
 <?php
 
 /**
- * One level of the hierarchy for the picker dialog.
+ * One level of the hierarchy.
  *
- * Serves both uses: picking a move target (containers only) and picking a
- * link target (objects of the types a tab accepts).
+ * Serves the picker dialog, for a move target (containers only) or a link
+ * target (objects of the types a tab accepts), and the breadcrumb, which
+ * asks for containers and keeps the folders of the answer.
  *
  * @var Sys\App  $app
  * @var Sys\Ajax $ajax

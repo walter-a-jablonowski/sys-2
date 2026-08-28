@@ -29,6 +29,15 @@ class Db
     return basename($this->root);
   }
 
+  /**
+   * A path as one readable line. The empty path is the database itself,
+   * which is what sits at the top of every trail.
+   */
+  public function pathLabel( string $rel ) : string
+  {
+    return $rel === '' ? $this->name() : str_replace('/', ' › ', $rel);
+  }
+
   public function abs( string $rel = '' ) : string
   {
     $rel = $this->clean($rel);
