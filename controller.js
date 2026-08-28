@@ -25,6 +25,7 @@
     view: 'list',
     saveTimer: null,
     paletteTimer: null,
+    views: {},
     saving: false,
     savePending: false,
     menu: []
@@ -105,6 +106,7 @@
   async function goTo( path, tab, push )
   {
     await flushSave();
+    rememberScroll();
 
     const data = await api('nav', { path: path, tab: tab || '' });
 
@@ -121,6 +123,8 @@
     el.back.hidden = data.isRoot;
     el.back.dataset.parent = data.parent;
     setListState(data.total);
+
+    await restoreView();
 
     if( push !== false )
       writeHash();
@@ -161,6 +165,9 @@
     state.total = data.total;
     setListState(data.total);
     markSelected();
+
+    if( ! append )
+      await restoreView();
   }
 
   /*
@@ -214,6 +221,7 @@
     });
 
     card.classList.add('is-open');
+    openRow(card.dataset.path);
   }
 
   function collapse( card )
@@ -229,6 +237,82 @@
     });
 
     card.classList.remove('is-open');
+    closeRow(path);
+  }
+
+  /*
+    What the column looked like, per container and tab: which rows were
+    unfolded and how far it was scrolled. Memory only, so a reload starts
+    clean, and replayed whenever the same list is rendered again.
+  */
+
+  function viewState()
+  {
+    const key = state.path + '|' + state.tab;
+
+    if( ! state.views[key])
+      state.views[key] = { open: [], scroll: 0 };
+
+    return state.views[key];
+  }
+
+  function openRow( path )
+  {
+    const open = viewState().open;
+
+    if( open.indexOf(path) < 0 )
+      open.push(path);
+  }
+
+  function closeRow( path )
+  {
+    const open = viewState().open;
+    const at = open.indexOf(path);
+
+    if( at >= 0 )
+      open.splice(at, 1);
+  }
+
+  function rememberScroll()
+  {
+    const list = el.nav.querySelector('.list');
+
+    if( list && state.source === 'children' )
+      viewState().scroll = list.scrollTop;
+  }
+
+  /*
+    Replays the rows in the order they were opened, so a parent is always
+    back before the child living inside it. The scroll comes last: until the
+    rows are there the offset would land somewhere else.
+  */
+
+  async function restoreView()
+  {
+    if( state.source !== 'children' || state.filter !== '' )
+      return;
+
+    const view = viewState();
+    const done = [];
+
+    for( const path of view.open.slice())
+    {
+      const card = el.nav.querySelector('.card[data-path="' + cssEscape(path) + '"]:not(.is-open)');
+
+      if( ! card )
+        continue;
+
+      await unfold(card);
+      done.push(path);
+    }
+
+    // Rows that were deleted or moved meanwhile drop out on their own
+    view.open = done;
+
+    const list = el.nav.querySelector('.list');
+
+    if( list )
+      list.scrollTop = view.scroll;
   }
 
   async function select( path, force )
@@ -936,9 +1020,25 @@
     if( state.selected )
       query.set('sel', state.selected);
 
-    const hash = '#/' + encodePath(state.path) + '?' + query.toString();
+    const path = encodePath(state.path);
+    const hash = '#/' + path + '?' + query.toString();
 
-    if( location.hash !== hash )
+    if( location.hash === hash )
+      return;
+
+    /*
+      Moving to another container is a step worth walking back, opening an
+      entry is not: one history entry per card click would leave the back
+      button useless for navigating.
+    */
+
+    const was = location.hash.replace(/^#\/?/, '').split('?');
+    const moved = location.hash !== ''
+      && ( was[0] !== path || new URLSearchParams(was[1] || '').get('tab') !== state.tab );
+
+    if( moved )
+      history.pushState({ view: state.view }, '', hash);
+    else
       history.replaceState({ view: state.view }, '', hash);
   }
 
