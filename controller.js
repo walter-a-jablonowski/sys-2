@@ -1407,9 +1407,12 @@
   }
 
   /*
-    Double click does what the chevron does, so both gestures mean the same
-    thing: go one step deeper. No timer is needed, the first click has already
-    selected the entry and the second one only adds the step.
+    Double click enters a container, at every level. The chevron keeps the
+    other job, unfolding one level in place, so the two gestures mean two
+    different things instead of the same one.
+
+    No timer is needed: the first click has already selected the entry, so
+    the editor shows the container itself while the list moves inside it.
   */
 
   document.addEventListener('dblclick', function ( event )
@@ -1425,9 +1428,7 @@
 
     event.preventDefault();
 
-    card.classList.contains('is-child')
-      ? goTo(card.dataset.path, '')
-      : unfold(card);
+    goTo(card.dataset.path, '');
   });
 
   document.addEventListener('input', function ( event )

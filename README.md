@@ -23,9 +23,10 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
 ## Navigation column
 
 - **Chevron** on a card — unfolds one level inline
-  - **Double click** does the same
-  - chevron on an already unfolded child — goes into it
-  - on a phone a container row always goes into it
+  - only one level ever unfolds; a chevron on an unfolded child goes into it
+- **Double click** a container — goes into it, at any level
+  - the container itself lands in the editor, its children in the list
+  - on a phone a single tap does this
 - **Filter** box — the list in front of you, by title only
 - **Drag the column edge** to resize; **double click it** resets the width
 - **edit** in the header — opens the container itself as an entry
