@@ -3,3 +3,5 @@ composer.lock
 vendor/
 sys.code-workspace
 data/*/.sys/index.json
+data/*/.sys/recent.json
+data/*/.sys/pinned.json

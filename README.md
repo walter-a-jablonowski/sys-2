@@ -1,0 +1,93 @@
+# Sys
+
+Markdown hierarchy viewer. Everything below is behaviour the UI does not spell out.
+
+## Keys
+
+- **Ctrl/Cmd K** — search overlay (also the magnifier in the header)
+  - **↑ ↓** move, wraps around
+  - **Enter** — container: go into it; entry: go to its container and open it
+  - **Esc** or click outside — close
+- **Enter** in a title field — commits the rename (blurs)
+- **Esc** — closes a dropdown
+
+## Search
+
+- Matches the **whole path**, not just the title
+  - `kick/fol/mig` finds `Kickoff process / 03 Follow up / Write the migration notes`
+  - characters need only appear in order
+- Ranking: title hits beat ancestor hits, tight runs beat scattered, shallow beats deep
+- Empty field shows the last 8 opened entries
+- Capped at 20 results
+
+## Navigation column
+
+- **Chevron** on a card — unfolds one level inline
+  - **Double click** does the same
+  - chevron on an already unfolded child — goes into it
+  - on a phone a container row always goes into it
+- **Filter** box — the list in front of you, by title only
+- **Drag the column edge** to resize; **double click it** resets the width
+- **edit** in the header — opens the container itself as an entry
+
+## Breadcrumb
+
+- A segment — goes to that container
+- **Chevron between segments** — lists the containers of that level (sideways jump)
+- **…** in a deep trail — the skipped levels, click to jump
+  - collapses past 4 segments, keeps root and the last two
+
+## Main / Recent / Pinned
+
+- Pills sit under the list, only on the **Entries** tab
+- Recent and Pinned ignore the current container
+  - each row shows where it lives; clicking that line goes there
+  - navigating anywhere resets to **Main**
+- **Pin** lives in the card's ⋮ menu, not on the card
+- Both store **ids**, not paths
+  - survive move and rename
+  - deleting drops the entry silently
+- Recent holds 50, the overlay shows 8
+
+## Not reachable
+
+Objects without an id are invisible to search, Recent and Pinned.
+
+- A folder with no `-this.md` has no id
+- The ⋮ menu hides **Pin** for those
+
+## Data on disk
+
+- Everything is files under `/data`, no database
+- **Title = file name.** Renaming renames the file or folder
+- `MY_ENTRY.md` and `MY_ENTRY/-this.md` are the **same object**
+  - a folder gets a `-this.md` when it needs content of its own
+- `(lnk)` in a name marks a **link stub**
+  - opening a link opens its target
+  - pinning a link pins the stub, not the target
+- Resources keep their extension; fields live in a sidecar `NAME.ext.md`
+- Front matter keys the app owns: `id`, `type`, `created`, `modified`, `target` — the rest belongs to the type
+- `<db>/.sys/` — runtime state, not content
+  - `index.json` rebuilds itself, safe to delete
+  - `recent.json`, `pinned.json` do not — deleting them loses the lists
+
+## Behaviour that surprises
+
+- Lists are sorted **newest first**, not alphabetically
+- **Delete is permanent.** No trash
+- Autosave 800 ms after the last keystroke
+  - title and dropdowns save at once, the title on leaving the field
+- The index rebuilds itself when any folder changes on disk
+- **Check database** (⋮ menu) finds duplicate ids, shadowed files, broken links
+
+## Config
+
+- `config.yml` — `dbPath`, `theme`, `appName`
+- `<db>/.sys/config.yml` — `thisFile`, `linkMarker`, `defaultType`, `pageSize`, `sort`
+- Tabs, fields, icons and menu entries per type — `types/<Type>/config.yml`
+  - `create: { tab: ['__link:Person'] }` makes **+** add a link, not a new object
+
+## URLs
+
+- `index.php?path=A/B` — first paint at a container
+- `#/A/B?tab=entries&sel=A/B/Entry` — kept in sync, shareable
