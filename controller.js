@@ -130,6 +130,21 @@
       writeHash();
   }
 
+  /*
+    Arriving at a container: the list moves inside it and the container goes
+    into the editor, so what you navigated to is what you see. goTo on its
+    own leaves the editor on whatever happened to be open before.
+
+    Switching tab and restoring a url do not go through here: the first stays
+    in the same container, the second carries its own selection.
+  */
+
+  async function enter( path )
+  {
+    await goTo(path, '');
+    await select(path);
+  }
+
   async function loadList( options )
   {
     const append = options && options.append;
@@ -607,7 +622,7 @@
 
     openDropdown(anchor, entries, function ( entry )
     {
-      goTo(entry.path, '');
+      enter(entry.path);
     });
   }
 
@@ -1205,7 +1220,7 @@
     closePalette();
 
     if( row.dataset.container === '1' )
-      return goTo(row.dataset.path, '');
+      return enter(row.dataset.path);
 
     await goTo(row.dataset.parent, '');
     await select(row.dataset.path);
@@ -1334,7 +1349,7 @@
     // The path line of a recent or pinned entry leads to its container
     if( name === 'goPath' )
     {
-      goTo(node.dataset.path, '');
+      enter(node.dataset.path);
       return;
     }
 
@@ -1356,7 +1371,7 @@
       return addEntry(node);
 
     if( name === 'back' )
-      return goTo(node.dataset.parent || '', '');
+      return enter(node.dataset.parent || '');
 
     if( name === 'backLayer' )
       return backLayer();
@@ -1396,12 +1411,12 @@
     // Phone: a row with a chevron navigates, that is what a list on a phone
     // does everywhere. The container's own editor is one [edit] away then.
     if( isContainer && state.mode === 'mobile' )
-      return goTo(card.dataset.path, '');
+      return enter(card.dataset.path);
 
     // Desktop: the chevron goes deeper, one level unfolds inline, an already
     // unfolded child navigates into it
     if( isContainer && onChevron )
-      return isChild ? goTo(card.dataset.path, '') : unfold(card);
+      return isChild ? enter(card.dataset.path) : unfold(card);
 
     select(card.dataset.path);
   }
@@ -1428,7 +1443,7 @@
 
     event.preventDefault();
 
-    goTo(card.dataset.path, '');
+    enter(card.dataset.path);
   });
 
   document.addEventListener('input', function ( event )

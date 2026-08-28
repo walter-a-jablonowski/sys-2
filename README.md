@@ -29,11 +29,15 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
   - on a phone a single tap does this
 - **Filter** box — the list in front of you, by title only
 - **Drag the column edge** to resize; **double click it** resets the width
-- **edit** in the header — opens the container itself as an entry
+- Arriving at a container puts **that container** in the editor
+  - applies to every route in: double click, chevron, back, breadcrumb, search, path line
+  - switching tab does not, it stays in the same container
 
 ## Breadcrumb
 
 - A segment — goes to that container
+- **The last segment** — puts the container you are in into the editor
+  - same as **edit** in the header
 - **Chevron between segments** — lists the containers of that level (sideways jump)
 - **…** in a deep trail — the skipped levels, click to jump
   - collapses past 4 segments, keeps root and the last two

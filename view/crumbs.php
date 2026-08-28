@@ -4,8 +4,9 @@
  * The way from the root down to the current container, in the header of the
  * navigation column.
  *
- * A segment leads to its own container. The chevron in front of a segment
- * opens the containers of the level above it, which is the sideways jump.
+ * A segment leads to its own container, the last one puts the container you
+ * are in into the editor. The chevron in front of a segment opens the
+ * containers of the level above it, which is the sideways jump.
  * A deep trail keeps the root and the last two segments only, everything
  * between them moves into the "…" and its dropdown.
  *
@@ -52,7 +53,8 @@ foreach( $slots as $i => $slot ):
 <?php
   elseif( $i === $last ):
 ?>
-  <span class="crumb is-current"><?= htmlspecialchars($slot['obj']->title, ENT_QUOTES) ?></span>
+  <button type="button" class="crumb is-current" data-action="editContainer"
+          title="Open this container"><?= htmlspecialchars($slot['obj']->title, ENT_QUOTES) ?></button>
 <?php
   else:
 ?>
