@@ -6,6 +6,10 @@
  *
  * A segment leads to its own container. The chevron in front of a segment
  * opens the containers of the level above it, which is the sideways jump.
+ *
+ * The container you are in is named at the top of the navigation column, so
+ * the trail stops at its chevron and does not write the name twice. Only at
+ * the root, which the column does not name, does the last segment show.
  * A deep trail keeps the root and the last two segments only, everything
  * between them moves into the "…" and its dropdown.
  *
@@ -51,9 +55,13 @@ foreach( $slots as $i => $slot ):
           data-skipped="<?= htmlspecialchars(json_encode($skipped, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES) ?>">…</button>
 <?php
   elseif( $i === $last ):
+
+    if( $slot['obj']->path === '' ):
 ?>
   <span class="crumb is-current"><?= htmlspecialchars($slot['obj']->title, ENT_QUOTES) ?></span>
 <?php
+    endif;
+
   else:
 ?>
   <button type="button" class="crumb" data-action="goPath"

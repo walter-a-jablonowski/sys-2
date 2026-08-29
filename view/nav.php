@@ -17,6 +17,24 @@ $filter  = '';
 $current = $tabs[$tab] ?? reset($tabs);
 
 ?>
+<?php
+  /*
+    The container itself, at the top of the column. The tabs below are its
+    tabs and the lists below those are its lists, so it heads all of them
+    and is the only place its name is written: the breadcrumb stops short.
+  */
+?>
+<?php if( $container->path !== '' ): ?>
+  <button type="button" class="self" data-action="editContainer"
+          data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" title="Open this entry">
+    <span class="self-icon">
+      <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#<?= htmlspecialchars($type->icon(), ENT_QUOTES) ?>"></use></svg>
+    </span>
+    <span class="self-title"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
+    <span class="self-type"><?= htmlspecialchars($type->label(), ENT_QUOTES) ?></span>
+  </button>
+<?php endif ?>
+
 <div class="row row-tabs">
   <div class="tabs" role="tablist">
     <?php foreach( $tabs as $id => $def ): ?>
@@ -38,24 +56,6 @@ $current = $tabs[$tab] ?? reset($tabs);
       <input type="search" class="filter-input" placeholder="Filter" aria-label="Filter entries">
     </label>
   </div>
-<?php endif ?>
-
-<?php
-  /*
-    The container itself, at the head of its own list, so what you navigated
-    to can be opened again. Only where the list shows its entries: the other
-    tabs have a purpose of their own, and the root names no single object.
-  */
-?>
-<?php if( $tab === 'entries' && $container->path !== '' ): ?>
-  <button type="button" class="self" data-role="self" data-action="editContainer"
-          data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" title="Open this entry">
-    <span class="self-icon">
-      <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#<?= htmlspecialchars($type->icon(), ENT_QUOTES) ?>"></use></svg>
-    </span>
-    <span class="self-title"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
-    <span class="self-type"><?= htmlspecialchars($type->label(), ENT_QUOTES) ?></span>
-  </button>
 <?php endif ?>
 
 <div class="list" data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" data-tab="<?= htmlspecialchars($tab, ENT_QUOTES) ?>">

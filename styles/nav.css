@@ -104,8 +104,9 @@
 }
 
 /*
-  The container itself, at the head of its own list. It belongs with the rows
-  above it rather than the cards below: one line, darker ground, firm line.
+  The container itself, at the top of the column: the tabs and lists below
+  all belong to it. Sits on the header's own ground so it reads as the
+  subject of the column rather than the first of its rows.
 */
 
 .self
@@ -122,11 +123,6 @@
   border-bottom: 1px solid var(--line);
   text-align: left;
   transition: background var(--speed) ease;
-}
-
-.self[hidden]
-{
-  display: none;
 }
 
 .self:hover

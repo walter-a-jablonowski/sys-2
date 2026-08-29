@@ -206,12 +206,6 @@
       node.classList.toggle('is-active', node.dataset.source === source);
     });
 
-    // Recent and pinned reach past this container, so it stops heading them
-    const self = el.nav.querySelector('[data-role="self"]');
-
-    if( self )
-      self.hidden = source !== 'children';
-
     loadList();
   }
 

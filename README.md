@@ -28,9 +28,10 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
   - the container itself lands in the editor, its children in the list
   - on a phone a single tap does this
 - **Filter** box — the list in front of you, by title only
-- **The row above the list** is the container you are in — click it to open it
-  - only on the **Entries** tab, never at the root
-  - stays put while filtering, steps aside for Recent and Pinned
+- **The row at the top of the column** is the container you are in
+  - click it to open that container in the editor
+  - it heads every tab and every list, and never moves
+  - not shown at the root, which is no entry
 - **Drag the column edge** to resize; **double click it** resets the width
 - Arriving at a container puts **that container** in the editor
   - applies to every route in: double click, chevron, back, breadcrumb, search, path line
@@ -38,7 +39,9 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
 
 ## Breadcrumb
 
-- A segment — goes to that container; the last one only names it
+- A segment — goes to that container
+- The trail **stops before the container you are in** — the column names that
+  - except at the root, which the column does not name
 - **Chevron between segments** — lists the containers of that level (sideways jump)
 - **…** in a deep trail — the skipped levels, click to jump
   - collapses past 4 segments, keeps root and the last two
