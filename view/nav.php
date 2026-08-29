@@ -40,6 +40,24 @@ $current = $tabs[$tab] ?? reset($tabs);
   </div>
 <?php endif ?>
 
+<?php
+  /*
+    The container itself, at the head of its own list, so what you navigated
+    to can be opened again. Only where the list shows its entries: the other
+    tabs have a purpose of their own, and the root names no single object.
+  */
+?>
+<?php if( $tab === 'entries' && $container->path !== '' ): ?>
+  <button type="button" class="self" data-role="self" data-action="editContainer"
+          data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" title="Open this entry">
+    <span class="self-icon">
+      <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#<?= htmlspecialchars($type->icon(), ENT_QUOTES) ?>"></use></svg>
+    </span>
+    <span class="self-title"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
+    <span class="self-type"><?= htmlspecialchars($type->label(), ENT_QUOTES) ?></span>
+  </button>
+<?php endif ?>
+
 <div class="list" data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" data-tab="<?= htmlspecialchars($tab, ENT_QUOTES) ?>">
   <?php require __DIR__ . '/list.php' ?>
 </div>

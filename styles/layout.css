@@ -86,7 +86,7 @@
   color: var(--fg);
 }
 
-/* Where you are. Clicking it puts the container itself into the editor */
+/* Where you are: named, but nothing to click, you are already there */
 
 .crumb.is-current
 {

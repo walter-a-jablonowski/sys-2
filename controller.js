@@ -206,6 +206,12 @@
       node.classList.toggle('is-active', node.dataset.source === source);
     });
 
+    // Recent and pinned reach past this container, so it stops heading them
+    const self = el.nav.querySelector('[data-role="self"]');
+
+    if( self )
+      self.hidden = source !== 'children';
+
     loadList();
   }
 
@@ -360,7 +366,7 @@
 
   function markSelected()
   {
-    el.nav.querySelectorAll('.card, .cell').forEach(function ( card )
+    el.nav.querySelectorAll('.card, .cell, .self').forEach(function ( card )
     {
       card.classList.toggle('is-selected', card.dataset.path === state.selected);
     });

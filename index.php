@@ -61,7 +61,6 @@ $icons     = $app->asset('styles/icons.svg');
       <nav class="crumbs" data-role="crumbs" aria-label="Location">
         <?php require __DIR__ . '/view/crumbs.php' ?>
       </nav>
-      <button type="button" class="btn-quiet edit" data-action="editContainer" title="Open this entry">edit</button>
     </div>
     <div class="seg seg-content">
       <button type="button" class="icon-btn back-layer" data-action="backLayer" title="Back">
@@ -93,7 +92,7 @@ $icons     = $app->asset('styles/icons.svg');
     <main class="col col-editor" data-role="editor">
       <div class="editor-empty">
         <svg class="icon icon-big" aria-hidden="true"><use href="<?= $icons ?>#entry"></use></svg>
-        <p>Select an entry on the left, or press <b>edit</b> to open this one.</p>
+        <p>Select an entry on the left.</p>
       </div>
     </main>
 
