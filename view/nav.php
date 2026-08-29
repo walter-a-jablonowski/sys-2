@@ -27,9 +27,6 @@ $current = $tabs[$tab] ?? reset($tabs);
 <?php if( $container->path !== '' ): ?>
   <button type="button" class="self" data-action="editContainer"
           data-path="<?= htmlspecialchars($container->path, ENT_QUOTES) ?>" title="Open this entry">
-    <span class="self-icon">
-      <svg class="icon" aria-hidden="true"><use href="<?= $icons ?>#<?= htmlspecialchars($type->icon(), ENT_QUOTES) ?>"></use></svg>
-    </span>
     <span class="self-title"><?= htmlspecialchars($container->title, ENT_QUOTES) ?></span>
     <span class="self-type"><?= htmlspecialchars($type->label(), ENT_QUOTES) ?></span>
   </button>

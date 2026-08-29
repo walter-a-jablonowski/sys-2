@@ -130,13 +130,6 @@
   background: var(--bg-3);
 }
 
-.self-icon
-{
-  display: flex;
-  flex: 0 0 auto;
-  color: var(--fg-faint);
-}
-
 .self-title
 {
   flex: 1 1 auto;
@@ -172,11 +165,6 @@
   bottom: 0;
   width: 3px;
   background: var(--accent);
-}
-
-.self.is-selected .self-icon
-{
-  color: var(--accent);
 }
 
 /* List */
