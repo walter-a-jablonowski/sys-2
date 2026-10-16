@@ -1,0 +1,17 @@
+# Activity: workflow viewer, moves an activity through its states
+#
+# Toolbar (header): the steps that lead on from the current status
+# Status bar (footer): status, progress of the steps inside, schedule
+
+label: 'Workflow'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'schedule'
+    label: 'Schedule'
+  - id: 'raw'
+    label: 'Front matter'

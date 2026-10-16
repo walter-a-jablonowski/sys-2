@@ -11,19 +11,24 @@ class Viewer
 {
   // Renderer kind -> file in the viewer folder
   private const RENDERERS = [
-    'list'   => 'list_renderer.php',
-    'mobile' => 'mobile_renderer.php',
-    'detail' => 'detail_renderer.php',
-    'header' => 'header_renderer.php',
-    'footer' => 'footer_renderer.php'
+    'list'      => 'list_renderer.php',
+    'mobile'    => 'mobile_renderer.php',
+    'detail'    => 'detail_renderer.php',
+    'header'    => 'header_renderer.php',
+    'toolbar'   => 'toolbar_renderer.php',
+    'footer'    => 'footer_renderer.php',
+    'statusbar' => 'statusbar_renderer.php'
   ];
 
+  // Toolbar and status bar draw nothing unless a viewer brings its own
   private const DEFAULTS = [
-    'list'   => ListRenderer::class,
-    'mobile' => MobileRenderer::class,
-    'detail' => DetailRenderer::class,
-    'header' => HeaderRenderer::class,
-    'footer' => FooterRenderer::class
+    'list'      => ListRenderer::class,
+    'mobile'    => MobileRenderer::class,
+    'detail'    => DetailRenderer::class,
+    'header'    => HeaderRenderer::class,
+    'toolbar'   => ToolbarRenderer::class,
+    'footer'    => FooterRenderer::class,
+    'statusbar' => StatusbarRenderer::class
   ];
 
   public string $name;

@@ -52,6 +52,31 @@ abstract class Renderer
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
   }
 
+  /**
+   * A button running an action entry: id, label, optional icon and title,
+   * and either "ajax" (handler in the viewer's ajax folder, with optional
+   * "params") or "js" (handler in window.SYS_TYPES). The same entries as in
+   * the "..." menu, so the controller runs them the same way.
+   */
+  protected function actionButton( array $entry, string $class ) : string
+  {
+    $entry = $this->action($entry);
+    $icon  = isset($entry['icon']) ? $this->icon($entry['icon']) : '';
+
+    return '<button type="button" class="' . $this->esc($class) . '" data-action="viewerAction"'
+      . ' title="' . $this->esc($entry['title'] ?? $entry['label']) . '"'
+      . ' data-entry="' . $this->esc(json_encode($entry)) . '">'
+      . $icon . '<span>' . $this->esc($entry['label']) . '</span></button>';
+  }
+
+  /**
+   * Adds what the ajax router needs to find the handler of this viewer.
+   */
+  protected function action( array $entry ) : array
+  {
+    return $entry + ['type' => $this->type->name, 'viewer' => $this->viewer->name];
+  }
+
   protected function icon( string $name ) : string
   {
     $sprite = $this->esc($this->app->asset('styles/icons.svg'));

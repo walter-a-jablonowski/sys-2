@@ -39,8 +39,10 @@
     aiMessages: document.querySelector('[data-role="aiMessages"]'),
     aiComposer: document.querySelector('[data-role="aiComposer"]'),
     headerSlot: document.querySelector('[data-role="headerSlot"]'),
-    footerSlot: document.querySelector('[data-role="footerSlot"]'),
+    toolbarSlot: document.querySelector('[data-role="toolbarSlot"]'),
     viewerSlot: document.querySelector('[data-role="viewerSlot"]'),
+    footerSlot: document.querySelector('[data-role="footerSlot"]'),
+    statusbarSlot: document.querySelector('[data-role="statusbarSlot"]'),
     saveState: document.querySelector('[data-role="saveState"]'),
     listState: document.querySelector('[data-role="listState"]'),
     crumbs: document.querySelector('[data-role="crumbs"]'),
@@ -349,9 +351,7 @@
     state.menu = data.menu || [];
 
     el.editor.innerHTML = data.editor;
-    el.headerSlot.innerHTML = data.header;
-    el.footerSlot.innerHTML = data.footer;
-    el.viewerSlot.innerHTML = data.viewers;
+    setFrame(data);
     setSaveState('');
     markSelected();
     writeHash();
@@ -366,6 +366,20 @@
     {
       card.classList.toggle('is-selected', card.dataset.path === state.selected);
     });
+  }
+
+  /**
+   * What the viewer of the open object draws around the editor (Frame.php):
+   * header, toolbar and viewer switch above, footer and status bar below.
+   * Without data the frame is empty.
+   */
+  function setFrame( data )
+  {
+    el.headerSlot.innerHTML = data.header || '<span class="head-empty">No entry selected</span>';
+    el.toolbarSlot.innerHTML = data.toolbar || '';
+    el.viewerSlot.innerHTML = data.viewers || '';
+    el.footerSlot.innerHTML = data.footer || '';
+    el.statusbarSlot.innerHTML = data.statusbar || '';
   }
 
   // Editor and autosave
@@ -429,10 +443,7 @@
       form.dataset.path = data.path;
       form.dataset.mtime = data.mtime;
 
-      el.headerSlot.innerHTML = data.header;
-      el.footerSlot.innerHTML = data.footer;
-      el.viewerSlot.innerHTML = data.viewers;
-
+      setFrame(data);
       replaceCard(data.path, data.card);
       setSaveState('saved');
       writeHash();
@@ -801,7 +812,8 @@
   {
     if( entry.ajax )
     {
-      const data = await api('viewer', { type: entry.type, viewer: entry.viewer, fn: entry.ajax, path: path }, 'POST');
+      const params = Object.assign({}, entry.params, { type: entry.type, viewer: entry.viewer, fn: entry.ajax, path: path });
+      const data = await api('viewer', params, 'POST');
 
       if( data.card )
         replaceCard(data.path, data.card);
@@ -809,8 +821,9 @@
       if( data.message )
         toast(data.message);
 
+      // Forced: the editor is open on exactly this object, but its data changed
       if( state.selected === path )
-        select(path);
+        select(path, true);
 
       return;
     }
@@ -931,9 +944,7 @@
     {
       state.selected = null;
       el.editor.innerHTML = '<div class="editor-empty"><p>Entry deleted.</p></div>';
-      el.headerSlot.innerHTML = '<span class="head-empty">No entry selected</span>';
-      el.footerSlot.innerHTML = '';
-      el.viewerSlot.innerHTML = '';
+      setFrame({});
       setSaveState('');
     }
 
@@ -1432,6 +1443,19 @@
 
     if( name === 'viewerMenu' )
       return viewerMenu(node);
+
+    // Toolbar and status bar buttons are entries like those of the "..." menu
+    if( name === 'viewerAction' )
+      return runMenuEntry(JSON.parse(node.dataset.entry), state.selected);
+
+    if( name === 'toolbarMenu' )
+    {
+      openDropdown(node, JSON.parse(node.dataset.entries), function ( entry )
+      {
+        runMenuEntry(entry, state.selected);
+      });
+      return;
+    }
 
     if( name === 'add' )
       return addEntry(node);

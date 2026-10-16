@@ -136,6 +136,28 @@ button
   color: var(--fg);
 }
 
+/* Fits into a status line, e.g. the viewer status bar */
+
+.btn-tiny
+{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 18px;
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-1);
+  color: var(--fg-dim);
+  font-size: 11px;
+  transition: background var(--speed) ease, color var(--speed) ease;
+}
+
+.btn-tiny:hover
+{
+  background: var(--bg-3);
+  color: var(--fg);
+}
+
 .btn
 {
   display: inline-flex;

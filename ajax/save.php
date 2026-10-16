@@ -11,7 +11,7 @@
  */
 
 use Sys\Failure;
-use Sys\View;
+use Sys\Frame;
 
 $obj    = $ajax->obj();
 $fields = $ajax->arrayParam('fields');
@@ -72,15 +72,10 @@ $saved = $app->store->save($obj, $data, $body, $renamed ? null : $mtime);
 
 $app->index->invalidate();
 
-// A changed type may come with other viewers
-$viewer = $app->viewers->forObj($saved);
-
+// The frame as well: it shows saved values, a changed type may even come with another viewer
 return [
-  'path'    => $saved->path,
-  'title'   => $saved->title,
-  'mtime'   => $saved->mtime,
-  'card'    => $app->renderer($ajax->param('mode') === 'mobile' ? 'mobile' : 'list', $saved)->html(),
-  'header'  => $app->renderer('header', $saved)->html(),
-  'footer'  => $viewer->get('footer', false) ? $app->renderer('footer', $saved)->html() : '',
-  'viewers' => View::render("{$app->root}/view/viewer_switch.php", ['app' => $app, 'viewer' => $viewer])
-];
+  'path'  => $saved->path,
+  'title' => $saved->title,
+  'mtime' => $saved->mtime,
+  'card'  => $app->renderer($ajax->param('mode') === 'mobile' ? 'mobile' : 'list', $saved)->html()
+] + Frame::build($app, $saved);

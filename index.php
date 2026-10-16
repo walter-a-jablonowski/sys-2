@@ -70,6 +70,7 @@ $viewers   = array_map([$app->viewers, 'active'], $app->types->all());
       <div class="head-slot" data-role="headerSlot">
         <span class="head-empty">No entry selected</span>
       </div>
+      <div class="head-toolbar" data-role="toolbarSlot"></div>
       <div class="head-viewers" data-role="viewerSlot"></div>
     </div>
     <div class="head-actions">
@@ -108,6 +109,7 @@ $viewers   = array_map([$app->viewers, 'active'], $app->types->all());
     </div>
     <div class="seg seg-content">
       <div class="foot-slot" data-role="footerSlot"></div>
+      <div class="foot-statusbar" data-role="statusbarSlot"></div>
       <div class="save-state" data-role="saveState"></div>
     </div>
   </footer>

@@ -101,6 +101,10 @@ Objects without an id are invisible to search, Recent and Pinned.
 - Viewers — `type_viewer/<Type>/<Viewer>/`, a type may have several
   - `config.yml` — `label`, `detailTabs`, `header`, `footer`, `menu`
   - optional `list_renderer.php`, `mobile_renderer.php`, `detail_renderer.php`, … with class `<Type><Viewer>ListRenderer` etc.
+  - optional `toolbar_renderer.php` — buttons in the header next to the entry's name, folded into an **Actions** dropdown on a phone
+  - optional `statusbar_renderer.php` — facts in the footer next to the save state, may hold tiny buttons
+  - toolbar and status bar buttons are entries like the ⋮ menu: `ajax` (plus `params`) or `js`
+  - demo: **Activity → Workflow** has both
   - optional `styles.css`, `controller.js`, `ajax/<fn>.php`
   - shown: the user's choice, else the type's `viewer`, else `default`
 - `data/users/default/settings.yml` — user settings, `viewers: { Activity: 'compact' }` is written by the switch

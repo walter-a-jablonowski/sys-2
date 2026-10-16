@@ -1,0 +1,46 @@
+/* Activity workflow viewer: status, progress and lateness in the status bar */
+
+.wf-state
+{
+  padding: 1px 7px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--fg-dim);
+  font-size: 10px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.wf-running { color: var(--accent); border-color: var(--accent-line); background: var(--accent-tint); }
+.wf-done    { color: var(--ok); border-color: var(--ok-line); }
+
+.wf-progress
+{
+  display: inline-block;
+  width: 48px;
+  height: 4px;
+  margin-left: 4px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.wf-progress > span
+{
+  display: block;
+  height: 100%;
+  background: var(--ok);
+}
+
+.wf-due
+{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wf-due.is-late
+{
+  color: var(--danger);
+}
