@@ -4,7 +4,7 @@
  * Only reached when a link has no target any more: every intact link is drawn
  * by the renderer of the object it points at.
  */
-class LinkListRenderer extends \Sys\ListRenderer
+class LinkDefaultListRenderer extends \Sys\ListRenderer
 {
   protected function badges() : string
   {

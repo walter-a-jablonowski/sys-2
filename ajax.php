@@ -4,7 +4,7 @@
  * Single entry point for all ajax calls.
  *
  * ?a=list        -> /ajax/list.php
- * ?a=type&type=Activity&fn=set_done -> /types/Activity/ajax/set_done.php
+ * ?a=viewer&type=Activity&viewer=default&fn=set_done -> /type_viewer/Activity/default/ajax/set_done.php
  */
 
 require __DIR__ . '/vendor/autoload.php';

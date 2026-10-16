@@ -6,6 +6,9 @@ description: 'A text entry with a headline and a description'
 idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
 icon: 'info'
 
+# Viewer shown unless the user picked another one: type_viewer/Info/NAME
+viewer: 'default'
+
 fields:
   title:
     type: 'text'
@@ -27,12 +30,3 @@ tabs:
 create:
   entries: ['Info', 'Activity']
   resources: []
-
-header: true
-footer: true
-
-detailTabs:
-  - id: 'content'
-    label: 'Content'
-  - id: 'raw'
-    label: 'Front matter'

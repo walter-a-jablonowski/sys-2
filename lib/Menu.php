@@ -3,21 +3,25 @@
 namespace Sys;
 
 /**
- * The "..." dropdown: entries the type brings along, a divider, then the
+ * The "..." dropdown: entries the viewer brings along, a divider, then the
  * entries every object has.
  */
 class Menu
 {
   public static function build( App $app, Obj $obj ) : array
   {
+    $viewer  = $app->viewers->forObj($obj);
     $entries = [];
 
-    foreach( $app->types->forObj($obj)->menu() as $entry )
+    // Type and viewer name the folder an ajax entry is answered from
+    foreach( $viewer->menu() as $entry )
     {
       $entries[] = [
         'id'      => $entry['id'] ?? '',
         'label'   => $entry['label'] ?? ($entry['id'] ?? ''),
         'ajax'    => $entry['ajax'] ?? '',
+        'type'    => $viewer->type->name,
+        'viewer'  => $viewer->name,
         'js'      => $entry['js'] ?? '',
         'confirm' => (bool) ($entry['confirm'] ?? false)
       ];

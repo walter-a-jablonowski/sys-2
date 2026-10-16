@@ -3,7 +3,7 @@
 namespace Sys;
 
 /**
- * Routes an ajax call to a handler in /ajax or to a type's own /ajax folder,
+ * Routes an ajax call to a handler in /ajax or to a viewer's own /ajax folder,
  * and turns whatever it returns into a json response.
  */
 class Ajax
@@ -98,8 +98,8 @@ class Ajax
     if( ! preg_match('/^[a-z][a-z_]*$/', $action))
       throw Failure::invalid('Unknown action');
 
-    $file = $action === 'type'
-      ? $this->typeHandler()
+    $file = $action === 'viewer'
+      ? $this->viewerHandler()
       : "{$this->app->root}/ajax/{$action}.php";
 
     if( ! is_file($file))
@@ -114,16 +114,19 @@ class Ajax
   }
 
   /**
-   * Type specific endpoint: types/MY_TYPE/ajax/MY_ACTION.php
+   * Viewer specific endpoint: type_viewer/MY_TYPE/MY_VIEWER/ajax/MY_ACTION.php
    */
-  private function typeHandler() : string
+  private function viewerHandler() : string
   {
-    $type = (string) $this->param('type', '');
-    $fn   = (string) $this->param('fn', '');
+    $type   = (string) $this->param('type', '');
+    $viewer = (string) $this->param('viewer', '');
+    $fn     = (string) $this->param('fn', '');
 
-    if( ! preg_match('/^[A-Za-z][A-Za-z0-9]*$/', $type) || ! preg_match('/^[a-z][a-z_]*$/', $fn))
-      throw Failure::invalid('Unknown type action');
+    $name = '/^[A-Za-z][A-Za-z0-9]*$/';
 
-    return "{$this->app->root}/types/{$type}/ajax/{$fn}.php";
+    if( ! preg_match($name, $type) || ! preg_match($name, $viewer) || ! preg_match('/^[a-z][a-z_]*$/', $fn))
+      throw Failure::invalid('Unknown viewer action');
+
+    return "{$this->app->root}/type_viewer/{$type}/{$viewer}/ajax/{$fn}.php";
   }
 }

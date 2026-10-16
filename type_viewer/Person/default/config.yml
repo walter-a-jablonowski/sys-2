@@ -1,0 +1,12 @@
+# Person: default viewer
+
+label: 'Default'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Person'
+  - id: 'raw'
+    label: 'Front matter'

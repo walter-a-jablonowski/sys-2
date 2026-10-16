@@ -3,7 +3,7 @@
 /**
  * Resource cell: name and size, nothing else fits.
  */
-class FileMobileRenderer extends \Sys\MobileRenderer
+class FileDefaultMobileRenderer extends \Sys\MobileRenderer
 {
   protected function meta() : string
   {

@@ -23,6 +23,7 @@ $result    = $query->run($container->path, $tabs[$tab]);
 $mode      = 'list';
 $theme     = (string) $app->config->app('theme', 'default');
 $icons     = $app->asset('styles/icons.svg');
+$viewers   = array_map([$app->viewers, 'active'], $app->types->all());
 
 ?><!doctype html>
 <html lang="en" data-ai="0" data-view="list">
@@ -38,15 +39,15 @@ $icons     = $app->asset('styles/icons.svg');
       'styles/cards.css', 'styles/editor.css', 'styles/ai.css', 'styles/dialog.css',
       'styles/palette.css'
     ];
-
-    foreach( $app->types->all() as $type )
-    {
-      if( $type->hasStyles())
-        $sheets[] = "types/{$type->name}/styles.css";
-    }
   ?>
   <?php foreach( $sheets as $sheet ): ?>
     <link rel="stylesheet" href="<?= htmlspecialchars($app->asset($sheet), ENT_QUOTES) ?>">
+  <?php endforeach ?>
+  <?php foreach( $viewers as $viewer ): ?>
+    <?php if( $viewer->hasStyles()): ?>
+      <link rel="stylesheet" href="<?= htmlspecialchars($app->asset("{$viewer->path}/styles.css"), ENT_QUOTES) ?>"
+            data-viewer-type="<?= htmlspecialchars($viewer->type->name, ENT_QUOTES) ?>">
+    <?php endif ?>
   <?php endforeach ?>
 </head>
 <body>
@@ -69,6 +70,7 @@ $icons     = $app->asset('styles/icons.svg');
       <div class="head-slot" data-role="headerSlot">
         <span class="head-empty">No entry selected</span>
       </div>
+      <div class="head-viewers" data-role="viewerSlot"></div>
     </div>
     <div class="head-actions">
       <button type="button" class="icon-btn" data-action="openSearch" title="Search (Ctrl K)">
@@ -128,9 +130,9 @@ $icons     = $app->asset('styles/icons.svg');
   };
 </script>
 <script src="<?= htmlspecialchars($app->asset('controller.js'), ENT_QUOTES) ?>"></script>
-<?php foreach( $app->types->all() as $type ): ?>
-  <?php if( $type->hasScript()): ?>
-    <script src="<?= htmlspecialchars($app->asset("types/{$type->name}/controller.js"), ENT_QUOTES) ?>"></script>
+<?php foreach( $viewers as $viewer ): ?>
+  <?php if( $viewer->hasScript()): ?>
+    <script src="<?= htmlspecialchars($app->asset("{$viewer->path}/controller.js"), ENT_QUOTES) ?>"></script>
   <?php endif ?>
 <?php endforeach ?>
 

@@ -14,6 +14,8 @@ class App
   public ObjStore $store;
   public Index $index;
   public TypeRegistry $types;
+  public UserSettings $user;
+  public ViewerRegistry $viewers;
   public ObjList $recent;
   public ObjList $pinned;
 
@@ -33,9 +35,11 @@ class App
     $this->path   = new ObjPath($this->db, $this->config);
     $this->store  = new ObjStore($this->db, $this->path, $this->config);
     $this->index  = new Index($this->db, $this->store);
-    $this->types  = new TypeRegistry("{$this->root}/types", $this->config);
-    $this->recent = new ObjList($this->db, $this->index, 'recent', 50);
-    $this->pinned = new ObjList($this->db, $this->index, 'pinned');
+    $this->types   = new TypeRegistry("{$this->root}/types", $this->config);
+    $this->user    = new UserSettings("{$this->root}/data/users/default/settings.yml");  // single user for now
+    $this->viewers = new ViewerRegistry($this->root, $this->types, $this->user);
+    $this->recent  = new ObjList($this->db, $this->index, 'recent', 50);
+    $this->pinned  = new ObjList($this->db, $this->index, 'pinned');
   }
 
   /**
@@ -55,11 +59,11 @@ class App
   }
 
   /**
-   * Renderer of a kind for an object, resolved through its type.
+   * Renderer of a kind for an object, resolved through the viewer of its type.
    */
   public function renderer( string $kind, Obj $obj ) : Renderer
   {
-    return $this->types->forObj($obj)->renderer($kind, $this, $obj);
+    return $this->viewers->forObj($obj)->renderer($kind, $this, $obj);
   }
 
   public static function boot( string $root ) : App

@@ -6,6 +6,9 @@ description: 'A step in a process, may contain further steps'
 idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
 icon: 'activity'
 
+# Viewer shown unless the user picked another one: type_viewer/Activity/NAME
+viewer: 'default'
+
 fields:
   title:
     type: 'text'
@@ -45,19 +48,3 @@ create:
   entries: ['Activity', 'Info']
   participants: ['__link:Person']
   resources: []
-
-header: true
-footer: true
-
-detailTabs:
-  - id: 'content'
-    label: 'Content'
-  - id: 'schedule'
-    label: 'Schedule'
-  - id: 'raw'
-    label: 'Front matter'
-
-menu:
-  - id: 'setDone'
-    label: 'Mark as done'
-    ajax: 'set_done'

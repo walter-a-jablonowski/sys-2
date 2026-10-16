@@ -4,7 +4,7 @@
  * Activity cell: the status moves into its own column so the titles of a
  * list stay aligned on a narrow screen.
  */
-class ActivityMobileRenderer extends \Sys\MobileRenderer
+class ActivityDefaultMobileRenderer extends \Sys\MobileRenderer
 {
   public function render() : void
   {

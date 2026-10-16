@@ -3,7 +3,7 @@
 namespace Sys;
 
 /**
- * Discovers the type folders and hands out Type objects.
+ * Discovers the type definitions (types/MY_TYPE.yml) and hands out Type objects.
  */
 class TypeRegistry
 {
@@ -60,18 +60,15 @@ class TypeRegistry
 
     foreach( scandir($this->dir) as $entry )
     {
-      if( strpos($entry, '.') === 0 )
+      if( strpos($entry, '.') === 0 || pathinfo($entry, PATHINFO_EXTENSION) !== 'yml' )
         continue;
 
-      $typeDir = "{$this->dir}/{$entry}";
+      $name = pathinfo($entry, PATHINFO_FILENAME);
 
-      if( ! is_dir($typeDir))
-        continue;
-
-      $this->types[$entry] = new Type($entry, $typeDir, Config::read("{$typeDir}/config.yml"));
+      $this->types[$name] = new Type($name, Config::read("{$this->dir}/{$entry}"));
     }
 
     if( ! isset($this->types[$this->defaultType]))
-      $this->types[$this->defaultType] = new Type($this->defaultType, "{$this->dir}/{$this->defaultType}", []);
+      $this->types[$this->defaultType] = new Type($this->defaultType, []);
   }
 }

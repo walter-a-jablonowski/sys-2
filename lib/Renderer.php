@@ -3,23 +3,25 @@
 namespace Sys;
 
 /**
- * Base of every renderer. A type overrides only the kinds it needs, the
+ * Base of every renderer. A viewer overrides only the kinds it needs, the
  * defaults below keep unknown and simple types fully usable.
  */
 abstract class Renderer
 {
   protected App $app;
+  protected Viewer $viewer;
   protected Type $type;
   protected Obj $obj;
 
   // Parent path, set only by lists that show entries from anywhere
   protected ?string $context = null;
 
-  public function __construct( App $app, Type $type, Obj $obj )
+  public function __construct( App $app, Viewer $viewer, Obj $obj )
   {
-    $this->app  = $app;
-    $this->type = $type;
-    $this->obj  = $obj;
+    $this->app    = $app;
+    $this->viewer = $viewer;
+    $this->type   = $viewer->type;
+    $this->obj    = $obj;
   }
 
   abstract public function render() : void;
@@ -43,7 +45,7 @@ abstract class Renderer
     return (string) ob_get_clean();
   }
 
-  // Helpers for the type renderers
+  // Helpers for the viewer renderers
 
   protected function esc( $value ) : string
   {

@@ -3,7 +3,7 @@
 /**
  * Person card: role and mail address are what one looks for in a list.
  */
-class PersonListRenderer extends \Sys\ListRenderer
+class PersonDefaultListRenderer extends \Sys\ListRenderer
 {
   protected function meta() : string
   {

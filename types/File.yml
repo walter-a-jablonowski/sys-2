@@ -6,6 +6,9 @@ description: 'A resource file, any file without front matter'
 idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
 icon: 'file'
 
+# Viewer shown unless the user picked another one: type_viewer/File/NAME
+viewer: 'default'
+
 # Fields live in the optional sidecar "NAME.ext.md"
 fields:
   title:
@@ -17,12 +20,3 @@ fields:
   body:
     type: 'markdown'
     label: 'Notes'
-
-header: true
-footer: true
-
-detailTabs:
-  - id: 'content'
-    label: 'File'
-  - id: 'raw'
-    label: 'Front matter'

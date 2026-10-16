@@ -3,7 +3,7 @@
 /**
  * Activity card: status first, then how much is inside and when it happens.
  */
-class ActivityListRenderer extends \Sys\ListRenderer
+class ActivityDefaultListRenderer extends \Sys\ListRenderer
 {
   protected function badges() : string
   {

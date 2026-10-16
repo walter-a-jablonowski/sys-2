@@ -95,8 +95,16 @@ Objects without an id are invisible to search, Recent and Pinned.
 
 - `config.yml` — `dbPath`, `theme`, `appName`
 - `<db>/.sys/config.yml` — `thisFile`, `linkMarker`, `defaultType`, `pageSize`, `sort`
-- Tabs, fields, icons and menu entries per type — `types/<Type>/config.yml`
+- Fields, tabs and icon per type — `types/<Type>.yml`
   - `create: { tab: ['__link:Person'] }` makes **+** add a link, not a new object
+  - `viewer: 'NAME'` — the viewer used unless the user picked another one
+- Viewers — `type_viewer/<Type>/<Viewer>/`, a type may have several
+  - `config.yml` — `label`, `detailTabs`, `header`, `footer`, `menu`
+  - optional `list_renderer.php`, `mobile_renderer.php`, `detail_renderer.php`, … with class `<Type><Viewer>ListRenderer` etc.
+  - optional `styles.css`, `controller.js`, `ajax/<fn>.php`
+  - shown: the user's choice, else the type's `viewer`, else `default`
+- `data/users/default/settings.yml` — user settings, `viewers: { Activity: 'compact' }` is written by the switch
+  - the switch sits in the header next to the entry's name, only when its type has more than one viewer
 
 ## URLs
 

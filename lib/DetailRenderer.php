@@ -3,14 +3,14 @@
 namespace Sys;
 
 /**
- * The editor. Built from the type's field definitions, so most types need no
- * detail renderer of their own.
+ * The editor. Built from the type's field definitions and the viewer's tabs,
+ * so most viewers need no detail renderer of their own.
  */
 class DetailRenderer extends Renderer
 {
   public function render() : void
   {
-    $tabs = $this->type->detailTabs();
+    $tabs = $this->viewer->detailTabs();
 
     ?>
     <form class="editor" data-path="<?= $this->esc($this->obj->path) ?>"

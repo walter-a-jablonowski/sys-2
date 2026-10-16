@@ -8,11 +8,11 @@ label: 'Link'
 description: 'Points at an object living somewhere else in the hierarchy'
 icon: 'link'
 
+# Viewer shown unless the user picked another one: type_viewer/Link/NAME
+viewer: 'default'
+
 fields:
   title:
     type: 'text'
     label: 'Label'
     required: true
-
-header: true
-footer: false

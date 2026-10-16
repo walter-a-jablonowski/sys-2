@@ -1,0 +1,19 @@
+# Activity: default viewer
+
+label: 'Default'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'schedule'
+    label: 'Schedule'
+  - id: 'raw'
+    label: 'Front matter'
+
+menu:
+  - id: 'setDone'
+    label: 'Mark as done'
+    ajax: 'set_done'

@@ -40,6 +40,7 @@
     aiComposer: document.querySelector('[data-role="aiComposer"]'),
     headerSlot: document.querySelector('[data-role="headerSlot"]'),
     footerSlot: document.querySelector('[data-role="footerSlot"]'),
+    viewerSlot: document.querySelector('[data-role="viewerSlot"]'),
     saveState: document.querySelector('[data-role="saveState"]'),
     listState: document.querySelector('[data-role="listState"]'),
     crumbs: document.querySelector('[data-role="crumbs"]'),
@@ -350,6 +351,7 @@
     el.editor.innerHTML = data.editor;
     el.headerSlot.innerHTML = data.header;
     el.footerSlot.innerHTML = data.footer;
+    el.viewerSlot.innerHTML = data.viewers;
     setSaveState('');
     markSelected();
     writeHash();
@@ -429,6 +431,7 @@
 
       el.headerSlot.innerHTML = data.header;
       el.footerSlot.innerHTML = data.footer;
+      el.viewerSlot.innerHTML = data.viewers;
 
       replaceCard(data.path, data.card);
       setSaveState('saved');
@@ -514,7 +517,7 @@
   }
 
   /**
-   * Tabs inside the editor, declared by the type as "detailTabs".
+   * Tabs inside the editor, declared by the viewer as "detailTabs".
    */
   function showPane( button )
   {
@@ -587,7 +590,7 @@
       const item = document.createElement('button');
 
       item.type = 'button';
-      item.className = 'menu-item' + (entry.danger ? ' is-danger' : '');
+      item.className = 'menu-item' + (entry.danger ? ' is-danger' : '') + (entry.current ? ' is-current' : '');
       item.textContent = entry.label;
       item.addEventListener('click', function ()
       {
@@ -794,11 +797,11 @@
 
   // Object actions
 
-  async function runMenuEntry( entry, path, type )
+  async function runMenuEntry( entry, path )
   {
     if( entry.ajax )
     {
-      const data = await api('type', { type: type || '', fn: entry.ajax, path: path }, 'POST');
+      const data = await api('viewer', { type: entry.type, viewer: entry.viewer, fn: entry.ajax, path: path }, 'POST');
 
       if( data.card )
         replaceCard(data.path, data.card);
@@ -930,6 +933,7 @@
       el.editor.innerHTML = '<div class="editor-empty"><p>Entry deleted.</p></div>';
       el.headerSlot.innerHTML = '<span class="head-empty">No entry selected</span>';
       el.footerSlot.innerHTML = '';
+      el.viewerSlot.innerHTML = '';
       setSaveState('');
     }
 
@@ -972,6 +976,62 @@
         toast('Link created');
       }
     });
+  }
+
+  // Viewers
+
+  /*
+    A type with more than one viewer gets a switch in the header. The choice
+    is stored for the user, so the list and the editor are drawn again with
+    the new viewer, its styles replacing those of the old one.
+  */
+
+  function viewerMenu( anchor )
+  {
+    openDropdown(anchor, JSON.parse(anchor.dataset.viewers), async function ( entry )
+    {
+      if( entry.current )
+        return;
+
+      await flushSave();
+
+      const data = await api('use_viewer', { type: anchor.dataset.type, viewer: entry.id }, 'POST');
+
+      useViewerAssets(data);
+      await loadList();
+
+      if( state.selected )
+        await select(state.selected, true);
+    });
+  }
+
+  /**
+   * A script cannot be unloaded, it is only added when it is not there yet.
+   */
+  function useViewerAssets( data )
+  {
+    const old = document.querySelector('link[data-viewer-type="' + cssEscape(data.type) + '"]');
+
+    if( old )
+      old.remove();
+
+    if( data.styles )
+    {
+      const link = document.createElement('link');
+
+      link.rel = 'stylesheet';
+      link.href = data.styles;
+      link.dataset.viewerType = data.type;
+      document.head.appendChild(link);
+    }
+
+    if( data.script && ! document.querySelector('script[src="' + cssEscape(data.script) + '"]'))
+    {
+      const script = document.createElement('script');
+
+      script.src = data.script;
+      document.body.appendChild(script);
+    }
   }
 
   // Adding
@@ -1325,7 +1385,7 @@
       {
         openDropdown(node, data.entries, function ( entry )
         {
-          runMenuEntry(entry, card.dataset.path, data.type);
+          runMenuEntry(entry, card.dataset.path);
         });
       });
       return;
@@ -1364,11 +1424,14 @@
       {
         openDropdown(node, data.entries, function ( entry )
         {
-          runMenuEntry(entry, path, data.type);
+          runMenuEntry(entry, path);
         });
       });
       return;
     }
+
+    if( name === 'viewerMenu' )
+      return viewerMenu(node);
 
     if( name === 'add' )
       return addEntry(node);

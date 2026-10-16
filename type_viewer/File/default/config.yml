@@ -1,0 +1,12 @@
+# File: default viewer
+
+label: 'Default'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'File'
+  - id: 'raw'
+    label: 'Front matter'

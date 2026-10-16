@@ -1,0 +1,12 @@
+# Group: default viewer
+
+label: 'Default'
+
+header: true
+footer: true
+
+detailTabs:
+  - id: 'content'
+    label: 'Content'
+  - id: 'raw'
+    label: 'Front matter'

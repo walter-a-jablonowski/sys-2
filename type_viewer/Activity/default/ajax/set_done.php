@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Type action behind the "Mark as done" menu entry.
+ * Viewer action behind the "Mark as done" menu entry.
  *
  * @var Sys\App  $app
  * @var Sys\Ajax $ajax

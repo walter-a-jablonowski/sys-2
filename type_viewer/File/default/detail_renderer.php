@@ -4,7 +4,7 @@
  * Resource editor: a preview of the file itself on top, the sidecar fields
  * below. Fields are written to "NAME.ext.md", the file stays untouched.
  */
-class FileDetailRenderer extends \Sys\DetailRenderer
+class FileDefaultDetailRenderer extends \Sys\DetailRenderer
 {
   private const IMAGES = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'];
   private const TEXT   = ['txt', 'md', 'csv', 'json', 'yml', 'yaml', 'log', 'ini', 'xml'];

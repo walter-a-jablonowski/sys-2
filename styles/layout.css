@@ -158,6 +158,21 @@
   display: flex;
 }
 
+/* Viewer switch, only rendered when a type has more than one viewer */
+
+.head-viewers
+{
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.head-viewer .icon
+{
+  width: 12px;
+  height: 12px;
+}
+
 /* Sits outside the segments, so it stays pinned to the very right edge */
 
 .head-actions

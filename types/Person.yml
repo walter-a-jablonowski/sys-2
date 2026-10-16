@@ -6,6 +6,9 @@ description: 'A participant, usually linked into an activity'
 idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
 icon: 'person'
 
+# Viewer shown unless the user picked another one: type_viewer/Person/NAME
+viewer: 'default'
+
 fields:
   title:
     type: 'text'
@@ -29,12 +32,3 @@ tabs:
 
 create:
   resources: []
-
-header: true
-footer: true
-
-detailTabs:
-  - id: 'content'
-    label: 'Person'
-  - id: 'raw'
-    label: 'Front matter'

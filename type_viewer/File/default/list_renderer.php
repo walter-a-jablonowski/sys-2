@@ -3,7 +3,7 @@
 /**
  * Resource card: extension and size, the two things that tell files apart.
  */
-class FileListRenderer extends \Sys\ListRenderer
+class FileDefaultListRenderer extends \Sys\ListRenderer
 {
   protected function badges() : string
   {

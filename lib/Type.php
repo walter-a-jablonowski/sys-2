@@ -3,35 +3,17 @@
 namespace Sys;
 
 /**
- * One entry type: its configuration and the renderers it brings along.
+ * One entry type: what its objects are made of, read from types/MY_TYPE.yml.
+ * How they are shown is up to the viewers in type_viewer/MY_TYPE.
  */
 class Type
 {
-  // Renderer kind -> file in the type folder
-  private const RENDERERS = [
-    'list'   => 'list_renderer.php',
-    'mobile' => 'mobile_renderer.php',
-    'detail' => 'detail_renderer.php',
-    'header' => 'header_renderer.php',
-    'footer' => 'footer_renderer.php'
-  ];
-
-  private const DEFAULTS = [
-    'list'   => ListRenderer::class,
-    'mobile' => MobileRenderer::class,
-    'detail' => DetailRenderer::class,
-    'header' => HeaderRenderer::class,
-    'footer' => FooterRenderer::class
-  ];
-
   public string $name;
-  public string $dir;
   public array $config;
 
-  public function __construct( string $name, string $dir, array $config )
+  public function __construct( string $name, array $config )
   {
     $this->name   = $name;
-    $this->dir    = $dir;
     $this->config = $config;
   }
 
@@ -68,24 +50,12 @@ class Type
     return $this->config['create'][$tab] ?? [];
   }
 
-  public function detailTabs() : array
+  /**
+   * Name of the viewer used unless the user picked another one.
+   */
+  public function viewer() : string
   {
-    return $this->config['detailTabs'] ?? [];
-  }
-
-  public function menu() : array
-  {
-    return $this->config['menu'] ?? [];
-  }
-
-  public function hasStyles() : bool
-  {
-    return is_file("{$this->dir}/styles.css");
-  }
-
-  public function hasScript() : bool
-  {
-    return is_file("{$this->dir}/controller.js");
+    return $this->config['viewer'] ?? 'default';
   }
 
   /**
@@ -113,26 +83,5 @@ class Type
   public function newName() : string
   {
     return 'New ' . $this->label();
-  }
-
-  /**
-   * Renderer of a kind: the type's own class if it ships one, else the default.
-   */
-  public function renderer( string $kind, App $app, Obj $obj ) : Renderer
-  {
-    $class = self::DEFAULTS[$kind] ?? ListRenderer::class;
-    $file  = "{$this->dir}/" . self::RENDERERS[$kind];
-
-    if( is_file($file))
-    {
-      require_once $file;
-
-      $own = $this->name . ucfirst($kind) . 'Renderer';
-
-      if( class_exists($own))
-        $class = $own;
-    }
-
-    return new $class($app, $this, $obj);
   }
 }

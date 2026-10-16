@@ -38,6 +38,11 @@
   color: var(--fg);
 }
 
+.menu-item.is-current
+{
+  color: var(--accent);
+}
+
 .menu-item.is-danger:hover
 {
   background: var(--danger-tint);
