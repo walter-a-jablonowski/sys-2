@@ -58,25 +58,45 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
   - deleting drops the entry silently
 - Recent holds 50, the overlay shows 8
 
-## Not reachable
+## Unreachable
 
 Objects without an id are invisible to search, Recent and Pinned.
 
 - A folder with no `-this.md` has no id
 - The ⋮ menu hides **Pin** for those
 
+## Objects
+
+Every file and folder under the database is an **object** — no separate registry.
+
+- `MY_ENTRY.md` and `MY_ENTRY/-this.md` are the **same object**
+  - leaf: `MY_ENTRY.md`; container: folder `MY_ENTRY/` with its content in `-this.md`
+  - adding a child to a leaf turns it into a folder (`X.md` → `X/-this.md`)
+  - a folder gets its `-this.md` the first time it is saved
+  - folders made outside the app have none until then — type **Group**, no id
+- The content file name is set **per database**, for all its folders
+  - `thisFile` — the name the app writes (default `-this`)
+  - `thisFileMatch` — regex on the name without `.md`, also read as content file
+    - `thisFile: '- DESC'` + `thisFileMatch: '-\s*DESC.*'` accepts `- DESC.md`, `-DESC.md`, `- DESC Kickoff notes.md`
+  - always `.md`: `- DESC.pdf` is an ordinary resource
+  - several matches in one folder — the first alphabetically wins, **Check database** lists the rest
+  - an entry cannot be created or renamed to a matching name
+- A `.md` with front matter — its `type` decides, missing `type` falls back to `defaultType`
+- Any other file is a **resource** (type **File**)
+  - keeps its extension; fields live in a sidecar `NAME.ext.md`
+  - a `.md` without front matter counts as a resource too
+- Not objects: hidden names (leading `.`), `-this.md`, sidecars, `X.md` next to a folder `X` (shadowed)
+- `(lnk)` in a name marks a **link stub** (type **Link**, front matter `target` = id)
+  - opening a link opens its target
+  - pinning a link pins the stub, not the target
+- The **database root is not an entry** — it cannot be opened or saved
+- Move and rename carry the sidecar along; delete removes a folder with everything inside
+
 ## Data on disk
 
 - Everything is files under `/data`, no database
 - **Title = file name.** Renaming renames the file or folder
-- `MY_ENTRY.md` and `MY_ENTRY/-this.md` are the **same object**
-  - a folder gets its `-this.md` the first time it is saved
-  - folders made outside the app have none until then
-- The **database root is not an entry** — it cannot be opened or saved
-- `(lnk)` in a name marks a **link stub**
-  - opening a link opens its target
-  - pinning a link pins the stub, not the target
-- Resources keep their extension; fields live in a sidecar `NAME.ext.md`
+  - characters the file system refuses become `-`; a taken name gets ` 2`, ` 3`, …
 - Front matter keys the app owns: `id`, `type`, `created`, `modified`, `target` — the rest belongs to the type
 - `<db>/.sys/` — runtime state, not content
   - `index.json` rebuilds itself, safe to delete
@@ -89,12 +109,12 @@ Objects without an id are invisible to search, Recent and Pinned.
 - Autosave 800 ms after the last keystroke
   - title and dropdowns save at once, the title on leaving the field
 - The index rebuilds itself when any folder changes on disk
-- **Check database** (⋮ menu) finds duplicate ids, shadowed files, broken links
+- **Check database** (⋮ menu) finds duplicate ids, shadowed files, extra content files, broken links
 
 ## Config
 
 - `config.yml` — `dbPath`, `theme`, `appName`
-- `<db>/.sys/config.yml` — `thisFile`, `linkMarker`, `defaultType`, `pageSize`, `sort`
+- `<db>/.sys/config.yml` — `thisFile`, `thisFileMatch`, `linkMarker`, `defaultType`, `pageSize`, `sort`
 - Fields, tabs and icon per type — `types/<Type>.yml`
   - `create: { tab: ['__link:Person'] }` makes **+** add a link, not a new object
   - `viewer: 'NAME'` — the viewer used unless the user picked another one

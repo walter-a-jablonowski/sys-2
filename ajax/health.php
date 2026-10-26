@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Health report of the database: shadowed files, duplicate ids, broken links.
+ * Health report of the database: shadowed files, extra content files, duplicate ids, broken links.
  *
  * @var Sys\App  $app
  * @var Sys\Ajax $ajax

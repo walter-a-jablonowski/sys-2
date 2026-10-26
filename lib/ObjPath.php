@@ -7,11 +7,15 @@ namespace Sys;
  *
  * MY_ENTRY.md and MY_ENTRY/-this.md are the same object, "(lnk)" in a name
  * marks a link stub and a name is otherwise taken verbatim (plan §2.2).
+ *
+ * The content file of a folder is written as "thisFile" and recognised by
+ * "thisFileMatch" too, e.g. "-\s*DESC.*" accepts "- DESC.md", "-DESC notes.md".
  */
 class ObjPath
 {
   private Db $db;
   private string $thisFile;
+  private string $thisPattern;
   private string $linkMarker;
 
   // Characters Windows and Linux refuse in a file name
@@ -22,6 +26,14 @@ class ObjPath
     $this->db         = $db;
     $this->thisFile   = $config->db('thisFile', '-this');
     $this->linkMarker = $config->db('linkMarker', ' (lnk)');
+
+    // The written name always matches, so a file the app made is found again
+    $match = preg_quote($this->thisFile, '~');
+
+    if( (string) $config->db('thisFileMatch', '') !== '' )
+      $match .= '|' . $config->db('thisFileMatch');
+
+    $this->thisPattern = "~^(?:{$match})\.md$~u";
   }
 
   public function thisFileName() : string
@@ -31,7 +43,20 @@ class ObjPath
 
   public function isThisFile( string $name ) : bool
   {
-    return $name === $this->thisFileName();
+    return preg_match($this->thisPattern, $name) === 1;
+  }
+
+  /**
+   * Names of the content files in a folder, alphabetical. More than one is
+   * a mistake on disk: the first wins, the check reports the others.
+   *
+   * @return string[]
+   */
+  public function thisFilesIn( string $rel ) : array
+  {
+    $abs = $this->db->abs($rel);
+
+    return array_values(array_filter(scandir($abs), fn( $entry ) => $this->isThisFile($entry) && is_file("{$abs}/{$entry}")));
   }
 
   /**
@@ -44,8 +69,8 @@ class ObjPath
 
     if( is_dir($this->db->abs($rel)))
     {
-      $file = "{$rel}/{$this->thisFileName()}";
-      return is_file($this->db->abs($file)) ? $file : null;
+      $names = $this->thisFilesIn($rel);
+      return $names ? "{$rel}/{$names[0]}" : null;
     }
 
     // Resources keep their extension, so the path is already the file. This is
@@ -96,6 +121,10 @@ class ObjPath
    */
   public function freeName( string $parentRel, string $name, string $suffix = '.md' ) : string
   {
+    // Such an entry would vanish into its folder's content
+    if( $suffix === '.md' && $this->isThisFile("{$name}.md"))
+      throw Failure::invalid("\"{$name}\" is reserved for the content of a folder");
+
     $try = $name;
     $n   = 1;
 

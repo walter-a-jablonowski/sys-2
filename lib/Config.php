@@ -11,11 +11,12 @@ class Config
 {
   // Database defaults, overridden by the database's own .sys/config.yml
   private const DB_DEFAULTS = [
-    'thisFile'    => '-this',
-    'linkMarker'  => ' (lnk)',
-    'defaultType' => 'Info',
-    'pageSize'    => 50,
-    'sort'        => ['by' => 'created', 'dir' => 'desc']
+    'thisFile'      => '-this',
+    'thisFileMatch' => '',
+    'linkMarker'    => ' (lnk)',
+    'defaultType'   => 'Info',
+    'pageSize'      => 50,
+    'sort'          => ['by' => 'created', 'dir' => 'desc']
   ];
 
   public array $app;

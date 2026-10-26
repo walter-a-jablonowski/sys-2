@@ -891,6 +891,7 @@
     const kinds = {
       duplicateId: 'Duplicate id',
       shadowed: 'Shadowed by a folder',
+      extraThisFile: 'Ignored, folder has another content file',
       brokenLink: 'Broken link'
     };
 

@@ -1,6 +1,7 @@
 # Database settings
 
-thisFile: '-this'
+thisFile: '-this'         # content file of a folder, written by the app
+thisFileMatch: ''         # regex on the name without .md, also read as content file, e.g. '-\s*DESC.*'
 linkMarker: ' (lnk)'
 defaultType: 'Info'
 pageSize: 8

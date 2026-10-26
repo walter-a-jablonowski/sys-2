@@ -71,7 +71,7 @@ class Db
   }
 
   /**
-   * Health report: shadowed files, duplicate ids, broken links.
+   * Health report: shadowed files, extra content files, duplicate ids, broken links.
    */
   public function check( ObjStore $store, Index $index ) : array
   {
@@ -82,8 +82,14 @@ class Db
 
     foreach( $store->walk('') as $obj )
     {
-      if( $obj->isFolder && is_file($this->abs("{$obj->path}.md")))
-        $issues[] = ['kind' => 'shadowed', 'path' => "{$obj->path}.md"];
+      if( $obj->isFolder )
+      {
+        if( is_file($this->abs("{$obj->path}.md")))
+          $issues[] = ['kind' => 'shadowed', 'path' => "{$obj->path}.md"];
+
+        foreach( array_slice($store->path()->thisFilesIn($obj->path), 1) as $name )
+          $issues[] = ['kind' => 'extraThisFile', 'path' => "{$obj->path}/{$name}"];
+      }
 
       if( $obj->isLink && $index->path($obj->target) === null )
         $issues[] = ['kind' => 'brokenLink', 'path' => $obj->path, 'target' => $obj->target];
