@@ -3,8 +3,9 @@
 /**
  * Writes the editor fields back.
  *
- * "title" is the file name and "body" the markdown body, every other field
- * is a front matter key, dots making it nested (plan §2.3).
+ * "title" and the fields carried in the name (NameFields) are the file name,
+ * "body" is the markdown body, every other field is a front matter key, dots
+ * making it nested (plan §2.3).
  *
  * @var Sys\App  $app
  * @var Sys\Ajax $ajax
@@ -22,6 +23,27 @@ $body  = array_key_exists('body', $fields) ? (string) $fields['body'] : $obj->bo
 $type  = array_key_exists('__type', $fields) ? (string) $fields['__type'] : '';
 
 unset($fields['title'], $fields['body'], $fields['__type']);
+
+// Fields carried in the name, only the changed ones: each one renames the file
+$names      = $app->path->fields();
+$nameValues = [];
+
+foreach( $fields as $key => $value )
+{
+  if( ! $names->has($key))
+    continue;
+
+  unset($fields[$key]);
+  $value = $names->normalize($key, $value);
+
+  if( $value !== $names->normalize($key, $obj->nameData[$key] ?? ''))
+    $nameValues[$key] = $value;
+}
+
+$altField = $names->fieldOf('id');
+
+if( $altField !== null && ($nameValues[$altField] ?? '') !== '' && $app->index->altPath($nameValues[$altField]) !== null )
+  throw Failure::invalid("\"{$nameValues[$altField]}\" is already used by another entry", ['field' => $altField]);
 
 // Dotted names become nested front matter, unknown keys are kept as they are
 $data = $obj->data;
@@ -55,10 +77,10 @@ if( $title === '' )
 if( $mtime !== null && $obj->mtime !== 0 && $obj->mtime !== $mtime )
   throw Failure::conflict('The file changed since it was loaded', ['mtime' => $obj->mtime]);
 
-$renamed = $title !== null && $title !== $obj->title;
+$renamed = ($title !== null && $title !== $obj->title) || $nameValues;
 
 if( $renamed )
-  $obj = $app->store->rename($obj, $title);
+  $obj = $app->store->rename($obj, $title ?? $obj->title, $nameValues);
 
 // After the rename: rename() reloads the object from disk
 if( $type !== '' && $type !== $obj->type && $app->types->has($type))

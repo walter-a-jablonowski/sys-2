@@ -3,7 +3,8 @@
 namespace Sys;
 
 /**
- * id -> path cache in <db>/.sys/index.json.
+ * id -> path cache in <db>/.sys/index.json, plus the alternative ids some
+ * databases carry in their names (NameFields role "id").
  *
  * This class is the only place that knows the storage format, so it can be
  * swapped for a real store later without touching anything else (plan §2.5).
@@ -21,7 +22,7 @@ class Index
     $this->db    = $db;
     $this->store = $store;
     $this->file  = "{$db->sysDir()}/index.json";
-    $this->data  = ['builtAt' => 0, 'objects' => [], 'links' => [], 'duplicates' => []];
+    $this->data  = ['builtAt' => 0, 'objects' => [], 'altIds' => [], 'links' => [], 'duplicates' => [], 'altDuplicates' => []];
   }
 
   public function path( string $id ) : ?string
@@ -30,9 +31,29 @@ class Index
     return $this->data['objects'][$id]['path'] ?? null;
   }
 
+  public function altPath( string $altId ) : ?string
+  {
+    $this->load();
+    return $this->data['altIds'][$altId]['path'] ?? null;
+  }
+
   public function obj( string $id ) : ?Obj
   {
     $path = $this->path($id);
+    return $path === null ? null : $this->store->get($path);
+  }
+
+  /**
+   * What a link points at: by the id in its front matter, else by the
+   * alternative id in its name. Null for a broken link.
+   */
+  public function target( Obj $link ) : ?Obj
+  {
+    if( $link->target !== '' )
+      return $this->obj($link->target);
+
+    $path = $link->altTarget === '' ? null : $this->altPath($link->altTarget);
+
     return $path === null ? null : $this->store->get($path);
   }
 
@@ -49,6 +70,12 @@ class Index
   {
     $this->load();
     return $this->data['duplicates'];
+  }
+
+  public function altDuplicates() : array
+  {
+    $this->load();
+    return $this->data['altDuplicates'];
   }
 
   public function all() : array
@@ -71,38 +98,52 @@ class Index
 
   public function build() : void
   {
-    $objects    = [];
-    $links      = [];
-    $duplicates = [];
+    $objects       = [];
+    $altIds        = [];
+    $links         = [];
+    $altLinks      = [];
+    $duplicates    = [];
+    $altDuplicates = [];
+    $idOfPath      = [];
 
     foreach( $this->store->walk('') as $obj )
     {
+      if( $obj->altId !== '' )
+        self::claim($altIds, $altDuplicates, $obj->altId, ['path' => $obj->path]);
+
       if( $obj->isLink )
       {
-        $links[$obj->target][] = $obj->path;
+        if( $obj->target !== '' )
+          $links[$obj->target][] = $obj->path;
+        else
+          $altLinks[$obj->altTarget][] = $obj->path;
+
         continue;
       }
 
-      if( $obj->id === '' )
-        continue;
-
-      if( isset($objects[$obj->id]))
+      if( $obj->id !== '' )
       {
-        $duplicates[$obj->id] = array_merge(
-          $duplicates[$obj->id] ?? [$objects[$obj->id]['path']],
-          [$obj->path]
-        );
-        continue;
+        self::claim($objects, $duplicates, $obj->id, ['path' => $obj->path, 'type' => $obj->type, 'mtime' => $obj->mtime]);
+        $idOfPath[$obj->path] = $obj->id;
       }
+    }
 
-      $objects[$obj->id] = ['path' => $obj->path, 'type' => $obj->type, 'mtime' => $obj->mtime];
+    // A link by alternative id is a backlink of the id behind it
+    foreach( $altLinks as $altId => $paths )
+    {
+      $id = $idOfPath[$altIds[$altId]['path'] ?? ''] ?? null;
+
+      if( $id !== null )
+        $links[$id] = array_merge($links[$id] ?? [], $paths);
     }
 
     $this->data = [
-      'builtAt'    => time(),
-      'objects'    => $objects,
-      'links'      => $links,
-      'duplicates' => $duplicates
+      'builtAt'       => time(),
+      'objects'       => $objects,
+      'altIds'        => $altIds,
+      'links'         => $links,
+      'duplicates'    => $duplicates,
+      'altDuplicates' => $altDuplicates
     ];
 
     $this->loaded = true;
@@ -110,6 +151,21 @@ class Index
   }
 
   // Internals
+
+  /**
+   * Records an entry under its key. A key already taken keeps its first
+   * entry, the paths of all of them are noted as duplicates.
+   */
+  private static function claim( array &$map, array &$duplicates, string $key, array $entry ) : void
+  {
+    if( ! isset($map[$key]))
+    {
+      $map[$key] = $entry;
+      return;
+    }
+
+    $duplicates[$key] = array_merge($duplicates[$key] ?? [$map[$key]['path']], [$entry['path']]);
+  }
 
   private function load() : void
   {
@@ -134,11 +190,15 @@ class Index
   }
 
   /**
-   * Any folder touched after the last build means the tree may have changed.
+   * Any folder touched after the last build means the tree may have changed,
+   * a changed database config that names are read differently.
    */
   private function isStale() : bool
   {
-    return $this->newestDir($this->db->root()) > (int) $this->data['builtAt'];
+    $config = "{$this->db->sysDir()}/config.yml";
+    $newest = max($this->newestDir($this->db->root()), is_file($config) ? (int) filemtime($config) : 0);
+
+    return $newest > (int) $this->data['builtAt'];
   }
 
   private function newestDir( string $abs ) : int

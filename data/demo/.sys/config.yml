@@ -8,3 +8,21 @@ pageSize: 8
 sort:
   by: 'created'
   dir: 'desc'
+
+# Fields carried in file and folder names, applied in this order; what is left is the title.
+# A token stands alone in the name (blank or name start/end around it), group 1 of match is the value.
+#
+# nameFields:
+#   - field: 'target2'
+#     match: '\(?lnk-([^\s()]+)\)?'      # "My file (lnk-K12)" is a link to the entry with id2 K12
+#     format: '(lnk-{value})'
+#     role: 'link'
+#   - field: 'id2'
+#     match: '\(?(?:id-|#)([^\s()]+)\)?' # "(id-K12)", "id-K12" or "#K12"
+#     format: '(id-{value})'             # no format: read-only
+#     role: 'id'                         # alternative unique id
+#   - field: 'tags'
+#     match: '\((best|draft)\)'          # only these strings are tags, "(some text)" stays in the title
+#     format: '({value})'
+#     list: true
+nameFields: []

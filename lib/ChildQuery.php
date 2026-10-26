@@ -75,10 +75,8 @@ class ChildQuery
 
   private function resolveLink( Obj $obj ) : void
   {
-    if( ! $obj->isLink || $obj->target === '' )
-      return;
-
-    $obj->linkTarget = $this->app->index->obj($obj->target);
+    if( $obj->isLink )
+      $obj->linkTarget = $this->app->index->target($obj);
   }
 
   /**

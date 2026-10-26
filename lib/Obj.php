@@ -17,6 +17,9 @@ class Obj
   public string $id     = '';
   public string $target = '';     // links only: id of the target
   public array  $data   = [];     // front matter without the reserved keys
+  public array  $nameData  = [];  // fields carried in the file or folder name (NameFields)
+  public string $altId     = '';  // alternative id from the name, role "id"
+  public string $altTarget = '';  // links by name only: alternative id of the target, role "link"
   public string $body   = '';
   public int    $mtime  = 0;
   public string $created  = '';
@@ -59,6 +62,6 @@ class Obj
 
   public function field( string $key, $default = null )
   {
-    return $this->data[$key] ?? $default;
+    return $this->nameData[$key] ?? $this->data[$key] ?? $default;
   }
 }

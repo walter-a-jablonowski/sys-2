@@ -13,6 +13,6 @@ class LinkDefaultListRenderer extends \Sys\ListRenderer
 
   protected function meta() : string
   {
-    return 'target <code class="mono">' . $this->esc($this->obj->target) . '</code> does not exist';
+    return 'target <code class="mono">' . $this->esc($this->obj->target ?: $this->obj->altTarget) . '</code> does not exist';
   }
 }

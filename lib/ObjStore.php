@@ -207,14 +207,12 @@ class ObjStore
   }
 
   /**
-   * Renaming the title renames the file or folder (plan §2.8).
+   * Renaming the title renames the file or folder (plan §2.8), and so does
+   * editing a field carried in the name.
    */
-  public function rename( Obj $obj, string $title ) : Obj
+  public function rename( Obj $obj, string $title, array $nameValues = [] ) : Obj
   {
-    $name = $obj->isLink ? $this->path->linkName($title) : $this->path->sanitize($title);
-
-    if( $obj->isResource )
-      $name = $this->path->sanitize($title);
+    $name = $this->path->nameFor($obj, $title, $nameValues);
 
     if( $name === $obj->name())
       return $obj;
@@ -332,7 +330,6 @@ class ObjStore
     $obj  = new Obj($rel, (string) ($data['type'] ?? $this->config->db('defaultType', 'Info')));
 
     $obj->file     = $file;
-    $obj->title    = $this->path->stripMarker($obj->name());
     $obj->id       = (string) ($data['id'] ?? '');
     $obj->target   = (string) ($data['target'] ?? '');
     $obj->created  = (string) ($data['created'] ?? '');
@@ -342,6 +339,8 @@ class ObjStore
     $obj->mtime    = (int) filemtime($absFile);
     $obj->isFolder = $isFolder;
     $obj->isLink   = $obj->type === 'Link';
+
+    $this->readName($obj);
 
     return $obj;
   }
@@ -355,9 +354,10 @@ class ObjStore
     $obj = new Obj($rel, 'File');
 
     $obj->file       = $file;
-    $obj->title      = $obj->name();
     $obj->isResource = true;
     $obj->mtime      = (int) filemtime($this->db->abs($file));
+
+    $this->readName($obj);
 
     $sidecar = $this->path->sidecarOf($rel);
     $abs     = $this->db->abs($sidecar);
@@ -382,11 +382,28 @@ class ObjStore
   {
     $obj = new Obj($rel, 'Group');
 
-    $obj->title    = $this->path->stripMarker($obj->name());
     $obj->isFolder = true;
     $obj->mtime    = (int) filemtime($this->db->abs($rel));
 
+    $this->readName($obj);
+
     return $obj;
+  }
+
+  /**
+   * Title and the fields carried in the name. A name with a link field makes
+   * the object a link, whatever its type.
+   */
+  private function readName( Obj $obj ) : void
+  {
+    $fields = $this->path->fields();
+    $parsed = $this->path->parseName($obj->name(), $obj->isResource);
+
+    $obj->title     = $parsed['title'];
+    $obj->nameData  = $parsed['data'];
+    $obj->altId     = $fields->roleValue($parsed['data'], 'id');
+    $obj->altTarget = $fields->roleValue($parsed['data'], 'link');
+    $obj->isLink    = $obj->isLink || $obj->altTarget !== '';
   }
 
   private function rootObj() : Obj

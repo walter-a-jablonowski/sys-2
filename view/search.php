@@ -36,7 +36,7 @@ else:
     </span>
     <span class="hit-body">
       <span class="hit-title"><?= htmlspecialchars($obj->title, ENT_QUOTES) ?></span>
-      <span class="hit-path"><?= htmlspecialchars($app->db->pathLabel($obj->parentPath()), ENT_QUOTES) ?></span>
+      <span class="hit-path"><?= htmlspecialchars($app->path->label($obj->parentPath()), ENT_QUOTES) ?></span>
     </span>
   </button>
 <?php

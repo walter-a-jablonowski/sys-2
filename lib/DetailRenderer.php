@@ -28,13 +28,34 @@ class DetailRenderer extends Renderer
           </div>
         <?php endforeach ?>
       <?php else: ?>
-        <div class="editor-pane is-active"><?php $this->renderFields($this->type->fields()) ?></div>
+        <div class="editor-pane is-active"><?php $this->renderFields($this->fields()) ?></div>
       <?php endif ?>
     </form>
     <?php
   }
 
   // Fields
+
+  /**
+   * The type's fields plus the fields carried in the name, which go right
+   * after the title unless the type places them itself.
+   */
+  protected function fields() : array
+  {
+    $own   = $this->type->fields();
+    $names = [];
+
+    foreach( $this->app->path->fields()->rules() as $field => $rule )
+    {
+      if( ! isset($own[$field]))
+        $names[$field] = ['label' => $rule['label']];
+    }
+
+    $at = array_search('title', array_keys($own), true);
+    $at = $at === false ? 0 : $at + 1;
+
+    return array_slice($own, 0, $at, true) + $names + array_slice($own, $at, null, true);
+  }
 
   /**
    * Fields belonging to a detail tab. Fields without a "tab" key stay in the
@@ -44,7 +65,7 @@ class DetailRenderer extends Renderer
   {
     $out = [];
 
-    foreach( $this->type->fields() as $key => $def )
+    foreach( $this->fields() as $key => $def )
     {
       $target = $def['tab'] ?? null;
 
@@ -85,15 +106,19 @@ class DetailRenderer extends Renderer
     $value = $this->value($name);
     $id    = 'f-' . str_replace('.', '-', $name);
 
+    // The title and the fields carried in the name rename the file: saved on leaving, not per keystroke
+    $rule  = $this->app->path->fields()->rules()[$name] ?? null;
+    $attrs = ($name === 'title' || $rule ? ' data-rename' : '') . ($rule && $rule['format'] === '' ? ' disabled' : '');
+
     ?>
     <div class="field field-<?= $this->esc($kind) ?><?= $name === 'title' ? ' field-is-title' : '' ?>">
       <label class="field-label" for="<?= $this->esc($id) ?>"><?= $this->esc($label) ?></label>
       <?php if( $kind === 'markdown' || $kind === 'textarea' ): ?>
         <textarea class="input input-area<?= $kind === 'markdown' ? ' mono' : '' ?>" id="<?= $this->esc($id) ?>"
                   data-field="<?= $this->esc($name) ?>" rows="<?= (int) ($def['rows'] ?? 14) ?>"
-                  placeholder="<?= $this->esc($def['placeholder'] ?? '') ?>"><?= $this->esc($value) ?></textarea>
+                  placeholder="<?= $this->esc($def['placeholder'] ?? '') ?>"<?= $attrs ?>><?= $this->esc($value) ?></textarea>
       <?php elseif( $kind === 'select' ): ?>
-        <select class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>">
+        <select class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>"<?= $attrs ?>>
           <option value=""><?= $def['required'] ?? false ? '—' : '(none)' ?></option>
           <?php foreach( $def['options'] ?? [] as $option ): ?>
             <option value="<?= $this->esc($option) ?>"<?= (string) $value === (string) $option ? ' selected' : '' ?>><?= $this->esc($option) ?></option>
@@ -103,7 +128,7 @@ class DetailRenderer extends Renderer
         <input class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>"
                type="<?= $this->esc($this->inputType($kind)) ?>" value="<?= $this->esc($value) ?>"
                placeholder="<?= $this->esc($def['placeholder'] ?? '') ?>"
-               <?= ($def['required'] ?? false) ? 'required' : '' ?>>
+               <?= ($def['required'] ?? false) ? 'required' : '' ?><?= $attrs ?>>
       <?php endif ?>
     </div>
     <?php
@@ -161,6 +186,9 @@ class DetailRenderer extends Renderer
 
     if( $path === 'body' )
       return $this->obj->body;
+
+    if( array_key_exists($path, $this->obj->nameData))
+      return implode(', ', (array) $this->obj->nameData[$path]);
 
     $value = $this->obj->data;
 

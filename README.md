@@ -89,13 +89,37 @@ Every file and folder under the database is an **object** — no separate regist
 - `(lnk)` in a name marks a **link stub** (type **Link**, front matter `target` = id)
   - opening a link opens its target
   - pinning a link pins the stub, not the target
+  - links made in the app always take this form
+
+## Fields in the name
+
+A database may read fields out of file and folder names — `nameFields` in `<db>/.sys/config.yml`, example there.
+
+- Rules run **in their order**, each takes its tokens out before the next one looks; what is left is the **title**
+  - so `(lnk-K12)` and `(id-K12)` must come before a catch-all like `\(([^()]+)\)`
+- A token stands alone: blank or start/end of the name around it
+  - `match` — regex, group 1 is the value, else the whole token
+  - `list: true` — every token counts (e.g. tags), otherwise only the first
+- Fixed tags: `match: '\((best|draft)\)'` — `(best)` is a tag, `(some text)` stays in the title
+- `role: 'id'` — **alternative id** (`id2`), unique across the database
+  - `id` in front matter stays the primary id: Pinned and Recent store that one
+  - duplicates show in **Check database**, the editor refuses a taken one
+- `role: 'link'` — the entry is a **link** to the one with that alternative id, whatever its type
+  - `My file (lnk-K12).md` — own title, front matter and body are allowed
+- Shown in the editor after the title, unless the type places the field itself
+  - editing one **renames** the file, written with `format` (e.g. `(id-{value})`); no `format` — read-only
+  - a list field is edited as `a, b`
+  - renaming the title keeps every token as written, moved behind the title
+  - whatever is written must read back the same, otherwise the save is refused (e.g. a title containing `(best)`)
+- Resources: fields come from the part before the extension
+- Not in front matter: these fields live only in the name
 - The **database root is not an entry** — it cannot be opened or saved
 - Move and rename carry the sidecar along; delete removes a folder with everything inside
 
 ## Data on disk
 
 - Everything is files under `/data`, no database
-- **Title = file name.** Renaming renames the file or folder
+- **Title = file name** (minus the fields in the name). Renaming renames the file or folder
   - characters the file system refuses become `-`; a taken name gets ` 2`, ` 3`, …
 - Front matter keys the app owns: `id`, `type`, `created`, `modified`, `target` — the rest belongs to the type
 - `<db>/.sys/` — runtime state, not content
@@ -107,14 +131,14 @@ Every file and folder under the database is an **object** — no separate regist
 - Lists are sorted **newest first**, not alphabetically
 - **Delete is permanent.** No trash
 - Autosave 800 ms after the last keystroke
-  - title and dropdowns save at once, the title on leaving the field
-- The index rebuilds itself when any folder changes on disk
-- **Check database** (⋮ menu) finds duplicate ids, shadowed files, extra content files, broken links
+  - title and dropdowns save at once, the title on leaving the field — same for fields in the name
+- The index rebuilds itself when any folder or `<db>/.sys/config.yml` changes
+- **Check database** (⋮ menu) finds duplicate ids and alternative ids, shadowed files, extra content files, broken links
 
 ## Config
 
 - `config.yml` — `dbPath`, `theme`, `appName`
-- `<db>/.sys/config.yml` — `thisFile`, `thisFileMatch`, `linkMarker`, `defaultType`, `pageSize`, `sort`
+- `<db>/.sys/config.yml` — `thisFile`, `thisFileMatch`, `linkMarker`, `nameFields`, `defaultType`, `pageSize`, `sort`
 - Fields, tabs and icon per type — `types/<Type>.yml`
   - `create: { tab: ['__link:Person'] }` makes **+** add a link, not a new object
   - `viewer: 'NAME'` — the viewer used unless the user picked another one

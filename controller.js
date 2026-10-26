@@ -890,6 +890,7 @@
     const data = await api('health');
     const kinds = {
       duplicateId: 'Duplicate id',
+      duplicateAltId: 'Duplicate alternative id',
       shadowed: 'Shadowed by a folder',
       extraThisFile: 'Ignored, folder has another content file',
       brokenLink: 'Broken link'
@@ -1546,8 +1547,8 @@
 
     field.closest('.field') && field.closest('.field').classList.remove('has-error');
 
-    // The title is a file name: renaming on every keystroke would be wrong
-    if( field.dataset.field === 'title' )
+    // Title and name fields are the file name: renaming on every keystroke would be wrong
+    if( 'rename' in field.dataset )
     {
       setSaveState('unsaved');
       return;
@@ -1569,7 +1570,7 @@
     const field = event.target.closest && event.target.closest('[data-field]');
 
     if( field && el.editor.contains(field))
-      scheduleSave(field.dataset.field === 'title');
+      scheduleSave('rename' in field.dataset);
   }, true);
 
   document.addEventListener('keydown', function ( event )
@@ -1603,7 +1604,7 @@
     if( event.key === 'Escape' )
       closeDropdown();
 
-    const field = event.target.closest && event.target.closest('[data-field="title"]');
+    const field = event.target.closest && event.target.closest('input[data-rename]');
 
     if( field && event.key === 'Enter' )
     {

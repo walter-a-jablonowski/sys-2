@@ -94,7 +94,7 @@ abstract class Renderer
     if( $this->context === null )
       return '';
 
-    $label = $this->app->db->pathLabel($this->context);
+    $label = $this->app->path->label($this->context);
 
     return '<button type="button" class="card-path" data-action="goPath" title="Go to this container" data-path="'
       . $this->esc($this->context) . '">' . $this->esc($label) . '</button>';

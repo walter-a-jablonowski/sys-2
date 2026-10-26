@@ -13,13 +13,8 @@ use Sys\Menu;
 $obj = $ajax->obj();
 
 // Opening a link means opening what it points at
-if( $obj->isLink && $obj->target !== '' )
-{
-  $target = $app->index->obj($obj->target);
-
-  if( $target !== null )
-    $obj = $target;
-}
+if( $obj->isLink )
+  $obj = $app->index->target($obj) ?? $obj;
 
 $app->recent->push($obj->id);
 

@@ -10,10 +10,13 @@ namespace Sys;
  *
  * The content file of a folder is written as "thisFile" and recognised by
  * "thisFileMatch" too, e.g. "-\s*DESC.*" accepts "- DESC.md", "-DESC notes.md".
+ *
+ * A name may carry fields besides the title, see NameFields.
  */
 class ObjPath
 {
   private Db $db;
+  private NameFields $fields;
   private string $thisFile;
   private string $thisPattern;
   private string $linkMarker;
@@ -24,6 +27,7 @@ class ObjPath
   public function __construct( Db $db, Config $config )
   {
     $this->db         = $db;
+    $this->fields     = new NameFields((array) $config->db('nameFields', []));
     $this->thisFile   = $config->db('thisFile', '-this');
     $this->linkMarker = $config->db('linkMarker', ' (lnk)');
 
@@ -102,6 +106,74 @@ class ObjPath
   public function linkName( string $title ) : string
   {
     return $this->sanitize($title) . $this->linkMarker;
+  }
+
+  public function fields() : NameFields
+  {
+    return $this->fields;
+  }
+
+  /**
+   * Title and fields a name carries. A resource keeps its extension in the
+   * title, its fields come from the part before it.
+   *
+   * @return array{title: string, data: array, tokens: array}
+   */
+  public function parseName( string $name, bool $isResource = false ) : array
+  {
+    [$stem, $ext] = $isResource ? $this->splitExt($name) : [$name, ''];
+
+    $parsed = $this->fields->parse($this->stripMarker($stem));
+    $parsed['title'] .= $ext;
+
+    return $parsed;
+  }
+
+  /**
+   * The name an object gets for a new title and new field values, fields not
+   * given keep their tokens as written. What is written has to read back the
+   * same, otherwise the title would swallow a field or the other way round.
+   */
+  public function nameFor( Obj $obj, string $title, array $values = [] ) : string
+  {
+    $tokens = $this->parseName($obj->name(), $obj->isResource)['tokens'];
+
+    foreach( $values as $field => $value )
+      $tokens[$field] = $this->fields->format($field, $value);
+
+    [$stem, $ext] = $obj->isResource ? $this->splitExt($title) : [$title, ''];
+
+    $name = $this->sanitize(implode(' ', array_merge([$stem], $this->fields->flatten($tokens)))) . $ext;
+
+    if( $this->isLinkName($obj->name()))
+      $name .= $this->linkMarker;
+
+    $back   = $this->parseName($name, $obj->isResource);
+    $expect = array_filter(array_replace($obj->nameData, $values), fn( $value ) => $value !== '' && $value !== []);
+    $wrong  = array_filter(array_keys($back['data'] + $expect), fn( $field ) => ($back['data'][$field] ?? null) !== ($expect[$field] ?? null));
+
+    // An edited value that does not read back is its own fault, anything else the title's
+    $edited = array_values(array_intersect($wrong, array_keys($values)));
+
+    if( $edited )
+      throw Failure::invalid("{$this->fields->rules()[$edited[0]]['label']} cannot be written into the name like this", ['field' => $edited[0]]);
+
+    if( $wrong || $back['title'] !== $this->sanitize($title))
+      throw Failure::invalid('Part of the title would be read as a field of the name', ['field' => 'title']);
+
+    return $name;
+  }
+
+  /**
+   * A path as one readable line of titles. The empty path is the database
+   * itself, which is what sits at the top of every trail.
+   */
+  public function label( string $rel ) : string
+  {
+    if( $rel === '' )
+      return $this->db->name();
+
+    return implode(' › ', array_map(fn( $segment ) => $this->parseName($segment)['title'], explode('/', $rel)));
   }
 
   /**
@@ -185,5 +257,15 @@ class ObjPath
   public function sidecarOf( string $rel ) : string
   {
     return "{$rel}.md";
+  }
+
+  /**
+   * "slides.pdf" -> ["slides", ".pdf"], a name without extension keeps it all.
+   */
+  private function splitExt( string $name ) : array
+  {
+    $dot = strrpos($name, '.');
+
+    return $dot > 0 ? [substr($name, 0, $dot), substr($name, $dot)] : [$name, ''];
   }
 }

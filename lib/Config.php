@@ -14,6 +14,7 @@ class Config
     'thisFile'      => '-this',
     'thisFileMatch' => '',
     'linkMarker'    => ' (lnk)',
+    'nameFields'    => [],
     'defaultType'   => 'Info',
     'pageSize'      => 50,
     'sort'          => ['by' => 'created', 'dir' => 'desc']

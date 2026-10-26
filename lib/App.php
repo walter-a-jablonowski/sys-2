@@ -60,10 +60,16 @@ class App
 
   /**
    * Renderer of a kind for an object, resolved through the viewer of its type.
+   * A link is drawn by the viewer of its target, a broken one by the Link viewer.
    */
   public function renderer( string $kind, Obj $obj ) : Renderer
   {
-    return $this->viewers->forObj($obj)->renderer($kind, $this, $obj);
+    if( $obj->isLink && $obj->linkTarget === null )
+      $obj->linkTarget = $this->index->target($obj);
+
+    $type = $obj->isLink && $obj->linkTarget === null ? $this->types->get('Link') : $this->types->forObj($obj->display());
+
+    return $this->viewers->active($type)->renderer($kind, $this, $obj);
   }
 
   public static function boot( string $root ) : App

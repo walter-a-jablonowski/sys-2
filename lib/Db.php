@@ -29,15 +29,6 @@ class Db
     return basename($this->root);
   }
 
-  /**
-   * A path as one readable line. The empty path is the database itself,
-   * which is what sits at the top of every trail.
-   */
-  public function pathLabel( string $rel ) : string
-  {
-    return $rel === '' ? $this->name() : str_replace('/', ' › ', $rel);
-  }
-
   public function abs( string $rel = '' ) : string
   {
     $rel = $this->clean($rel);
@@ -80,6 +71,9 @@ class Db
     foreach( $index->duplicates() as $id => $paths )
       $issues[] = ['kind' => 'duplicateId', 'id' => $id, 'paths' => $paths];
 
+    foreach( $index->altDuplicates() as $id => $paths )
+      $issues[] = ['kind' => 'duplicateAltId', 'id' => $id, 'paths' => $paths];
+
     foreach( $store->walk('') as $obj )
     {
       if( $obj->isFolder )
@@ -91,8 +85,8 @@ class Db
           $issues[] = ['kind' => 'extraThisFile', 'path' => "{$obj->path}/{$name}"];
       }
 
-      if( $obj->isLink && $index->path($obj->target) === null )
-        $issues[] = ['kind' => 'brokenLink', 'path' => $obj->path, 'target' => $obj->target];
+      if( $obj->isLink && $index->target($obj) === null )
+        $issues[] = ['kind' => 'brokenLink', 'path' => $obj->path, 'target' => $obj->target ?: $obj->altTarget];
     }
 
     return $issues;
