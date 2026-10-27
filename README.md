@@ -111,6 +111,9 @@ A database may read fields out of file and folder names — `nameFields` in `<db
   - a list field is edited as `a, b`
   - renaming the title keeps every token as written, moved behind the title
   - whatever is written must read back the same, otherwise the save is refused (e.g. a title containing `(best)`)
+- A **title is required** besides the fields
+  - a name holding only fields, like `(id-K12).md`, shows as **No title**
+  - the editor saves nothing until one is entered, **Check database** lists such names
 - Resources: fields come from the part before the extension
 - Not in front matter: these fields live only in the name
 - The **database root is not an entry** — it cannot be opened or saved
@@ -133,7 +136,7 @@ A database may read fields out of file and folder names — `nameFields` in `<db
 - Autosave 800 ms after the last keystroke
   - title and dropdowns save at once, the title on leaving the field — same for fields in the name
 - The index rebuilds itself when any folder or `<db>/.sys/config.yml` changes
-- **Check database** (⋮ menu) finds duplicate ids and alternative ids, shadowed files, extra content files, broken links
+- **Check database** (⋮ menu) finds duplicate ids and alternative ids, shadowed files, extra content files, names without a title, broken links
 
 ## Config
 

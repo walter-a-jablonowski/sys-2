@@ -70,8 +70,9 @@ foreach( $fields as $name => $value )
   unset($cursor);
 }
 
-if( $title === '' )
-  throw Failure::invalid('The title is the file name and cannot be empty', ['field' => 'title']);
+// Nothing is saved while the title is missing, also when the name on disk holds only fields
+if( ($title ?? $obj->title) === '' )
+  throw Failure::invalid('A title is required besides the fields in the name', ['field' => 'title']);
 
 // Checked before anything is written, so a stale editor cannot rename a file
 if( $mtime !== null && $obj->mtime !== 0 && $obj->mtime !== $mtime )

@@ -110,8 +110,12 @@ class DetailRenderer extends Renderer
     $rule  = $this->app->path->fields()->rules()[$name] ?? null;
     $attrs = ($name === 'title' || $rule ? ' data-rename' : '') . ($rule && $rule['format'] === '' ? ' disabled' : '');
 
+    // A name needs a title besides its fields, whatever the type says. A missing one is shown right away
+    $required = ($def['required'] ?? false) || $name === 'title';
+    $missing  = $name === 'title' && $value === '';
+
     ?>
-    <div class="field field-<?= $this->esc($kind) ?><?= $name === 'title' ? ' field-is-title' : '' ?>">
+    <div class="field field-<?= $this->esc($kind) ?><?= $name === 'title' ? ' field-is-title' : '' ?><?= $missing ? ' has-error' : '' ?>">
       <label class="field-label" for="<?= $this->esc($id) ?>"><?= $this->esc($label) ?></label>
       <?php if( $kind === 'markdown' || $kind === 'textarea' ): ?>
         <textarea class="input input-area<?= $kind === 'markdown' ? ' mono' : '' ?>" id="<?= $this->esc($id) ?>"
@@ -127,8 +131,8 @@ class DetailRenderer extends Renderer
       <?php else: ?>
         <input class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>"
                type="<?= $this->esc($this->inputType($kind)) ?>" value="<?= $this->esc($value) ?>"
-               placeholder="<?= $this->esc($def['placeholder'] ?? '') ?>"
-               <?= ($def['required'] ?? false) ? 'required' : '' ?><?= $attrs ?>>
+               placeholder="<?= $this->esc($def['placeholder'] ?? ($missing ? 'Required' : '')) ?>"
+               <?= $required ? 'required' : '' ?><?= $attrs ?>>
       <?php endif ?>
     </div>
     <?php

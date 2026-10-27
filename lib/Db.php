@@ -62,7 +62,8 @@ class Db
   }
 
   /**
-   * Health report: shadowed files, extra content files, duplicate ids, broken links.
+   * Health report: shadowed files, extra content files, duplicate ids, names
+   * without a title, broken links.
    */
   public function check( ObjStore $store, Index $index ) : array
   {
@@ -84,6 +85,9 @@ class Db
         foreach( array_slice($store->path()->thisFilesIn($obj->path), 1) as $name )
           $issues[] = ['kind' => 'extraThisFile', 'path' => "{$obj->path}/{$name}"];
       }
+
+      if( $obj->title === '' )
+        $issues[] = ['kind' => 'missingTitle', 'path' => $obj->path];
 
       if( $obj->isLink && $index->target($obj) === null )
         $issues[] = ['kind' => 'brokenLink', 'path' => $obj->path, 'target' => $obj->target ?: $obj->altTarget];

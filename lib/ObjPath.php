@@ -115,7 +115,8 @@ class ObjPath
 
   /**
    * Title and fields a name carries. A resource keeps its extension in the
-   * title, its fields come from the part before it.
+   * title, its fields come from the part before it. A name holding only
+   * fields has an empty title, also for a resource.
    *
    * @return array{title: string, data: array, tokens: array}
    */
@@ -124,15 +125,18 @@ class ObjPath
     [$stem, $ext] = $isResource ? $this->splitExt($name) : [$name, ''];
 
     $parsed = $this->fields->parse($this->stripMarker($stem));
-    $parsed['title'] .= $ext;
+
+    if( $parsed['title'] !== '' )
+      $parsed['title'] .= $ext;
 
     return $parsed;
   }
 
   /**
    * The name an object gets for a new title and new field values, fields not
-   * given keep their tokens as written. What is written has to read back the
-   * same, otherwise the title would swallow a field or the other way round.
+   * given keep their tokens as written. A title is required besides the
+   * fields. What is written has to read back the same, otherwise the title
+   * would swallow a field or the other way round.
    */
   public function nameFor( Obj $obj, string $title, array $values = [] ) : string
   {
@@ -142,6 +146,9 @@ class ObjPath
       $tokens[$field] = $this->fields->format($field, $value);
 
     [$stem, $ext] = $obj->isResource ? $this->splitExt($title) : [$title, ''];
+
+    if( trim($stem, ' .') === '' )
+      throw Failure::invalid('A title is required besides the fields in the name', ['field' => 'title']);
 
     $name = $this->sanitize(implode(' ', array_merge([$stem], $this->fields->flatten($tokens)))) . $ext;
 
@@ -260,12 +267,13 @@ class ObjPath
   }
 
   /**
-   * "slides.pdf" -> ["slides", ".pdf"], a name without extension keeps it all.
+   * "slides.pdf" -> ["slides", ".pdf"], ".pdf" -> ["", ".pdf"] (a title
+   * missing), a name without extension keeps it all.
    */
   private function splitExt( string $name ) : array
   {
     $dot = strrpos($name, '.');
 
-    return $dot > 0 ? [substr($name, 0, $dot), substr($name, $dot)] : [$name, ''];
+    return $dot !== false ? [substr($name, 0, $dot), substr($name, $dot)] : [$name, ''];
   }
 }

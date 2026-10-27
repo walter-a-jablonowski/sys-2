@@ -145,6 +145,13 @@
   text-overflow: ellipsis;
 }
 
+.head-title:empty::before
+{
+  content: 'No title';
+  font-style: italic;
+  color: var(--danger);
+}
+
 .head-type,
 .head-empty
 {

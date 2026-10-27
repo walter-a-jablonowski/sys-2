@@ -893,6 +893,7 @@
       duplicateAltId: 'Duplicate alternative id',
       shadowed: 'Shadowed by a folder',
       extraThisFile: 'Ignored, folder has another content file',
+      missingTitle: 'No title, the name holds only fields',
       brokenLink: 'Broken link'
     };
 

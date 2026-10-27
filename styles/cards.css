@@ -84,6 +84,16 @@
   color: var(--fg);
 }
 
+/* A name holding only fields has no title, the editor asks for one */
+
+.card-title:empty::before,
+.cell-title:empty::before
+{
+  content: 'No title';
+  font-style: italic;
+  color: var(--danger);
+}
+
 .card-badges
 {
   display: flex;
