@@ -35,12 +35,13 @@ class Search
 
     $hits = [];
 
-    foreach( $this->app->index->all() as $id => $entry )
+    // Objects without an id are found all the same, a hit is opened by its path
+    foreach( array_merge(array_values($this->app->index->all()), $this->app->index->withoutId()) as $entry )
     {
       $score = $this->score((string) $entry['path'], $needle);
 
       if( $score >= 0 )
-        $hits[] = ['id' => $id, 'score' => $score, 'mtime' => (int) $entry['mtime'], 'path' => (string) $entry['path']];
+        $hits[] = ['score' => $score, 'mtime' => (int) $entry['mtime'], 'path' => (string) $entry['path']];
     }
 
     usort($hits, function( array $a, array $b ) {
@@ -52,7 +53,7 @@ class Search
 
     foreach( array_slice($hits, 0, $limit) as $hit )
     {
-      $obj = $this->app->index->obj($hit['id']);
+      $obj = $this->app->store->get($hit['path']);
 
       if( $obj !== null )
         $out[] = $obj;

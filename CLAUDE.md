@@ -132,8 +132,7 @@ End to end: copy the app without `data/` to a temp dir, create `data/<db>/.sys/c
 ## Known limitations
 
 - Folders without content file and resources without sidecar have no id until pinned, linked to or
-  saved: not in search or Recent until then
-- Link stubs have no id, so they cannot be pinned (README and `ajax/pin.php` claim otherwise)
+  saved: search finds them by path (`Index::withoutId()`), Recent does not list them until then
 - A link file's own front matter/body is not reachable in the UI (opening shows the target)
 - List name fields are edited as comma separated text, no multi-select for fixed tags
 - `ObjPath::isLinkName()`/`stripMarker()` find the ` (lnk)` marker anywhere in the name

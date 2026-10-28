@@ -26,7 +26,7 @@ class Index
     $this->store = $store;
     $this->types = $types;
     $this->file  = "{$db->sysDir()}/index.json";
-    $this->data  = ['builtAt' => 0, 'objects' => [], 'altIds' => [], 'links' => [], 'duplicates' => [], 'altDuplicates' => []];
+    $this->data  = ['builtAt' => 0, 'objects' => [], 'altIds' => [], 'links' => [], 'duplicates' => [], 'altDuplicates' => [], 'withoutId' => []];
   }
 
   public function path( string $id ) : ?string
@@ -89,6 +89,19 @@ class Index
   }
 
   /**
+   * Objects that have no id yet: folders without content file, resources
+   * without sidecar, a .md whose front matter does not parse. Known by path
+   * only, which is enough to find them; an id comes when one is needed.
+   *
+   * @return array[]  each with path, type, mtime
+   */
+  public function withoutId() : array
+  {
+    $this->load();
+    return $this->data['withoutId'];
+  }
+
+  /**
    * The id itself when it is free, else the first free one of "ID-2",
    * "ID-3", ... Generated ids end with the minute, so two entries of one
    * title made within a minute would get the same one.
@@ -145,6 +158,7 @@ class Index
     $altDuplicates = [];
     $idOfPath      = [];
     $entries       = [];
+    $withoutId     = [];
 
     foreach( $this->store->walk('') as $obj )
     {
@@ -177,6 +191,8 @@ class Index
         self::claim($objects, $duplicates, $obj->id, ['path' => $obj->path, 'type' => $obj->type, 'mtime' => $obj->mtime]);
         $idOfPath[$obj->path] = $obj->id;
       }
+      else
+        $withoutId[] = ['path' => $obj->path, 'type' => $obj->type, 'mtime' => $obj->mtime];
     }
 
     // A link by alternative id is a backlink of the id behind it
@@ -194,7 +210,8 @@ class Index
       'altIds'        => $altIds,
       'links'         => $links,
       'duplicates'    => $duplicates,
-      'altDuplicates' => $altDuplicates
+      'altDuplicates' => $altDuplicates,
+      'withoutId'     => $withoutId
     ];
 
     $this->loaded = true;

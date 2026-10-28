@@ -67,7 +67,7 @@ Search, Recent, Pinned and links find objects by the `id` in their front matter.
   - a front matter that does not parse is left alone, it needs fixing by hand first
 - **A folder with no `-this.md`, a resource with no sidecar** — only when needed: on **Pin**, when linked to, or on the first save
   - that writes the `-this.md` or the sidecar
-  - until then invisible to search and Recent
+  - search finds them all the same (by path), Recent does not list them until then
 - Generated ids are unique: a taken one gets `-2`, `-3`, …
 
 ## Objects
@@ -92,7 +92,7 @@ Every file and folder under the database is an **object** — no separate regist
 - Not objects: hidden names (leading `.`), `-this.md`, sidecars, `X.md` next to a folder `X` (shadowed)
 - `(lnk)` in a name marks a **link stub** (type **Link**, front matter `target` = id)
   - opening a link opens its target
-  - pinning a link pins the stub, not the target
+  - pinning a link pins its target, like Recent keeps the target; a broken link has nothing to pin
   - links made in the app always take this form
 
 ## Fields in the name

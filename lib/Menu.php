@@ -30,9 +30,11 @@ class Menu
     if( $entries )
       $entries[] = ['divider' => true];
 
-    // The list stores ids: one without gets it when pinned (Index::ensureId), a link has none of its own
-    if( ! $obj->isLink )
-      $entries[] = ['id' => 'pin', 'label' => $app->pinned->has($obj->id) ? 'Unpin' : 'Pin'];
+    // A link pins its target, a broken one has nothing to pin. An object without id gets one when pinned (Index::ensureId)
+    $pins = $obj->isLink ? $obj->linkTarget ?? $app->index->target($obj) : $obj;
+
+    if( $pins !== null )
+      $entries[] = ['id' => 'pin', 'label' => $app->pinned->has($pins->id) ? 'Unpin' : 'Pin'];
 
     $entries[] = ['id' => 'rename', 'label' => 'Rename'];
     $entries[] = ['id' => 'move',   'label' => 'Move to…'];
