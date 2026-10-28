@@ -58,12 +58,17 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
   - deleting drops the entry silently
 - Recent holds 50, the overlay shows 8
 
-## Unreachable
+## Ids
 
-Objects without an id are invisible to search, Recent and Pinned.
+Search, Recent, Pinned and links find objects by the `id` in their front matter. A missing one is added:
 
-- A folder with no `-this.md` has no id
-- The ⋮ menu hides **Pin** for those
+- **Every `.md` entry** — when the index is built, so a database made outside the app gets its ids on first use
+  - only the `id` line is added (a plain `.md` gets a front matter holding just that), body and file time stay
+  - a front matter that does not parse is left alone, it needs fixing by hand first
+- **A folder with no `-this.md`, a resource with no sidecar** — only when needed: on **Pin**, when linked to, or on the first save
+  - that writes the `-this.md` or the sidecar
+  - until then invisible to search and Recent
+- Generated ids are unique: a taken one gets `-2`, `-3`, …
 
 ## Objects
 
@@ -81,10 +86,9 @@ Every file and folder under the database is an **object** — no separate regist
   - always `.md`: `- DESC.pdf` is an ordinary resource
   - several matches in one folder — the first alphabetically wins, **Check database** lists the rest
   - an entry cannot be created or renamed to a matching name
-- A `.md` with front matter — its `type` decides, missing `type` falls back to `defaultType`
+- Every `.md` is an entry, with or without front matter — its `type` decides, missing `type` falls back to `defaultType`
 - Any other file is a **resource** (type **File**)
   - keeps its extension; fields live in a sidecar `NAME.ext.md`
-  - a `.md` without front matter counts as a resource too
 - Not objects: hidden names (leading `.`), `-this.md`, sidecars, `X.md` next to a folder `X` (shadowed)
 - `(lnk)` in a name marks a **link stub** (type **Link**, front matter `target` = id)
   - opening a link opens its target

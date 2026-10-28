@@ -2,7 +2,7 @@
 
 name: 'File'
 label: 'File'
-description: 'A resource file, any file without front matter'
+description: 'A resource file, any file other than .md'
 idPattern: '{slug}-{YYYY}-{MM}-{DD}-{HHmm}'
 icon: 'file'
 

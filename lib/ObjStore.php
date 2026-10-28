@@ -176,19 +176,7 @@ class ObjStore
    */
   public function save( Obj $obj, array $data, string $body, ?int $mtime = null ) : Obj
   {
-    $file = $obj->isResource ? $this->path->sidecarOf($obj->path) : $obj->file;
-
-    /*
-      A folder made outside the app carries no file of its own. Saving is
-      what gives it one: "-this" is where the content of a folder object
-      lives, so it is written the moment there is content to write.
-    */
-
-    if( $file === '' && $obj->isFolder && $obj->path !== '' )
-      $file = "{$obj->path}/{$this->path->thisFileName()}";
-
-    if( $file === '' )
-      throw Failure::invalid('The database itself is not an entry');
+    $file = $this->fileFor($obj);
 
     if( $mtime !== null && $obj->mtime !== 0 && $obj->mtime !== $mtime )
       throw Failure::conflict('The file changed since it was loaded', ['mtime' => $obj->mtime]);
@@ -202,6 +190,41 @@ class ObjStore
     $head['modified'] = date('c');
 
     $this->write($file, array_merge($head, $this->clean($data)), $body);
+
+    return $this->get($obj->path);
+  }
+
+  /**
+   * Adds the id an object lacks and nothing else: the rest of the front
+   * matter, the body and the file's time stay as they were, getting an id
+   * is no change of content. A folder or a resource gets its content file
+   * or sidecar here, with the type, so a Group stays a Group.
+   *
+   * A head that does not parse is left alone: a second one on top would
+   * turn it into body text, and the user could no longer fix it.
+   */
+  public function addId( Obj $obj, string $id ) : Obj
+  {
+    $file = $this->fileFor($obj);
+    $abs  = $this->db->abs($file);
+    $data = ['id' => $id, 'type' => $obj->type];
+    $body = '';
+
+    if( is_file($abs))
+    {
+      $parsed = FrontMatter::parse((string) file_get_contents($abs));
+
+      if( $parsed['broken'] )
+        return $obj;
+
+      $data = ['id' => $id] + ($parsed['data'] ?? []);
+      $body = $parsed['body'];
+    }
+
+    $this->write($file, $data, $body);
+
+    // The time the object had, also on a new file: an editor open on it must not see a change on disk
+    touch($abs, $obj->mtime);
 
     return $this->get($obj->path);
   }
@@ -280,6 +303,30 @@ class ObjStore
   // Internals
 
   /**
+   * The file an object's fields are written to: a resource's sidecar, else
+   * the file holding it.
+   */
+  private function fileFor( Obj $obj ) : string
+  {
+    if( $obj->isResource )
+      return $this->path->sidecarOf($obj->path);
+
+    /*
+      A folder made outside the app carries no file of its own. Saving is
+      what gives it one: "-this" is where the content of a folder object
+      lives, so it is written the moment there is content to write.
+    */
+
+    if( $obj->file === '' && $obj->isFolder && $obj->path !== '' )
+      return "{$obj->path}/{$this->path->thisFileName()}";
+
+    if( $obj->file === '' )
+      throw Failure::invalid('The database itself is not an entry');
+
+    return $obj->file;
+  }
+
+  /**
    * Makes sure a parent can hold children, promoting a leaf if needed.
    */
   private function containerFor( string $rel ) : string
@@ -318,15 +365,18 @@ class ObjStore
     return $this->get($target);
   }
 
+  /**
+   * Every .md is an entry, with or without front matter, any other file a
+   * resource. A plain .md gets its id when the index is built (Index::build).
+   */
   private function read( string $rel, string $file, bool $isFolder ) : Obj
   {
-    $absFile = $this->db->abs($file);
-    $parsed  = FrontMatter::parse((string) file_get_contents($absFile));
-
-    if( $parsed['data'] === null )
+    if( substr($file, -3) !== '.md' )
       return $this->resourceObj($rel, $file);
 
-    $data = $parsed['data'];
+    $absFile = $this->db->abs($file);
+    $parsed  = FrontMatter::parse((string) file_get_contents($absFile));
+    $data    = $parsed['data'] ?? [];
     $obj  = new Obj($rel, (string) ($data['type'] ?? $this->config->db('defaultType', 'Info')));
 
     $obj->file     = $file;
@@ -346,8 +396,8 @@ class ObjStore
   }
 
   /**
-   * A file without front matter is a resource, its metadata may live in a
-   * sidecar with the same name plus ".md".
+   * A file other than .md is a resource, its metadata may live in a sidecar
+   * with the same name plus ".md".
    */
   private function resourceObj( string $rel, string $file ) : Obj
   {

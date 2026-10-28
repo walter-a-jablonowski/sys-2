@@ -10,7 +10,8 @@
  * @var Sys\Ajax $ajax
  */
 
-$obj = $ajax->obj();
+// Pinned keeps ids: a folder or a resource without one gets it now
+$obj = $app->index->ensureId($ajax->obj());
 
 return [
   'path'   => $obj->path,

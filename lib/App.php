@@ -34,8 +34,8 @@ class App
     $this->db     = new Db($dbPath, $this->config);
     $this->path   = new ObjPath($this->db, $this->config);
     $this->store  = new ObjStore($this->db, $this->path, $this->config);
-    $this->index  = new Index($this->db, $this->store);
-    $this->types   = new TypeRegistry("{$this->root}/types", $this->config);
+    $this->types  = new TypeRegistry("{$this->root}/types", $this->config);
+    $this->index  = new Index($this->db, $this->store, $this->types);
     $this->user    = new UserSettings("{$this->root}/data/users/default/settings.yml");  // single user for now
     $this->viewers = new ViewerRegistry($this->root, $this->types, $this->user);
     $this->recent  = new ObjList($this->db, $this->index, 'recent', 50);

@@ -982,7 +982,7 @@
       exclude: path,
       onPick: async function ( target )
       {
-        await api('link', { parentPath: target.path, targetId: obj.id }, 'POST');
+        await api('link', { parentPath: target.path, targetPath: obj.path }, 'POST');
 
         if( target.path === state.path )
           await loadList();
@@ -1094,7 +1094,7 @@
       start: '',
       onPick: async function ( item )
       {
-        await api('link', { parentPath: state.path, targetId: item.id }, 'POST');
+        await api('link', { parentPath: state.path, targetPath: item.path }, 'POST');
         await loadList();
         toast('Link created');
       }

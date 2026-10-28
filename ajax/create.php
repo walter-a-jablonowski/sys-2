@@ -20,7 +20,7 @@ if( ! $app->types->has($typeName))
 
 $type = $app->types->get($typeName);
 $name = $type->newName();
-$obj  = $app->store->create($parent->path, $typeName, $name, $type->newId($name));
+$obj  = $app->store->create($parent->path, $typeName, $name, $app->index->freeId($type->newId($name)));
 
 $app->index->invalidate();
 
