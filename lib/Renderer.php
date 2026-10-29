@@ -102,21 +102,11 @@ abstract class Renderer
 
   /**
    * The fixed values in the object's name, e.g. its tags or its prio, as
-   * small chips. Every card shows them, so a type's own badges need not care.
+   * small chips (view/tags.php). '' when there are none.
    */
   protected function tags() : string
   {
-    $out = '';
-
-    foreach( $this->app->path->fields($this->obj->type)->fixedValues($this->obj->nameData) as $tag )
-    {
-      $class = 'tag' . ($tag['sort'] ? ' tag-rank' : '') . ($tag['selected'] !== '' ? ' tag-selected' : '');
-
-      $out .= '<span class="' . $class . '" data-field="' . $this->esc($tag['field']) . '" data-value="' . $this->esc($tag['value']) . '"'
-        . ' title="' . $this->esc($tag['value']) . '">' . $this->esc($tag['label']) . '</span>';
-    }
-
-    return $out;
+    return trim(View::render("{$this->app->root}/view/tags.php", ['app' => $this->app, 'obj' => $this->obj]));
   }
 
   protected function excerpt( string $text, int $max = 90 ) : string

@@ -132,7 +132,7 @@
 
 .self-title
 {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
   color: var(--fg);
   font-size: 13px;
@@ -142,9 +142,24 @@
   text-overflow: ellipsis;
 }
 
+/* Tags and prio of the container, right after its title like on a card */
+
+.self-tags
+{
+  display: flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.self-tags:empty
+{
+  display: none;
+}
+
 .self-type
 {
   flex: 0 0 auto;
+  margin-left: auto;
   color: var(--fg-faint);
   font-size: 11.5px;
 }
