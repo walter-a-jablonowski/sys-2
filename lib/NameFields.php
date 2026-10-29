@@ -39,6 +39,7 @@ namespace Sys;
  *     type: 'Activity'                    # unless the front matter names one
  *     sort: true                          # lists are ordered by it, entries without come last
  *     selected: { '1': 'global', '2': 'local' }   # selected for the whole database or within its parent
+ *     keepIn: 'priority'                  # front matter field keeping the other value while a selection covers it
  *     colors: { '1': 'gold', '3': 'red' }  # chip color per value, one of COLORS (theme tokens --tag-NAME)
  */
 class NameFields
@@ -63,6 +64,7 @@ class NameFields
       $start  = ($rule['at'] ?? '') === 'start';
       $chosen = array_map('strval', (array) ($rule['selected'] ?? []));
       $colors = array_map('strval', (array) ($rule['colors'] ?? []));
+      $keepIn = (string) ($rule['keepIn'] ?? '');
 
       // Fixed values are found as written by format, unless match places them itself. None at all: nothing matches
       if( $values !== null && ($match !== '' || $format !== ''))
@@ -92,6 +94,9 @@ class NameFields
       if( $colors && ($values === null || array_diff(array_keys($colors), $values) || array_diff($colors, self::COLORS)))
         throw new Failure("nameFields: \"$field\" colors without values, or colors an unknown value or with an unknown color", 500);
 
+      if( $keepIn !== '' && ( ! $chosen || $list || in_array($keepIn, self::RESERVED, true)))
+        throw new Failure("nameFields: \"$field\" keeps a value without selecting, as a list or in a reserved field", 500);
+
       $this->rules[$field] = [
         'regex'  => $regex,
         'format' => $format,
@@ -104,6 +109,7 @@ class NameFields
         'sort'     => ! empty($rule['sort']),
         'selected' => $chosen,     // value -> 'global' | 'local'
         'colors'   => $colors,     // value -> one of COLORS
+        'keepIn'   => $keepIn,     // front matter field keeping the value a selection covers, '' for none
         'label'    => (string) ($rule['label'] ?? ucfirst($field))
       ];
     }
@@ -170,6 +176,61 @@ class NameFields
     }
 
     return $out;
+  }
+
+  /**
+   * Fields whose value a selection may cover in the name, and the front
+   * matter field keeping that value meanwhile, e.g. prio -> priority.
+   *
+   * @return array  field -> keepIn
+   */
+  public function kept() : array
+  {
+    $out = [];
+
+    foreach( $this->rules as $field => $rule )
+    {
+      if( $rule['keepIn'] !== '' )
+        $out[$field] = $rule['keepIn'];
+    }
+
+    return $out;
+  }
+
+  /**
+   * The values a selection covers, e.g. the priorities 3 to 5.
+   */
+  public function keptValues( string $field ) : array
+  {
+    $rule = $this->rules[$field];
+
+    return array_values(array_diff($rule['values'], array_keys($rule['selected'])));
+  }
+
+  /**
+   * The value as a selection, '' when it is none: "2" is one, "4" is a priority.
+   */
+  public function selection( string $field, string $value ) : string
+  {
+    return isset($this->rules[$field]['selected'][$value]) ? $value : '';
+  }
+
+  /**
+   * The data of a name with the kept fields added: a name showing no
+   * selection shows the kept value, "4 - x" has the priority 4. While it
+   * shows one, the front matter holds that value.
+   */
+  public function withKept( array $data ) : array
+  {
+    foreach( $this->kept() as $field => $keepIn )
+    {
+      $value = (string) ($data[$field] ?? '');
+
+      if( $value !== '' && $this->selection($field, $value) === '' )
+        $data[$keepIn] = $value;
+    }
+
+    return $data;
   }
 
   /**

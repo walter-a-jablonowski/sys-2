@@ -7,6 +7,7 @@ status: running
 schedule:
   start: '2026-08-12'
   end: '2026-08-12'
+priority: '3'
 ---
 
 One day, three sessions, one decision at the end.

@@ -13,6 +13,12 @@ fields:
   title:
     type: 'text'
     required: true
+  priority:                    # relative to the parent; a database may show it in the name (nameFields "keepIn")
+    type: 'select'
+    label: 'Priority'
+    options: ['3', '4', '5']
+    labels: { '3': 'Important', '4': 'Secondary', '5': 'Optional' }
+    required: true
   status:
     type: 'select'
     options: ['open', 'running', 'done']

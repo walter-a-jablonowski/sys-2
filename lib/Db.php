@@ -65,7 +65,7 @@ class Db
    * Health report: shadowed files, extra content files, duplicate ids, names
    * without a title, broken links.
    */
-  public function check( ObjStore $store, Index $index ) : array
+  public function check( ObjStore $store, Index $index, TypeRegistry $types ) : array
   {
     $issues = [];
 
@@ -91,6 +91,16 @@ class Db
 
       if( $obj->isLink && $index->target($obj) === null )
         $issues[] = ['kind' => 'brokenLink', 'path' => $obj->path, 'target' => $obj->target ?: $obj->altTarget];
+
+      // Required fields besides the title, e.g. the priority of an Activity. A link's own fields are out of reach
+      if( $obj->isLink )
+        continue;
+
+      foreach( $types->forObj($obj)->fields() as $key => $def )
+      {
+        if( ($def['required'] ?? false) && $key !== 'title' && in_array($obj->field($key), [null, ''], true))
+          $issues[] = ['kind' => 'missingField', 'path' => $obj->path, 'field' => $def['label'] ?? ucfirst($key)];
+      }
     }
 
     return $issues;

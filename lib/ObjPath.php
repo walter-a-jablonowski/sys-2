@@ -166,7 +166,8 @@ class ObjPath
   public function nameFor( Obj $obj, string $title, array $values = [] ) : string
   {
     $fields = $this->fields($obj->type);
-    $tokens = $this->parseName($obj->name(), $obj->isResource, $obj->type)['tokens'];
+    $parsed = $this->parseName($obj->name(), $obj->isResource, $obj->type);
+    $tokens = $parsed['tokens'];
 
     foreach( $values as $field => $value )
       $tokens[$field] = $fields->format($field, $value);
@@ -182,7 +183,7 @@ class ObjPath
       $name .= $this->linkMarker;
 
     $back   = $this->parseName($name, $obj->isResource, $obj->type);
-    $expect = array_filter(array_replace($obj->nameData, $values), fn( $value ) => $value !== '' && $value !== []);
+    $expect = array_filter(array_replace($parsed['data'], $values), fn( $value ) => $value !== '' && $value !== []);
     $wrong  = array_filter(array_keys($back['data'] + $expect), fn( $field ) => ($back['data'][$field] ?? null) !== ($expect[$field] ?? null));
 
     // An edited value that does not read back is its own fault, anything else the title's

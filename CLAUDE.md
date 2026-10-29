@@ -81,7 +81,10 @@ Other: `ChildQuery` (children of a container for one tab: filter, links, sort, p
   - more keys: `at: 'start'` (leads the name, `flatten($tokens, $start)` writes it before the title),
     `type` (`typeOf()`: the name gives the type), `sort` (`rank()`, used by `ChildQuery::sort()`),
     `selected` (value → `global`|`local`, filled chip), `colors` (value → palette name, `.tag-<color>`,
-    theme tokens `--tag-<color>`), `labels`
+    theme tokens `--tag-<color>`), `labels`, `keepIn` (front matter field keeping the value a selection covers,
+    e.g. the priority: `kept()`, `keptValues()`, `selection()`; `ObjStore::readName()` adds it to `nameData` via
+    `withKept()` when the name shows it, `ajax/save.php` composes the name token and writes/drops the front matter,
+    `DetailRenderer` shows the two as separate fields)
   - a type adds values via `nameFields: { tags: [...] }` in its yml, so parsing depends on the type:
     `ObjPath::fields($type)`, `parseName($name, $isResource, $type)`. Pass the type wherever an object is
     known; `ObjPath::label()` has none and reads the database's own
@@ -133,7 +136,7 @@ for f in lib/*.php ajax/*.php; do php -l "$f" | grep -v "No syntax errors"; done
 
 # demo database: object count and health issues (expect "27 []" for the untouched demo)
 php -r "require 'vendor/autoload.php'; \$app = Sys\App::boot(getcwd()); \$app->index->build();
-  echo count(\$app->index->all()), ' ', json_encode(\$app->db->check(\$app->store, \$app->index));"
+  echo count(\$app->index->all()), ' ', json_encode(\$app->db->check(\$app->store, \$app->index, \$app->types));"
 ```
 
 End to end: copy the app without `data/` to a temp dir, create `data/<db>/.sys/config.yml` there (e.g. with

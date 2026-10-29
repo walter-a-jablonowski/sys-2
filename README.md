@@ -124,7 +124,11 @@ A database may read fields out of file and folder names — `nameFields` in `<db
   - `sort: true` — lists are sorted by it in the order of `values`, entries without one last, newest first within
   - `selected: { '1': 'global', '2': 'local' }` — selected for the whole database or within its parent; filled chips
     - the priorities 3–5 are relative to the parent as well
-  - `labels` — the editor's dropdown (`1 – Selected`, `3 – Important`) and the tooltip of a chip; the chip shows the value
+  - `keepIn: 'priority'` — a selection covers the priority in the name, the front matter keeps it meanwhile
+    - the editor shows **Priority** and **Selected** as two fields; the name shows the selection, else the priority
+    - `priority` is written to the front matter only while a selection covers it, and dropped when the name shows it again
+    - a priority the name shows wins over one left in the front matter
+  - `labels` — the editor's dropdowns (`1 – Everywhere`, `3 – Important`) and the tooltip of a chip; the chip shows the value
 - `colors: { '1': 'gold', '3': 'red' }` — chip color per fixed value: `gold` (default), `red`, `orange`, `yellow`,
   `green`, `blue`, `purple`, `gray`, `lightgray`; the theme defines them (`--tag-red`, …)
 - `role: 'id'` — **alternative id** (`id2`), unique across the database
@@ -162,7 +166,11 @@ A database may read fields out of file and folder names — `nameFields` in `<db
 - Autosave 800 ms after the last keystroke
   - title and dropdowns save at once, the title on leaving the field — same for fields in the name
 - The index rebuilds itself when any folder or `<db>/.sys/config.yml` changes
-- **Check database** (⋮ menu) finds duplicate ids and alternative ids, shadowed files, extra content files, names without a title, broken links
+- **Check database** (⋮ menu) finds duplicate ids and alternative ids, shadowed files, extra content files, names without a title, broken links,
+  missing required fields
+- **Activities need a priority** — 3 Important, 4 Secondary, 5 Optional, relative to the parent (`types/Activity.yml`)
+  - in front matter (`priority: '4'`), or in the name where the database shows it there (see `keepIn`)
+  - a missing one is marked in the editor and listed by **Check database**; saving still works
 
 ## Config
 

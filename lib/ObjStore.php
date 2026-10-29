@@ -471,7 +471,7 @@ class ObjStore
     $parsed = $this->path->parseName($obj->name(), $obj->isResource, $obj->type);
 
     $obj->title     = $parsed['title'];
-    $obj->nameData  = $parsed['data'];
+    $obj->nameData  = $fields->withKept($parsed['data']);
     $obj->altId     = $fields->roleValue($parsed['data'], 'id');
     $obj->altTarget = $fields->roleValue($parsed['data'], 'link');
     $obj->isLink    = $obj->isLink || $obj->altTarget !== '';

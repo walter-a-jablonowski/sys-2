@@ -25,8 +25,36 @@ $type  = array_key_exists('__type', $fields) ? (string) $fields['__type'] : '';
 
 unset($fields['title'], $fields['body'], $fields['__type']);
 
+$names = $app->path->fields($obj->type);
+$drop  = [];
+
+// A value a selection covers in the name lives in the front matter meanwhile (NameFields "keepIn"), e.g. the priority
+foreach( $names->kept() as $field => $keepIn )
+{
+  if( ! array_key_exists($field, $fields) && ! array_key_exists($keepIn, $fields))
+    continue;
+
+  $selection = (string) ($fields[$field] ?? $names->selection($field, (string) ($obj->nameData[$field] ?? '')));
+  $kept      = (string) ($fields[$keepIn] ?? $obj->field($keepIn, ''));
+
+  if( $selection !== '' && $names->selection($field, $selection) === '' )
+    throw Failure::invalid("\"$selection\" is no selection", ['field' => $field]);
+
+  if( $kept !== '' && ! in_array($kept, $names->keptValues($field), true))
+    throw Failure::invalid("\"$kept\" is not one of " . implode(', ', $names->keptValues($field)), ['field' => $keepIn]);
+
+  $fields[$field] = $selection !== '' ? $selection : $kept;
+
+  if( $selection !== '' && $kept !== '' )
+    $fields[$keepIn] = $kept;
+  else
+  {
+    unset($fields[$keepIn]);
+    $drop[] = $keepIn;
+  }
+}
+
 // Fields carried in the name, only the changed ones: each one renames the file
-$names      = $app->path->fields($obj->type);
 $nameValues = [];
 
 foreach( $fields as $key => $value )
@@ -47,7 +75,7 @@ if( $altField !== null && ($nameValues[$altField] ?? '') !== '' && $app->index->
   throw Failure::invalid("\"{$nameValues[$altField]}\" is already used by another entry", ['field' => $altField]);
 
 // Dotted names become nested front matter, unknown keys are kept as they are
-$data = $obj->data;
+$data = array_diff_key($obj->data, array_flip($drop));
 
 foreach( $fields as $name => $value )
 {

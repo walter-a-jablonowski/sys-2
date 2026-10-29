@@ -18,7 +18,7 @@ class Obj
   public string $id     = '';
   public string $target = '';     // links only: id of the target
   public array  $data   = [];     // front matter without the reserved keys
-  public array  $nameData  = [];  // fields carried in the file or folder name (NameFields)
+  public array  $nameData  = [];  // fields carried in the file or folder name (NameFields), with the kept ones ("keepIn")
   public string $altId     = '';  // alternative id from the name, role "id"
   public string $altTarget = '';  // links by name only: alternative id of the target, role "link"
   public string $body   = '';

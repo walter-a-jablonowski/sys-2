@@ -27,9 +27,9 @@ sort:
 #     list: true                         # a type may add tags: "nameFields: { tags: ['urgent'] }" in types/MY_TYPE.yml
 nameFields:
   - field: 'prio'                      # "2 - My task": selection or priority, makes the entry an Activity
-    label: 'Prio'
+    label: 'Selected'
     values: ['1', '2', '3', '4', '5']  # lists are sorted in this order
-    labels: { '1': 'Selected', '2': 'Selected', '3': 'Important', '4': 'Secondary', '5': 'Optional' }
+    labels: { '1': 'Everywhere', '2': 'Here', '3': 'Important', '4': 'Secondary', '5': 'Optional' }
     colors: { '1': 'orange', '2': 'gold', '3': 'green', '4': 'gray', '5': 'lightgray' }
     match: '{value}\s*-\s*'           # "2 - x", "2-x", "2 -x", "2- x"
     format: '{value} - '
@@ -37,6 +37,7 @@ nameFields:
     type: 'Activity'
     sort: true
     selected: { '1': 'global', '2': 'local' }   # 1 for the whole database; 2 and the priorities 3-5 within the parent
+    keepIn: 'priority'                 # while 1 or 2 is in the name, the priority is kept in the front matter
   - field: 'tags'
     values: ['best']
     colors: { 'best': 'purple' }

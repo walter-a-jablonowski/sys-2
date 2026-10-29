@@ -43,14 +43,26 @@ class DetailRenderer extends Renderer
    */
   protected function fields() : array
   {
-    $own   = $this->type->fields();
-    $names = [];
+    $own    = $this->type->fields();
+    $fields = $this->app->path->fields($this->obj->type);
+    $names  = [];
 
-    foreach( $this->nameRules() as $field => $rule )
+    foreach( $fields->rules() as $field => $rule )
     {
       $def = ['label' => $rule['label']];
 
-      if( $rule['values'] !== null )
+      // A field a selection may cover offers the selections only, the value covered is a field of its own, placed before
+      if( $rule['keepIn'] !== '' )
+      {
+        $keepIn = $rule['keepIn'];
+
+        $names[$keepIn] = ['type' => 'select', 'options' => $fields->keptValues($field), 'labels' => $rule['labels']]
+          + ($own[$keepIn] ?? ['label' => ucfirst($keepIn)]);
+
+        unset($own[$keepIn]);
+        $def += ['type' => 'select', 'options' => array_keys($rule['selected']), 'labels' => $rule['labels']];
+      }
+      elseif( $rule['values'] !== null )
         $def += ['type' => $rule['list'] ? 'multiselect' : 'select', 'options' => $rule['values'], 'labels' => $rule['labels']];
 
       if( isset($own[$field]))
@@ -114,13 +126,15 @@ class DetailRenderer extends Renderer
     $value = $this->value($name);
     $id    = 'f-' . str_replace('.', '-', $name);
 
-    // The title and the fields carried in the name rename the file: saved on leaving, not per keystroke
+    // The title and the fields carried in the name rename the file: saved on leaving, not per keystroke.
+    // So does a value kept for the name, e.g. the priority: unless covered by a selection, the name shows it
     $rule  = $this->nameRules()[$name] ?? null;
-    $attrs = ($name === 'title' || $rule ? ' data-rename' : '') . ($rule && $rule['format'] === '' ? ' disabled' : '');
+    $kept  = in_array($name, $this->app->path->fields($this->obj->type)->kept(), true);
+    $attrs = ($name === 'title' || $rule || $kept ? ' data-rename' : '') . ($rule && $rule['format'] === '' ? ' disabled' : '');
 
-    // A name needs a title besides its fields, whatever the type says. A missing one is shown right away
+    // A name needs a title besides its fields, whatever the type says. A missing value is shown right away
     $required = ($def['required'] ?? false) || $name === 'title';
-    $missing  = $name === 'title' && $value === '';
+    $missing  = $required && $value === '';
 
     ?>
     <div class="field field-<?= $this->esc($kind) ?><?= $name === 'title' ? ' field-is-title' : '' ?><?= $missing ? ' has-error' : '' ?>">
@@ -227,6 +241,12 @@ class DetailRenderer extends Renderer
 
     if( $path === 'body' )
       return $this->obj->body;
+
+    $names = $this->app->path->fields($this->obj->type);
+
+    // A field a selection may cover is edited as the selection, its other values are the kept field's
+    if( isset($names->kept()[$path]))
+      return $names->selection($path, (string) ($this->obj->nameData[$path] ?? ''));
 
     if( array_key_exists($path, $this->obj->nameData))
       return implode(', ', (array) $this->obj->nameData[$path]);

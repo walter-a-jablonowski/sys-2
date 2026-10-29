@@ -7,6 +7,7 @@ status: open
 schedule:
   start: ''
   end: ''
+priority: '3'
 ---
 
 Everything that came out of the workshop and needs a decision.

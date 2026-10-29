@@ -898,7 +898,8 @@
       shadowed: 'Shadowed by a folder',
       extraThisFile: 'Ignored, folder has another content file',
       missingTitle: 'No title, the name holds only fields',
-      brokenLink: 'Broken link'
+      brokenLink: 'Broken link',
+      missingField: 'Required field missing'
     };
 
     let body = '<p><b>' + data.objects + '</b> objects in <b>' + escapeHtml(data.db) + '</b>.</p>';
@@ -915,7 +916,9 @@
       {
         const what = issue.path || issue.id || '';
 
-        body += '<div class="tree-item"><span class="warn-line">' + escapeHtml(kinds[issue.kind] || issue.kind) +
+        const kind = ( kinds[issue.kind] || issue.kind ) + ( issue.field ? ': ' + issue.field : '' );
+
+        body += '<div class="tree-item"><span class="warn-line">' + escapeHtml(kind) +
           '</span> <span class="mono">' + escapeHtml(what) + '</span></div>';
       });
 

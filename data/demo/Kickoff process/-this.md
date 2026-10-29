@@ -7,6 +7,7 @@ status: running
 schedule:
   start: ''
   end: ''
+priority: '3'
 ---
 
 Getting the new viewer off the ground.
