@@ -12,10 +12,4 @@ fields they would be empty on almost every entry of the gd collection.
 
 - A type marks fields as optional, e.g. `optional: true`: hidden in the editor while empty
 - An "+ add" row lists the hidden ones (chips like "+ Agent + Constraints"), a click shows the input
-- Elements without structure stay text in the body (markdown headings), only what the app or the
-  agent evaluates becomes a field
-
-## Open questions
-
-- Which of the ten elements earn a field? Likely: goal, progress, agent (participants exist as
-  links), resources (time/money budget)
+- Which fields of the activity model exist: see `activity-elements.md`

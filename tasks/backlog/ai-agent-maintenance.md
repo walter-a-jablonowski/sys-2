@@ -16,10 +16,13 @@ current was too much manual work. An agent that understands what the activities 
   rules, ids and links stay consistent
 - Proposes changes the user reviews and accepts, at least until it has earned trust
 - Can fill in what the model adds (goals, dependencies, status) for the existing collection
+- Its prompt contains the principles of the activity model (`tasks/backlog.md`, "Principles"), so
+  it judges activities by the same causes of failure as `activity-health-hints.md`
 - Needs `bulk-change-safety.md` first
 
 ## Steps (first idea)
 
-1. Read-only: report what it would change
+1. Read-only: report what it would change (its memory: `agent-memory.md`)
 2. Apply accepted proposals one by one
 3. Scheduled runs on the stale review list
+4. Doing tasks itself instead of only organizing them, see `agent-does-tasks.md`

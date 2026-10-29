@@ -20,5 +20,4 @@ available secondary one. The "what next" view needs to know what can be done now
 
 - Which states does the user actually need?
 - Done activities: keep in place, hide in lists, or move to an archive?
-- The model's lifecycle phases (initiate, define, plan, execute, close) are a second axis besides
-  the status. Only for large activities, as an optional field? Or leave them out
+- The model's lifecycle phases are a second axis besides the status, see `lifecycle-phases.md`

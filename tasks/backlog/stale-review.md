@@ -14,5 +14,6 @@ when the tree grew too large. Pointing at what is likely outdated turns that int
   - untouched for months while important
   - a priority left in front matter while the name shows another one (renamed outside the app)
   - Activities without priority (already in **Check database** as `missingField`)
+- The hints of `activity-health-hints.md` and the warnings of `stop-condition-warnings.md`
 - Thresholds in `<db>/.sys/config.yml`
 - Later the agent can work through this list and propose changes (see `ai-agent-maintenance.md`)
