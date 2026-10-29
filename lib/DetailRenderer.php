@@ -51,7 +51,7 @@ class DetailRenderer extends Renderer
       $def = ['label' => $rule['label']];
 
       if( $rule['values'] !== null )
-        $def += ['type' => $rule['list'] ? 'multiselect' : 'select', 'options' => $rule['values']];
+        $def += ['type' => $rule['list'] ? 'multiselect' : 'select', 'options' => $rule['values'], 'labels' => $rule['labels']];
 
       if( isset($own[$field]))
         $own[$field] += $def;
@@ -136,14 +136,14 @@ class DetailRenderer extends Renderer
           <?php foreach( $def['options'] ?? [] as $option ): ?>
             <?php $on = in_array((string) $option, $chosen, true) ?>
             <button type="button" class="chip<?= $on ? ' is-on' : '' ?>" data-action="toggleChip" data-value="<?= $this->esc($option) ?>"
-                    aria-pressed="<?= $on ? 'true' : 'false' ?>"<?= $rule && $rule['format'] === '' ? ' disabled' : '' ?>><?= $this->esc($option) ?></button>
+                    aria-pressed="<?= $on ? 'true' : 'false' ?>"<?= $rule && $rule['format'] === '' ? ' disabled' : '' ?>><?= $this->esc($this->optionLabel($def, $option)) ?></button>
           <?php endforeach ?>
         </div>
       <?php elseif( $kind === 'select' ): ?>
         <select class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>"<?= $attrs ?>>
           <option value=""><?= $def['required'] ?? false ? '—' : '(none)' ?></option>
           <?php foreach( $def['options'] ?? [] as $option ): ?>
-            <option value="<?= $this->esc($option) ?>"<?= (string) $value === (string) $option ? ' selected' : '' ?>><?= $this->esc($option) ?></option>
+            <option value="<?= $this->esc($option) ?>"<?= (string) $value === (string) $option ? ' selected' : '' ?>><?= $this->esc($this->optionLabel($def, $option)) ?></option>
           <?php endforeach ?>
         </select>
       <?php else: ?>
@@ -206,6 +206,16 @@ class DetailRenderer extends Renderer
   protected function nameRules() : array
   {
     return $this->app->path->fields($this->obj->type)->rules();
+  }
+
+  /**
+   * "3 – High" where the value alone says little, else the value itself.
+   */
+  protected function optionLabel( array $def, $option ) : string
+  {
+    $label = $def['labels'][$option] ?? '';
+
+    return $label === '' ? (string) $option : "{$option} – {$label}";
   }
 
   // Values

@@ -46,10 +46,12 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
 - **…** in a deep trail — the skipped levels, click to jump
   - collapses past 4 segments, keeps root and the last two
 
-## Main / Recent / Pinned
+## Main / Recent / Pinned / Selected
 
 - Pills sit under the list, only on the **Entries** tab
-- Recent and Pinned ignore the current container
+- **Selected** — every entry the name selects for the whole database (e.g. `1 - My task`), wherever it lives
+  - only there when a field in the name selects globally, see **Fields in the name**
+- Recent, Pinned and Selected ignore the current container
   - each row shows where it lives; clicking that line goes there
   - navigating anywhere resets to **Main**
 - **Pin** lives in the card's ⋮ menu, not on the card
@@ -86,7 +88,10 @@ Every file and folder under the database is an **object** — no separate regist
   - always `.md`: `- DESC.pdf` is an ordinary resource
   - several matches in one folder — the first alphabetically wins, **Check database** lists the rest
   - an entry cannot be created or renamed to a matching name
-- Every `.md` is an entry, with or without front matter — its `type` decides, missing `type` falls back to `defaultType`
+- Every `.md` is an entry, with or without front matter — its `type` decides
+  - missing `type`: the name may give one (e.g. `2 - My task` is an Activity), else `defaultType`
+  - such a type is **not written** to the front matter, so the name keeps deciding: remove the number, it is an Info again
+  - a type picked in the editor's **Front matter** tab is written, and then wins over the name
 - Any other file is a **resource** (type **File**)
   - keeps its extension; fields live in a sidecar `NAME.ext.md`
 - Not objects: hidden names (leading `.`), `-this.md`, sidecars, `X.md` next to a folder `X` (shadowed)
@@ -113,6 +118,14 @@ A database may read fields out of file and folder names — `nameFields` in `<db
     - path lines (search, Recent, Pinned) know only the global tags
   - editor: toggle chips for a list, a dropdown for a single value; nothing else is accepted
   - cards show them right after the title
+- **Leading fields, selection and priority**, e.g. `2 - My task` — see the `prio` rule in `data/gd_demo/.sys/config.yml`
+  - `at: 'start'` — the token leads the name, the title follows right away: `2 - x`, `2-x`, `2 -x` all read as `2`
+    - written as `format` says, before the title
+    - a title like `3-D printing` would read as prio 3, so it is refused
+  - `type: 'Activity'` — a name with this field makes an entry or a folder an Activity, unless its front matter names a type
+  - `sort: true` — lists are sorted by it in the order of `values`, entries without one last, newest first within
+  - `selected: { '1': 'global', '2': 'local' }` — global ones are listed under **Selected**, both are marked on cards
+  - `labels` — what cards and the editor's dropdown show for a value (`1 – Selected`, `3 – High`)
 - `role: 'id'` — **alternative id** (`id2`), unique across the database
   - `id` in front matter stays the primary id: Pinned and Recent store that one
   - duplicates show in **Check database**, the editor refuses a taken one
@@ -143,7 +156,7 @@ A database may read fields out of file and folder names — `nameFields` in `<db
 
 ## Behaviour that surprises
 
-- Lists are sorted **newest first**, not alphabetically
+- Lists are sorted **newest first**, not alphabetically — after a sorting field in the name, if the database has one
 - **Delete is permanent.** No trash
 - Autosave 800 ms after the last keystroke
   - title and dropdowns save at once, the title on leaving the field — same for fields in the name

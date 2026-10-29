@@ -101,14 +101,22 @@ abstract class Renderer
   }
 
   /**
-   * The fixed values in the object's name, e.g. its tags, as small chips.
-   * Every card shows them, so a type's own badges need not care.
+   * The fixed values in the object's name, e.g. its tags or its prio, as
+   * small chips. Every card shows them, so a type's own badges need not care.
    */
   protected function tags() : string
   {
-    $tags = $this->app->path->fields($this->obj->type)->fixedValues($this->obj->nameData);
+    $out = '';
 
-    return implode('', array_map(fn( $tag ) => '<span class="tag">' . $this->esc($tag) . '</span>', $tags));
+    foreach( $this->app->path->fields($this->obj->type)->fixedValues($this->obj->nameData) as $tag )
+    {
+      $class = 'tag' . ($tag['sort'] ? ' tag-rank' : '') . ($tag['selected'] !== '' ? ' tag-selected' : '');
+
+      $out .= '<span class="' . $class . '" data-field="' . $this->esc($tag['field']) . '" data-value="' . $this->esc($tag['value']) . '"'
+        . ' title="' . $this->esc($tag['value']) . '">' . $this->esc($tag['label']) . '</span>';
+    }
+
+    return $out;
   }
 
   protected function excerpt( string $text, int $max = 90 ) : string

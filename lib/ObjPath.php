@@ -176,7 +176,7 @@ class ObjPath
     if( trim($stem, ' .') === '' )
       throw Failure::invalid('A title is required besides the fields in the name', ['field' => 'title']);
 
-    $name = $this->sanitize(implode(' ', array_merge([$stem], $fields->flatten($tokens)))) . $ext;
+    $name = $this->sanitize(implode(' ', array_merge($fields->flatten($tokens, true), [$stem], $fields->flatten($tokens, false)))) . $ext;
 
     if( $this->isLinkName($obj->name()))
       $name .= $this->linkMarker;

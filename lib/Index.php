@@ -26,7 +26,7 @@ class Index
     $this->store = $store;
     $this->types = $types;
     $this->file  = "{$db->sysDir()}/index.json";
-    $this->data  = ['builtAt' => 0, 'objects' => [], 'altIds' => [], 'links' => [], 'duplicates' => [], 'altDuplicates' => [], 'withoutId' => []];
+    $this->data  = ['builtAt' => 0, 'objects' => [], 'altIds' => [], 'links' => [], 'duplicates' => [], 'altDuplicates' => [], 'withoutId' => [], 'selected' => []];
   }
 
   public function path( string $id ) : ?string
@@ -86,6 +86,16 @@ class Index
   {
     $this->load();
     return $this->data['objects'];
+  }
+
+  /**
+   * Paths of the entries a name selects for the whole database, e.g.
+   * "1 - My task" (NameFields "selected"), wherever they live.
+   */
+  public function selected() : array
+  {
+    $this->load();
+    return $this->data['selected'];
   }
 
   /**
@@ -159,6 +169,7 @@ class Index
     $idOfPath      = [];
     $entries       = [];
     $withoutId     = [];
+    $selected      = [];
 
     foreach( $this->store->walk('') as $obj )
     {
@@ -176,6 +187,9 @@ class Index
       }
 
       $entries[] = $obj;
+
+      if( $this->store->path()->fields($obj->type)->isSelectedGlobally($obj->nameData))
+        $selected[] = $obj->path;
     }
 
     // Objects with an id first, so a new id is handed out only once every taken one is known
@@ -211,7 +225,8 @@ class Index
       'links'         => $links,
       'duplicates'    => $duplicates,
       'altDuplicates' => $altDuplicates,
-      'withoutId'     => $withoutId
+      'withoutId'     => $withoutId,
+      'selected'      => $selected
     ];
 
     $this->loaded = true;

@@ -181,7 +181,11 @@ class ObjStore
     if( $mtime !== null && $obj->mtime !== 0 && $obj->mtime !== $mtime )
       throw Failure::conflict('The file changed since it was loaded', ['mtime' => $obj->mtime]);
 
-    $head = ['id' => $obj->id, 'type' => $obj->type];
+    $head = ['id' => $obj->id];
+
+    // A type the name gives stays in the name, the default needs no writing: a number added later still decides
+    if( ! $obj->typeImplied )
+      $head['type'] = $obj->type;
 
     if( $obj->target !== '' )
       $head['target'] = $obj->target;
@@ -207,7 +211,7 @@ class ObjStore
   {
     $file = $this->fileFor($obj);
     $abs  = $this->db->abs($file);
-    $data = ['id' => $id, 'type' => $obj->type];
+    $data = $obj->typeImplied ? ['id' => $id] : ['id' => $id, 'type' => $obj->type];
     $body = '';
 
     if( is_file($abs))
@@ -390,7 +394,10 @@ class ObjStore
     $obj->isFolder = $isFolder;
     $obj->isLink   = $obj->type === 'Link';
 
-    $this->readName($obj);
+    // No type in the front matter: the default, unless the name gives one
+    $obj->typeImplied = ! isset($data['type']);
+
+    $this->readName($obj, $obj->typeImplied);
 
     return $obj;
   }
@@ -407,7 +414,7 @@ class ObjStore
     $obj->isResource = true;
     $obj->mtime      = (int) filemtime($this->db->abs($file));
 
-    $this->readName($obj);
+    $this->readName($obj, false);
 
     $sidecar = $this->path->sidecarOf($rel);
     $abs     = $this->db->abs($sidecar);
@@ -435,17 +442,31 @@ class ObjStore
     $obj->isFolder = true;
     $obj->mtime    = (int) filemtime($this->db->abs($rel));
 
-    $this->readName($obj);
+    $this->readName($obj, true);
 
     return $obj;
   }
 
   /**
    * Title and the fields carried in the name. A name with a link field makes
-   * the object a link, whatever its type.
+   * the object a link, whatever its type. A name with a field that gives a
+   * type (e.g. "2 - My task" an Activity) decides the type of an object
+   * whose front matter names none, and of a folder without content file;
+   * a resource stays a File.
    */
-  private function readName( Obj $obj ) : void
+  private function readName( Obj $obj, bool $nameDecides ) : void
   {
+    if( $nameDecides )
+    {
+      $named = $this->path->fields()->typeOf($this->path->parseName($obj->name(), $obj->isResource)['data']);
+
+      if( $named !== '' )
+      {
+        $obj->type        = $named;
+        $obj->typeImplied = true;
+      }
+    }
+
     $fields = $this->path->fields($obj->type);
     $parsed = $this->path->parseName($obj->name(), $obj->isResource, $obj->type);
 

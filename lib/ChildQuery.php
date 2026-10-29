@@ -104,7 +104,7 @@ class ChildQuery
 
     foreach( $this->app->path->fields($obj->type)->fixedValues($obj->nameData) as $tag )
     {
-      if( mb_stripos($tag, $filter) !== false )
+      if( mb_stripos($tag['value'], $filter) !== false || mb_stripos($tag['label'], $filter) !== false )
         return true;
     }
 
@@ -112,13 +112,21 @@ class ChildQuery
   }
 
   /**
-   * Newest first, from the front matter timestamps (plan §2.7).
+   * Newest first, from the front matter timestamps (plan §2.7). A field in
+   * the name may come before that, e.g. the prio: selected entries first,
+   * then by priority, entries without one last (NameFields "sort"). Also
+   * used for lists that reach across the tree.
    */
-  private function sort( array &$items ) : void
+  public function sort( array &$items ) : void
   {
     $desc = strtolower((string) ($this->app->config->db('sort')['dir'] ?? 'desc')) === 'desc';
 
     usort($items, function( Obj $a, Obj $b ) use ( $desc ) {
+
+      $rank = $this->rank($a) <=> $this->rank($b);
+
+      if( $rank !== 0 )
+        return $rank;
 
       $cmp = $this->stamp($a) <=> $this->stamp($b);
 
@@ -127,6 +135,11 @@ class ChildQuery
 
       return $desc ? -$cmp : $cmp;
     });
+  }
+
+  private function rank( Obj $obj ) : int
+  {
+    return $this->app->path->fields($obj->type)->rank($obj->nameData);
   }
 
   private function stamp( Obj $obj ) : int

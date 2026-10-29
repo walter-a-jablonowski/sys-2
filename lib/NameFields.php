@@ -26,10 +26,24 @@ namespace Sys;
  *     values: ['best', 'draft']           # a type may add its own (ObjPath::fields)
  *     format: '({value})'                 # also how they are found
  *     list: true
+ *
+ * A field may also lead the name, decide the type of what carries it, order
+ * the lists and select entries, e.g. "2 - My task":
+ *
+ *   - field: 'prio'
+ *     values: ['1', '2', '3', '4', '5']   # in the order lists are sorted by
+ *     labels: { '1': 'Selected', '3': 'High' }
+ *     match: '{value}\s*-\s*'
+ *     format: '{value} - '
+ *     at: 'start'                         # leads the name, nothing needs to follow it but the title
+ *     type: 'Activity'                    # unless the front matter names one
+ *     sort: true                          # lists are ordered by it, entries without come last
+ *     selected: { '1': 'global', '2': 'local' }   # global: listed under "Selected", wherever it lives
  */
 class NameFields
 {
   private const ROLES    = ['', 'id', 'link'];
+  private const SCOPES   = ['global', 'local'];
   private const RESERVED = ['title', 'body', 'id', 'type', 'created', 'modified', 'target'];
 
   private array $rules = [];     // field -> rule, in the order they run
@@ -44,6 +58,8 @@ class NameFields
       $values = isset($rule['values']) ? array_values(array_filter(array_map('strval', (array) $rule['values']), 'strlen')) : null;
       $role   = (string) ($rule['role'] ?? '');
       $list   = (bool) ($rule['list'] ?? false);
+      $start  = ($rule['at'] ?? '') === 'start';
+      $chosen = array_map('strval', (array) ($rule['selected'] ?? []));
 
       // Fixed values are found as written by format, unless match places them itself. None at all: nothing matches
       if( $values !== null && ($match !== '' || $format !== ''))
@@ -52,7 +68,8 @@ class NameFields
         $match = $match !== '' ? str_replace('{value}', $any, $match) : str_replace(preg_quote('{value}', '~'), $any, preg_quote($format, '~'));
       }
 
-      $regex = "~(?<=^|\s)(?:{$match})(?=\s|$)~u";
+      // A leading field only has to start the name, any other stands on its own
+      $regex = $start ? "~^\s*(?:{$match})~u" : "~(?<=^|\s)(?:{$match})(?=\s|$)~u";
 
       if( $field === '' || in_array($field, self::RESERVED, true) || isset($this->rules[$field]))
         throw new Failure("nameFields: field \"$field\" is missing, reserved or defined twice", 500);
@@ -63,13 +80,24 @@ class NameFields
       if( ! in_array($role, self::ROLES, true) || ($role !== '' && ($list || $this->fieldOf($role) !== null)))
         throw new Failure("nameFields: \"$field\" has an unknown role, a role on a list or a role taken twice", 500);
 
+      if( ! in_array($rule['at'] ?? '', ['', 'start'], true) || ($start && $list))
+        throw new Failure("nameFields: \"$field\" has an unknown \"at\" or leads the name as a list", 500);
+
+      if(( ! empty($rule['sort']) || $chosen ) && ($values === null || array_diff(array_keys($chosen), $values) || array_diff($chosen, self::SCOPES)))
+        throw new Failure("nameFields: \"$field\" sorts or selects without values, or selects an unknown value or scope", 500);
+
       $this->rules[$field] = [
         'regex'  => $regex,
         'format' => $format,
-        'values' => $values,     // null: any value the match takes
-        'role'   => $role,
-        'list'   => $list,
-        'label'  => (string) ($rule['label'] ?? ucfirst($field))
+        'values'   => $values,     // null: any value the match takes
+        'labels'   => array_map('strval', (array) ($rule['labels'] ?? [])),
+        'role'     => $role,
+        'list'     => $list,
+        'start'    => $start,
+        'type'     => (string) ($rule['type'] ?? ''),
+        'sort'     => ! empty($rule['sort']),
+        'selected' => $chosen,     // value -> 'global' | 'local'
+        'label'    => (string) ($rule['label'] ?? ucfirst($field))
       ];
     }
   }
@@ -106,10 +134,10 @@ class NameFields
   }
 
   /**
-   * The fixed values a name carries, e.g. its tags: what cards show and the
-   * list filter matches.
+   * The fixed values a name carries, e.g. its tags or its prio: what cards
+   * show and the list filter matches.
    *
-   * @return string[]
+   * @return array[]  each with field, value, label, selected ('', 'global', 'local'), sort
    */
   public function fixedValues( array $data ) : array
   {
@@ -117,11 +145,80 @@ class NameFields
 
     foreach( $this->rules as $field => $rule )
     {
-      if( $rule['values'] !== null )
-        $out = array_merge($out, (array) ($data[$field] ?? []));
+      if( $rule['values'] === null )
+        continue;
+
+      foreach( (array) ($data[$field] ?? []) as $value )
+      {
+        $out[] = [
+          'field'    => $field,
+          'value'    => $value,
+          'label'    => $rule['labels'][$value] ?? $value,
+          'selected' => $rule['selected'][$value] ?? '',
+          'sort'     => $rule['sort']
+        ];
+      }
     }
 
     return $out;
+  }
+
+  /**
+   * The type a name gives what carries it, '' when it gives none.
+   */
+  public function typeOf( array $data ) : string
+  {
+    foreach( $this->rules as $field => $rule )
+    {
+      if( $rule['type'] !== '' && isset($data[$field]))
+        return $rule['type'];
+    }
+
+    return '';
+  }
+
+  /**
+   * Place in a sorted list: the position of the value in the values of the
+   * sorting field, entries without one after all others.
+   */
+  public function rank( array $data ) : int
+  {
+    foreach( $this->rules as $field => $rule )
+    {
+      if( $rule['sort'] )
+      {
+        $at = array_search((string) ($data[$field] ?? ''), $rule['values'], true);
+        return $at === false ? count($rule['values']) : $at;
+      }
+    }
+
+    return 0;
+  }
+
+  /**
+   * Whether a name can select an entry for the whole database, which is
+   * what brings the "Selected" list along.
+   */
+  public function selectsGlobally() : bool
+  {
+    foreach( $this->rules as $rule )
+    {
+      if( in_array('global', $rule['selected'], true))
+        return true;
+    }
+
+    return false;
+  }
+
+  public function isSelectedGlobally( array $data ) : bool
+  {
+    foreach( $this->fixedValues($data) as $entry )
+    {
+      if( $entry['selected'] === 'global' )
+        return true;
+    }
+
+    return false;
   }
 
   /**
@@ -187,14 +284,18 @@ class NameFields
   }
 
   /**
-   * Tokens of all fields in the order of the rules.
+   * Tokens in the order of the rules: those leading the name, or those
+   * behind the title.
    */
-  public function flatten( array $tokens ) : array
+  public function flatten( array $tokens, bool $start ) : array
   {
     $out = [];
 
-    foreach( array_keys($this->rules) as $field )
-      $out = array_merge($out, $tokens[$field] ?? []);
+    foreach( $this->rules as $field => $rule )
+    {
+      if( $rule['start'] === $start )
+        $out = array_merge($out, $tokens[$field] ?? []);
+    }
 
     return $out;
   }

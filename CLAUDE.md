@@ -64,6 +64,9 @@ Other: `ChildQuery` (children of a container for one tab: filter, links, sort, p
   - `data` = front matter minus reserved keys (`id`, `type`, `created`, `modified`, `target`)
   - `nameData` = fields parsed from the name, never written to front matter; `field()` checks it first
   - `isFolder`, `isLink`, `isResource`; `display()` gives a link's resolved target
+  - `typeImplied`: the type came from the name or `defaultType`, not front matter. `ObjStore::save()`/`addId()`
+    then write no `type`, so the name keeps deciding. `ajax/save.php` applies `__type` only when it differs
+    from the type loaded (the dropdown sends it on every save) and answers `typeChanged`, which reloads the editor
 - `X.md` and `X/<thisFile>.md` are the same object; adding a child promotes a leaf to a folder
 - Every `.md` is an entry (front matter optional). Any other file → **resource** (type **File**), fields
   in sidecar `NAME.ext.md`. Folder without content file → type **Group**
@@ -75,6 +78,9 @@ Other: `ChildQuery` (children of a container for one tab: filter, links, sort, p
   tokens out, the rest is the title. Keys: `field`, `match`, `format`, `values`, `role` (`id` | `link`), `list`, `label`
   - `values`: fixed strings (tags); found as `format` writes them, or where `match` puts `{value}`;
     `format()` refuses others, `fixedValues()` gives them for cards (`Renderer::tags()`) and the list filter
+  - more keys: `at: 'start'` (leads the name, `flatten($tokens, $start)` writes it before the title),
+    `type` (`typeOf()`: the name gives the type), `sort` (`rank()`, used by `ChildQuery::sort()`),
+    `selected` (value → `global`|`local`; global ones in `Index::selected()`, the "Selected" pill), `labels`
   - a type adds values via `nameFields: { tags: [...] }` in its yml, so parsing depends on the type:
     `ObjPath::fields($type)`, `parseName($name, $isResource, $type)`. Pass the type wherever an object is
     known; `ObjPath::label()` has none and reads the database's own

@@ -26,6 +26,16 @@ sort:
 #     format: '({value})'                # how a tag is written, and found; or match: '\(?{value}\)?'
 #     list: true                         # a type may add tags: "nameFields: { tags: ['urgent'] }" in types/MY_TYPE.yml
 nameFields:
+  - field: 'prio'                      # "2 - My task": selection or priority, makes the entry an Activity
+    label: 'Prio'
+    values: ['1', '2', '3', '4', '5']  # lists are sorted in this order
+    labels: { '1': 'Selected', '2': 'Selected here', '3': 'High', '4': 'Medium', '5': 'Low' }
+    match: '{value}\s*-\s*'           # "2 - x", "2-x", "2 -x", "2- x"
+    format: '{value} - '
+    at: 'start'
+    type: 'Activity'
+    sort: true
+    selected: { '1': 'global', '2': 'local' }
   - field: 'tags'
     values: ['best']
     format: '({value})'

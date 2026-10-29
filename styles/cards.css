@@ -114,6 +114,22 @@
   white-space: nowrap;
 }
 
+/* A value lists are sorted by, e.g. a priority: quieter than a tag. Selected stands out */
+
+.tag-rank
+{
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--fg-dim);
+}
+
+.tag-rank.tag-selected
+{
+  background: var(--accent);
+  box-shadow: none;
+  color: var(--bg);
+}
+
 .card-badges
 {
   display: flex;

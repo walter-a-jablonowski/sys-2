@@ -15,6 +15,7 @@ use Sys\Failure;
 use Sys\Frame;
 
 $obj    = $ajax->obj();
+$loaded = $obj->type;
 $fields = $ajax->arrayParam('fields');
 $mtime  = $ajax->intParam('mtime') ?: null;
 
@@ -83,9 +84,13 @@ $renamed = ($title !== null && $title !== $obj->title) || $nameValues;
 if( $renamed )
   $obj = $app->store->rename($obj, $title ?? $obj->title, $nameValues);
 
-// After the rename: rename() reloads the object from disk
-if( $type !== '' && $type !== $obj->type && $app->types->has($type))
-  $obj->type = $type;
+// After the rename: rename() reloads the object from disk, and a name may give another type.
+// Only a type picked in the editor counts: the dropdown sends the one it was loaded with on every save
+if( $type !== '' && $type !== $loaded && $app->types->has($type))
+{
+  $obj->type        = $type;
+  $obj->typeImplied = false;    // picked, so written from now on
+}
 
 // Written for the first time: without an id the index cannot find it again
 if( $obj->id === '' )
@@ -95,10 +100,12 @@ $saved = $app->store->save($obj, $data, $body, $renamed ? null : $mtime);
 
 $app->index->invalidate();
 
-// The frame as well: it shows saved values, a changed type may even come with another viewer
+// The frame as well: it shows saved values, a changed type may even come with another viewer.
+// A changed type also has other fields, the client then reloads the editor
 return [
-  'path'  => $saved->path,
-  'title' => $saved->title,
-  'mtime' => $saved->mtime,
-  'card'  => $app->renderer($ajax->param('mode') === 'mobile' ? 'mobile' : 'list', $saved)->html()
+  'path'        => $saved->path,
+  'title'       => $saved->title,
+  'mtime'       => $saved->mtime,
+  'typeChanged' => $saved->type !== $loaded,
+  'card'        => $app->renderer($ajax->param('mode') === 'mobile' ? 'mobile' : 'list', $saved)->html()
 ] + Frame::build($app, $saved);

@@ -447,6 +447,10 @@
       replaceCard(data.path, data.card);
       setSaveState('saved');
       writeHash();
+
+      // Another type comes with other fields, e.g. a prio in the name making an entry an Activity
+      if( data.typeChanged )
+        select(data.path, true);
     }
     catch( error ) {
       onSaveError(error);

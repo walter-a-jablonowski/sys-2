@@ -14,6 +14,7 @@ class Obj
   public string $title  = '';     // the file or folder name, link marker stripped
   public string $file   = '';     // relative file holding it, '' for a bare group folder
   public string $type   = '';
+  public bool   $typeImplied = false;    // given by the name (NameFields "type") or the default: never written, so the name keeps deciding
   public string $id     = '';
   public string $target = '';     // links only: id of the target
   public array  $data   = [];     // front matter without the reserved keys
