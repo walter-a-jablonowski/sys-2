@@ -15,7 +15,7 @@ to the parent, so a flat list of prios says nothing across the tree.
   - read the priorities along the path as a tuple, best branch first: `(3, 3, 4)` before `(3, 4, 3)`
   - selection 2 counts as the best value within its parent
   - selection 1 shows the entry wherever it lives, as an override
-- Leave out what cannot be done now once a status exists (done, waiting, blocked), see `activity-status.md`
+- Leave out what cannot be done now: done, waiting (`activity-status.md`), blocked (`activity-dependencies.md`)
 - Filters: subtree, depth, type
 
 ## Open questions

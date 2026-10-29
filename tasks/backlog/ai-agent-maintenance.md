@@ -15,6 +15,7 @@ current was too much manual work. An agent that understands what the activities 
 - Works through the app's own code (`ObjStore`, ajax handlers), never raw file edits, so naming
   rules, ids and links stay consistent
 - Proposes changes the user reviews and accepts, at least until it has earned trust
+- Can fill in what the model adds (goals, dependencies, status) for the existing collection
 - Needs `bulk-change-safety.md` first
 
 ## Steps (first idea)
