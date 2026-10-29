@@ -80,7 +80,8 @@ Other: `ChildQuery` (children of a container for one tab: filter, links, sort, p
     `format()` refuses others, `fixedValues()` gives them for cards (`Renderer::tags()`) and the list filter
   - more keys: `at: 'start'` (leads the name, `flatten($tokens, $start)` writes it before the title),
     `type` (`typeOf()`: the name gives the type), `sort` (`rank()`, used by `ChildQuery::sort()`),
-    `selected` (value → `global`|`local`; global ones in `Index::selected()`, the "Selected" pill), `labels`
+    `selected` (value → `global`|`local`, filled chip), `colors` (value → palette name, `.tag-<color>`,
+    theme tokens `--tag-<color>`), `labels`
   - a type adds values via `nameFields: { tags: [...] }` in its yml, so parsing depends on the type:
     `ObjPath::fields($type)`, `parseName($name, $isResource, $type)`. Pass the type wherever an object is
     known; `ObjPath::label()` has none and reads the database's own

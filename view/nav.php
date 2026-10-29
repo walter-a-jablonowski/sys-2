@@ -74,8 +74,5 @@ $current = $tabs[$tab] ?? reset($tabs);
     <button type="button" class="pill is-active" data-source="children">Main</button>
     <button type="button" class="pill" data-source="recent">Recent</button>
     <button type="button" class="pill" data-source="pinned">Pinned</button>
-    <?php if( $app->path->fields()->selectsGlobally()): ?>
-      <button type="button" class="pill" data-source="selected">Selected</button>
-    <?php endif ?>
   </div>
 <?php endif ?>

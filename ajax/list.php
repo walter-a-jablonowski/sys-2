@@ -18,14 +18,13 @@ $filter = (string) $ajax->param('filter', '');
 $mode   = $ajax->param('mode', 'list') === 'mobile' ? 'mobile' : 'list';
 $limit  = (int) $app->config->db('pageSize', 50);
 
-if( ! in_array($source, ['children', 'recent', 'pinned', 'selected'], true))
+if( ! in_array($source, ['children', 'recent', 'pinned'], true))
   $source = 'children';
 
 $hints = [
   'children' => 'Nothing here yet.',
   'recent'   => 'Nothing opened yet.',
-  'pinned'   => 'Nothing pinned yet. Pin an entry from its menu.',
-  'selected' => 'Nothing selected for the whole database yet.'
+  'pinned'   => 'Nothing pinned yet. Pin an entry from its menu.'
 ];
 
 if( $source === 'children' )
@@ -44,14 +43,7 @@ if( $source === 'children' )
 }
 else
 {
-  // The selected ones are found by their names, wherever they live, and sorted like any list
-  if( $source === 'selected' )
-  {
-    $items = array_values(array_filter(array_map([$app->store, 'get'], $app->index->selected())));
-    (new ChildQuery($app))->sort($items);
-  }
-  else
-    $items = ($source === 'pinned' ? $app->pinned : $app->recent)->objs();
+  $items = ($source === 'pinned' ? $app->pinned : $app->recent)->objs();
 
   $path = '';
   $tab  = '';

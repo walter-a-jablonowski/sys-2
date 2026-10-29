@@ -29,14 +29,16 @@ nameFields:
   - field: 'prio'                      # "2 - My task": selection or priority, makes the entry an Activity
     label: 'Prio'
     values: ['1', '2', '3', '4', '5']  # lists are sorted in this order
-    labels: { '1': 'Selected', '2': 'Selected here', '3': 'High', '4': 'Medium', '5': 'Low' }
+    labels: { '1': 'Selected', '2': 'Selected', '3': 'Important', '4': 'Secondary', '5': 'Optional' }
+    colors: { '1': 'orange', '2': 'gold', '3': 'green', '4': 'gray', '5': 'lightgray' }
     match: '{value}\s*-\s*'           # "2 - x", "2-x", "2 -x", "2- x"
     format: '{value} - '
     at: 'start'
     type: 'Activity'
     sort: true
-    selected: { '1': 'global', '2': 'local' }
+    selected: { '1': 'global', '2': 'local' }   # 1 for the whole database; 2 and the priorities 3-5 within the parent
   - field: 'tags'
     values: ['best']
+    colors: { 'best': 'purple' }
     format: '({value})'
     list: true

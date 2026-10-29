@@ -32,18 +32,20 @@ namespace Sys;
  *
  *   - field: 'prio'
  *     values: ['1', '2', '3', '4', '5']   # in the order lists are sorted by
- *     labels: { '1': 'Selected', '3': 'High' }
+ *     labels: { '1': 'Selected', '3': 'Important' }
  *     match: '{value}\s*-\s*'
  *     format: '{value} - '
  *     at: 'start'                         # leads the name, nothing needs to follow it but the title
  *     type: 'Activity'                    # unless the front matter names one
  *     sort: true                          # lists are ordered by it, entries without come last
- *     selected: { '1': 'global', '2': 'local' }   # global: listed under "Selected", wherever it lives
+ *     selected: { '1': 'global', '2': 'local' }   # selected for the whole database or within its parent
+ *     colors: { '1': 'gold', '3': 'red' }  # chip color per value, one of COLORS (theme tokens --tag-NAME)
  */
 class NameFields
 {
   private const ROLES    = ['', 'id', 'link'];
   private const SCOPES   = ['global', 'local'];
+  private const COLORS   = ['gold', 'red', 'orange', 'yellow', 'green', 'blue', 'purple', 'gray', 'lightgray'];
   private const RESERVED = ['title', 'body', 'id', 'type', 'created', 'modified', 'target'];
 
   private array $rules = [];     // field -> rule, in the order they run
@@ -60,6 +62,7 @@ class NameFields
       $list   = (bool) ($rule['list'] ?? false);
       $start  = ($rule['at'] ?? '') === 'start';
       $chosen = array_map('strval', (array) ($rule['selected'] ?? []));
+      $colors = array_map('strval', (array) ($rule['colors'] ?? []));
 
       // Fixed values are found as written by format, unless match places them itself. None at all: nothing matches
       if( $values !== null && ($match !== '' || $format !== ''))
@@ -86,6 +89,9 @@ class NameFields
       if(( ! empty($rule['sort']) || $chosen ) && ($values === null || array_diff(array_keys($chosen), $values) || array_diff($chosen, self::SCOPES)))
         throw new Failure("nameFields: \"$field\" sorts or selects without values, or selects an unknown value or scope", 500);
 
+      if( $colors && ($values === null || array_diff(array_keys($colors), $values) || array_diff($colors, self::COLORS)))
+        throw new Failure("nameFields: \"$field\" colors without values, or colors an unknown value or with an unknown color", 500);
+
       $this->rules[$field] = [
         'regex'  => $regex,
         'format' => $format,
@@ -97,6 +103,7 @@ class NameFields
         'type'     => (string) ($rule['type'] ?? ''),
         'sort'     => ! empty($rule['sort']),
         'selected' => $chosen,     // value -> 'global' | 'local'
+        'colors'   => $colors,     // value -> one of COLORS
         'label'    => (string) ($rule['label'] ?? ucfirst($field))
       ];
     }
@@ -137,8 +144,8 @@ class NameFields
    * The fixed values a name carries, e.g. its tags or its prio: what cards
    * show and the list filter matches.
    *
-   * @return array[]  each with field, value, label, selected ('', 'global', 'local'), sort,
-   *                   start (leads the name, so it is shown before the title)
+   * @return array[]  each with field, value, label, selected ('', 'global', 'local'), color
+   *                   ('' for the default), start (leads the name, so it is shown before the title)
    */
   public function fixedValues( array $data ) : array
   {
@@ -156,7 +163,7 @@ class NameFields
           'value'    => $value,
           'label'    => $rule['labels'][$value] ?? $value,
           'selected' => $rule['selected'][$value] ?? '',
-          'sort'     => $rule['sort'],
+          'color'    => $rule['colors'][$value] ?? '',
           'start'    => $rule['start']
         ];
       }
@@ -195,32 +202,6 @@ class NameFields
     }
 
     return 0;
-  }
-
-  /**
-   * Whether a name can select an entry for the whole database, which is
-   * what brings the "Selected" list along.
-   */
-  public function selectsGlobally() : bool
-  {
-    foreach( $this->rules as $rule )
-    {
-      if( in_array('global', $rule['selected'], true))
-        return true;
-    }
-
-    return false;
-  }
-
-  public function isSelectedGlobally( array $data ) : bool
-  {
-    foreach( $this->fixedValues($data) as $entry )
-    {
-      if( $entry['selected'] === 'global' )
-        return true;
-    }
-
-    return false;
   }
 
   /**

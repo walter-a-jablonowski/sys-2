@@ -46,12 +46,10 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
 - **…** in a deep trail — the skipped levels, click to jump
   - collapses past 4 segments, keeps root and the last two
 
-## Main / Recent / Pinned / Selected
+## Main / Recent / Pinned
 
 - Pills sit under the list, only on the **Entries** tab
-- **Selected** — every entry the name selects for the whole database (e.g. `1 - My task`), wherever it lives
-  - only there when a field in the name selects globally, see **Fields in the name**
-- Recent, Pinned and Selected ignore the current container
+- Recent and Pinned ignore the current container
   - each row shows where it lives; clicking that line goes there
   - navigating anywhere resets to **Main**
 - **Pin** lives in the card's ⋮ menu, not on the card
@@ -124,8 +122,11 @@ A database may read fields out of file and folder names — `nameFields` in `<db
     - a title like `3-D printing` would read as prio 3, so it is refused
   - `type: 'Activity'` — a name with this field makes an entry or a folder an Activity, unless its front matter names a type
   - `sort: true` — lists are sorted by it in the order of `values`, entries without one last, newest first within
-  - `selected: { '1': 'global', '2': 'local' }` — global ones are listed under **Selected**, both are marked on cards
-  - `labels` — what cards and the editor's dropdown show for a value (`1 – Selected`, `3 – High`)
+  - `selected: { '1': 'global', '2': 'local' }` — selected for the whole database or within its parent; filled chips
+    - the priorities 3–5 are relative to the parent as well
+  - `labels` — the editor's dropdown (`1 – Selected`, `3 – Important`) and the tooltip of a chip; the chip shows the value
+- `colors: { '1': 'gold', '3': 'red' }` — chip color per fixed value: `gold` (default), `red`, `orange`, `yellow`,
+  `green`, `blue`, `purple`, `gray`, `lightgray`; the theme defines them (`--tag-red`, …)
 - `role: 'id'` — **alternative id** (`id2`), unique across the database
   - `id` in front matter stays the primary id: Pinned and Recent store that one
   - duplicates show in **Check database**, the editor refuses a taken one

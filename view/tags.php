@@ -7,8 +7,9 @@
  *
  * Only those on one side of the title: leading the name ($start) or not.
  *
- * A value lists are sorted by (e.g. a priority) looks quieter than a tag,
- * a selected one stands out.
+ * Each has the color its field gives the value (NameFields "colors"), the
+ * accent otherwise; a selected one is filled, so it stands out. A chip shows
+ * the value as the name writes it (e.g. the prio "2"), its label is the tooltip.
  *
  * @var Sys\App $app
  * @var Sys\Obj $obj
@@ -20,10 +21,10 @@ foreach( $app->path->fields($obj->type)->fixedValues($obj->nameData) as $tag ):
   if( $tag['start'] !== $start )
     continue;
 
-  $class = 'tag' . ($tag['sort'] ? ' tag-rank' : '') . ($tag['selected'] !== '' ? ' tag-selected' : '');
+  $class = 'tag' . ($tag['color'] !== '' ? " tag-{$tag['color']}" : '') . ($tag['selected'] !== '' ? ' tag-selected' : '');
 ?>
   <span class="<?= $class ?>" data-field="<?= htmlspecialchars($tag['field'], ENT_QUOTES) ?>"
         data-value="<?= htmlspecialchars($tag['value'], ENT_QUOTES) ?>"
-        title="<?= htmlspecialchars($tag['value'], ENT_QUOTES) ?>"><?= htmlspecialchars($tag['label'], ENT_QUOTES) ?></span>
+        title="<?= htmlspecialchars($tag['label'], ENT_QUOTES) ?>"><?= htmlspecialchars($tag['value'], ENT_QUOTES) ?></span>
 <?php
 endforeach;

@@ -114,10 +114,9 @@ class ChildQuery
   /**
    * Newest first, from the front matter timestamps (plan §2.7). A field in
    * the name may come before that, e.g. the prio: selected entries first,
-   * then by priority, entries without one last (NameFields "sort"). Also
-   * used for lists that reach across the tree.
+   * then by priority, entries without one last (NameFields "sort").
    */
-  public function sort( array &$items ) : void
+  private function sort( array &$items ) : void
   {
     $desc = strtolower((string) ($this->app->config->db('sort')['dir'] ?? 'desc')) === 'desc';
 
