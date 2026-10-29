@@ -446,8 +446,8 @@ class ObjStore
    */
   private function readName( Obj $obj ) : void
   {
-    $fields = $this->path->fields();
-    $parsed = $this->path->parseName($obj->name(), $obj->isResource);
+    $fields = $this->path->fields($obj->type);
+    $parsed = $this->path->parseName($obj->name(), $obj->isResource, $obj->type);
 
     $obj->title     = $parsed['title'];
     $obj->nameData  = $parsed['data'];

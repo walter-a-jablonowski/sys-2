@@ -25,7 +25,7 @@ $type  = array_key_exists('__type', $fields) ? (string) $fields['__type'] : '';
 unset($fields['title'], $fields['body'], $fields['__type']);
 
 // Fields carried in the name, only the changed ones: each one renames the file
-$names      = $app->path->fields();
+$names      = $app->path->fields($obj->type);
 $nameValues = [];
 
 foreach( $fields as $key => $value )

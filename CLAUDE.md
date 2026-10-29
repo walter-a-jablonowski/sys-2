@@ -72,7 +72,12 @@ Other: `ChildQuery` (children of a container for one tab: filter, links, sort, p
   `nameFor()` (title + fields → name, read-back validated, **a title is required besides the fields**),
   `label()` (path as readable titles)
 - `lib/NameFields.php` — `nameFields` rules from `<db>/.sys/config.yml`: run in order, each takes its
-  tokens out, the rest is the title. Keys: `field`, `match`, `format`, `role` (`id` | `link`), `list`, `label`
+  tokens out, the rest is the title. Keys: `field`, `match`, `format`, `values`, `role` (`id` | `link`), `list`, `label`
+  - `values`: fixed strings (tags); found as `format` writes them, or where `match` puts `{value}`;
+    `format()` refuses others, `fixedValues()` gives them for cards (`Renderer::tags()`) and the list filter
+  - a type adds values via `nameFields: { tags: [...] }` in its yml, so parsing depends on the type:
+    `ObjPath::fields($type)`, `parseName($name, $isResource, $type)`. Pass the type wherever an object is
+    known; `ObjPath::label()` has none and reads the database's own
 - Links: app-made links are `Title (lnk).md` with front matter `type: Link`, `target: <id>`. With a
   `role: link` name field, `Name (lnk-K12).md` links by alternative id. `App::renderer()` draws a link
   with its target's viewer, the Link viewer only when broken. `ajax/detail.php` opens the target
@@ -134,6 +139,6 @@ End to end: copy the app without `data/` to a temp dir, create `data/<db>/.sys/c
 - Folders without content file and resources without sidecar have no id until pinned, linked to or
   saved: search finds them by path (`Index::withoutId()`), Recent does not list them until then
 - A link file's own front matter/body is not reachable in the UI (opening shows the target)
-- List name fields are edited as comma separated text, no multi-select for fixed tags
+- List name fields without `values` are edited as comma separated text
 - `ObjPath::isLinkName()`/`stripMarker()` find the ` (lnk)` marker anywhere in the name
 - Renaming a resource to a title without its extension drops the extension

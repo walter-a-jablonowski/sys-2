@@ -14,6 +14,7 @@ class ListRenderer extends Renderer
     $shown  = $obj->display();
     $meta   = $this->meta();
     $badges = $this->badges();
+    $tags   = $this->tags();
 
     ?>
     <article class="card<?= $obj->isLink ? ' is-link' : '' ?>"
@@ -24,6 +25,9 @@ class ListRenderer extends Renderer
       <div class="card-body">
         <div class="card-line">
           <span class="card-title"><?= $this->esc($obj->title) ?></span>
+          <?php if( $tags !== '' ): ?>
+            <span class="card-tags"><?= $tags ?></span>
+          <?php endif ?>
           <?php if( $obj->isLink ): ?>
             <span class="card-linkmark" title="Link"><?= $this->icon('link') ?></span>
           <?php endif ?>

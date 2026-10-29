@@ -22,7 +22,7 @@ sort:
 #     format: '(id-{value})'             # no format: read-only
 #     role: 'id'                         # alternative unique id
 #   - field: 'tags'
-#     match: '\((best|draft)\)'          # only these strings are tags, "(some text)" stays in the title
-#     format: '({value})'
-#     list: true
+#     values: ['best', 'draft']          # only these strings are tags, "(some text)" stays in the title
+#     format: '({value})'                # how a tag is written, and found; or match: '\(?{value}\)?'
+#     list: true                         # a type may add tags: "nameFields: { tags: ['urgent'] }" in types/MY_TYPE.yml
 nameFields: []

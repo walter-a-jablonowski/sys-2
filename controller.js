@@ -1447,6 +1447,21 @@
     if( name === 'viewerMenu' )
       return viewerMenu(node);
 
+    // A chip of a field with fixed values: the hidden input holds the chosen ones, saved at once like a dropdown
+    if( name === 'toggleChip' )
+    {
+      const field = node.closest('.field');
+      const input = field.querySelector('[data-field]');
+
+      node.classList.toggle('is-on');
+      node.setAttribute('aria-pressed', node.classList.contains('is-on') ? 'true' : 'false');
+      field.classList.remove('has-error');
+
+      input.value = Array.from(field.querySelectorAll('.chip.is-on')).map(function ( chip ) { return chip.dataset.value; }).join(', ');
+      scheduleSave(true);
+      return;
+    }
+
     // Toolbar and status bar buttons are entries like those of the "..." menu
     if( name === 'viewerAction' )
       return runMenuEntry(JSON.parse(node.dataset.entry), state.selected);

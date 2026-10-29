@@ -140,6 +140,53 @@
   border-bottom-color: var(--danger);
 }
 
+/* Fixed values of a field in the name, e.g. tags: toggled, not typed */
+
+.chips
+{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip
+{
+  font: inherit;
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: none;
+  color: var(--fg-dim);
+  cursor: pointer;
+}
+
+.chip:hover
+{
+  border-color: var(--fg-faint);
+  color: var(--fg);
+}
+
+.chip.is-on
+{
+  border-color: var(--accent-line);
+  background: var(--accent-tint);
+  color: var(--accent-hi);
+}
+
+.chip:disabled
+{
+  cursor: default;
+  opacity: .6;
+}
+
+.field.has-error .chips
+{
+  outline: 1px solid var(--danger);
+  outline-offset: 4px;
+  border-radius: var(--r-1);
+}
+
 /* Front matter tab */
 
 .raw

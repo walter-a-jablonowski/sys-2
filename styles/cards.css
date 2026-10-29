@@ -87,11 +87,31 @@
 /* A name holding only fields has no title, the editor asks for one */
 
 .card-title:empty::before,
-.cell-title:empty::before
+.cell-text:empty::before
 {
   content: 'No title';
   font-style: italic;
   color: var(--danger);
+}
+
+/* Fixed values in the name, e.g. tags, right after the title */
+
+.card-tags
+{
+  display: flex;
+  gap: 4px;
+  flex: 0 0 auto;
+}
+
+.tag
+{
+  font-size: 10.5px;
+  line-height: 1.4;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent-hi);
+  white-space: nowrap;
 }
 
 .card-badges
@@ -269,6 +289,13 @@
   font-size: 14px;
   color: var(--fg);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell-text
+{
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 }

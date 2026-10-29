@@ -100,6 +100,17 @@ abstract class Renderer
       . $this->esc($this->context) . '">' . $this->esc($label) . '</button>';
   }
 
+  /**
+   * The fixed values in the object's name, e.g. its tags, as small chips.
+   * Every card shows them, so a type's own badges need not care.
+   */
+  protected function tags() : string
+  {
+    $tags = $this->app->path->fields($this->obj->type)->fixedValues($this->obj->nameData);
+
+    return implode('', array_map(fn( $tag ) => '<span class="tag">' . $this->esc($tag) . '</span>', $tags));
+  }
+
   protected function excerpt( string $text, int $max = 90 ) : string
   {
     $text = trim(preg_replace('/\s+/u', ' ', strip_tags($text)));

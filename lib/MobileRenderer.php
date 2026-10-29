@@ -20,7 +20,7 @@ class MobileRenderer extends Renderer
              data-container="<?= $shown->isFolder && ! $obj->isLink ? '1' : '0' ?>">
       <span class="cell-icon"><?= $this->icon($this->type->icon()) ?></span>
       <div class="cell-body">
-        <div class="cell-title"><?= $this->esc($obj->title) ?><?= $obj->isLink ? $this->icon('link') : '' ?></div>
+        <div class="cell-title"><span class="cell-text"><?= $this->esc($obj->title) ?></span><?= $this->tags() ?><?= $obj->isLink ? $this->icon('link') : '' ?></div>
         <?php $meta = $this->meta() ?>
         <?php if( $meta !== '' ): ?>
           <div class="cell-meta"><?= $meta ?></div>

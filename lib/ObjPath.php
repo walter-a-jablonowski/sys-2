@@ -11,12 +11,15 @@ namespace Sys;
  * The content file of a folder is written as "thisFile" and recognised by
  * "thisFileMatch" too, e.g. "-\s*DESC.*" accepts "- DESC.md", "-DESC notes.md".
  *
- * A name may carry fields besides the title, see NameFields.
+ * A name may carry fields besides the title, see NameFields: the database
+ * defines them, a type may add fixed values (fields()).
  */
 class ObjPath
 {
   private Db $db;
-  private NameFields $fields;
+  private TypeRegistry $types;
+  private array $rules;           // nameFields of the database as configured
+  private array $fields = [];     // type name -> NameFields, '' for the database's own
   private string $thisFile;
   private string $thisPattern;
   private string $linkMarker;
@@ -24,10 +27,11 @@ class ObjPath
   // Characters Windows and Linux refuse in a file name
   private const FORBIDDEN = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
 
-  public function __construct( Db $db, Config $config )
+  public function __construct( Db $db, Config $config, TypeRegistry $types )
   {
     $this->db         = $db;
-    $this->fields     = new NameFields((array) $config->db('nameFields', []));
+    $this->types      = $types;
+    $this->rules      = (array) $config->db('nameFields', []);
     $this->thisFile   = $config->db('thisFile', '-this');
     $this->linkMarker = $config->db('linkMarker', ' (lnk)');
 
@@ -108,23 +112,44 @@ class ObjPath
     return $this->sanitize($title) . $this->linkMarker;
   }
 
-  public function fields() : NameFields
+  /**
+   * The fields a name carries for a type: the database's, plus the fixed
+   * values the type adds, e.g. "nameFields: { tags: ['urgent'] }" in
+   * types/Activity.yml. How a field is written is the database's business,
+   * a type only adds words. No type: the database's own.
+   */
+  public function fields( string $type = '' ) : NameFields
   {
-    return $this->fields;
+    if( ! isset($this->fields[$type]))
+    {
+      $rules = $this->rules;
+      $extra = $type === '' ? [] : (array) $this->types->get($type)->get('nameFields', []);
+
+      foreach( $rules as $i => $rule )
+      {
+        if( isset($rule['values'], $extra[$rule['field'] ?? '']))
+          $rules[$i]['values'] = array_values(array_unique(array_merge((array) $rule['values'], (array) $extra[$rule['field']])));
+      }
+
+      $this->fields[$type] = new NameFields($rules);
+    }
+
+    return $this->fields[$type];
   }
 
   /**
    * Title and fields a name carries. A resource keeps its extension in the
    * title, its fields come from the part before it. A name holding only
-   * fields has an empty title, also for a resource.
+   * fields has an empty title, also for a resource. Which strings are fixed
+   * values may depend on the type.
    *
    * @return array{title: string, data: array, tokens: array}
    */
-  public function parseName( string $name, bool $isResource = false ) : array
+  public function parseName( string $name, bool $isResource = false, string $type = '' ) : array
   {
     [$stem, $ext] = $isResource ? $this->splitExt($name) : [$name, ''];
 
-    $parsed = $this->fields->parse($this->stripMarker($stem));
+    $parsed = $this->fields($type)->parse($this->stripMarker($stem));
 
     if( $parsed['title'] !== '' )
       $parsed['title'] .= $ext;
@@ -140,22 +165,23 @@ class ObjPath
    */
   public function nameFor( Obj $obj, string $title, array $values = [] ) : string
   {
-    $tokens = $this->parseName($obj->name(), $obj->isResource)['tokens'];
+    $fields = $this->fields($obj->type);
+    $tokens = $this->parseName($obj->name(), $obj->isResource, $obj->type)['tokens'];
 
     foreach( $values as $field => $value )
-      $tokens[$field] = $this->fields->format($field, $value);
+      $tokens[$field] = $fields->format($field, $value);
 
     [$stem, $ext] = $obj->isResource ? $this->splitExt($title) : [$title, ''];
 
     if( trim($stem, ' .') === '' )
       throw Failure::invalid('A title is required besides the fields in the name', ['field' => 'title']);
 
-    $name = $this->sanitize(implode(' ', array_merge([$stem], $this->fields->flatten($tokens)))) . $ext;
+    $name = $this->sanitize(implode(' ', array_merge([$stem], $fields->flatten($tokens)))) . $ext;
 
     if( $this->isLinkName($obj->name()))
       $name .= $this->linkMarker;
 
-    $back   = $this->parseName($name, $obj->isResource);
+    $back   = $this->parseName($name, $obj->isResource, $obj->type);
     $expect = array_filter(array_replace($obj->nameData, $values), fn( $value ) => $value !== '' && $value !== []);
     $wrong  = array_filter(array_keys($back['data'] + $expect), fn( $field ) => ($back['data'][$field] ?? null) !== ($expect[$field] ?? null));
 
@@ -163,7 +189,7 @@ class ObjPath
     $edited = array_values(array_intersect($wrong, array_keys($values)));
 
     if( $edited )
-      throw Failure::invalid("{$this->fields->rules()[$edited[0]]['label']} cannot be written into the name like this", ['field' => $edited[0]]);
+      throw Failure::invalid("{$fields->rules()[$edited[0]]['label']} cannot be written into the name like this", ['field' => $edited[0]]);
 
     if( $wrong || $back['title'] !== $this->sanitize($title))
       throw Failure::invalid('Part of the title would be read as a field of the name', ['field' => 'title']);
@@ -173,7 +199,8 @@ class ObjPath
 
   /**
    * A path as one readable line of titles. The empty path is the database
-   * itself, which is what sits at the top of every trail.
+   * itself, which is what sits at the top of every trail. Segments are read
+   * without their types: fixed values only a type adds stay in the title.
    */
   public function label( string $rel ) : string
   {

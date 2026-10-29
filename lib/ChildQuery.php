@@ -93,12 +93,22 @@ class ChildQuery
     return in_array($obj->display()->type, $types, true);
   }
 
+  /**
+   * The title or one of the fixed values in the name, so "best" lists
+   * everything tagged so.
+   */
   private function matchesFilter( Obj $obj, string $filter ) : bool
   {
-    if( $filter === '' )
+    if( $filter === '' || mb_stripos($obj->title, $filter) !== false )
       return true;
 
-    return mb_stripos($obj->title, $filter) !== false;
+    foreach( $this->app->path->fields($obj->type)->fixedValues($obj->nameData) as $tag )
+    {
+      if( mb_stripos($tag, $filter) !== false )
+        return true;
+    }
+
+    return false;
   }
 
   /**

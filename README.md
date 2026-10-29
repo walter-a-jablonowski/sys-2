@@ -27,7 +27,7 @@ Markdown hierarchy viewer. Everything below is behaviour the UI does not spell o
 - **Double click** a container — goes into it, at any level
   - the container itself lands in the editor, its children in the list
   - on a phone a single tap does this
-- **Filter** box — the list in front of you, by title only
+- **Filter** box — the list in front of you, by title and tags (`best` lists everything tagged `best`)
 - **The row at the top of the column** is the container you are in
   - click it to open that container in the editor
   - it heads every tab and every list, and never moves
@@ -104,7 +104,15 @@ A database may read fields out of file and folder names — `nameFields` in `<db
 - A token stands alone: blank or start/end of the name around it
   - `match` — regex, group 1 is the value, else the whole token
   - `list: true` — every token counts (e.g. tags), otherwise only the first
-- Fixed tags: `match: '\((best|draft)\)'` — `(best)` is a tag, `(some text)` stays in the title
+- **Fixed values**, e.g. tags — names put no mark on them, so the strings are listed: `values: ['best', 'draft']`
+  - `(best)` is a tag, `(some text)` stays in the title
+  - `format: '({value})'` is how a tag is written and also how it is found; or `match: '\(?{value}\)?'` places them freely
+  - global in `<db>/.sys/config.yml`; a type adds its own in `types/<Type>.yml`: `nameFields: { tags: ['urgent'] }`
+    - the database decides how a field is written, a type only adds words
+    - `(urgent)` is a tag on an Activity, on an Info it stays in the title
+    - path lines (search, Recent, Pinned) know only the global tags
+  - editor: toggle chips for a list, a dropdown for a single value; nothing else is accepted
+  - cards show them right after the title
 - `role: 'id'` — **alternative id** (`id2`), unique across the database
   - `id` in front matter stays the primary id: Pinned and Recent store that one
   - duplicates show in **Check database**, the editor refuses a taken one
@@ -112,7 +120,7 @@ A database may read fields out of file and folder names — `nameFields` in `<db
   - `My file (lnk-K12).md` — own title, front matter and body are allowed
 - Shown in the editor after the title, unless the type places the field itself
   - editing one **renames** the file, written with `format` (e.g. `(id-{value})`); no `format` — read-only
-  - a list field is edited as `a, b`
+  - a list field without fixed values is edited as `a, b`
   - renaming the title keeps every token as written, moved behind the title
   - whatever is written must read back the same, otherwise the save is refused (e.g. a title containing `(best)`)
 - A **title is required** besides the fields

@@ -38,17 +38,25 @@ class DetailRenderer extends Renderer
 
   /**
    * The type's fields plus the fields carried in the name, which go right
-   * after the title unless the type places them itself.
+   * after the title unless the type places them itself. A field of fixed
+   * values is picked, not typed: chips for a list, a dropdown for one value.
    */
   protected function fields() : array
   {
     $own   = $this->type->fields();
     $names = [];
 
-    foreach( $this->app->path->fields()->rules() as $field => $rule )
+    foreach( $this->nameRules() as $field => $rule )
     {
-      if( ! isset($own[$field]))
-        $names[$field] = ['label' => $rule['label']];
+      $def = ['label' => $rule['label']];
+
+      if( $rule['values'] !== null )
+        $def += ['type' => $rule['list'] ? 'multiselect' : 'select', 'options' => $rule['values']];
+
+      if( isset($own[$field]))
+        $own[$field] += $def;
+      else
+        $names[$field] = $def;
     }
 
     $at = array_search('title', array_keys($own), true);
@@ -107,7 +115,7 @@ class DetailRenderer extends Renderer
     $id    = 'f-' . str_replace('.', '-', $name);
 
     // The title and the fields carried in the name rename the file: saved on leaving, not per keystroke
-    $rule  = $this->app->path->fields()->rules()[$name] ?? null;
+    $rule  = $this->nameRules()[$name] ?? null;
     $attrs = ($name === 'title' || $rule ? ' data-rename' : '') . ($rule && $rule['format'] === '' ? ' disabled' : '');
 
     // A name needs a title besides its fields, whatever the type says. A missing one is shown right away
@@ -121,6 +129,16 @@ class DetailRenderer extends Renderer
         <textarea class="input input-area<?= $kind === 'markdown' ? ' mono' : '' ?>" id="<?= $this->esc($id) ?>"
                   data-field="<?= $this->esc($name) ?>" rows="<?= (int) ($def['rows'] ?? 14) ?>"
                   placeholder="<?= $this->esc($def['placeholder'] ?? '') ?>"<?= $attrs ?>><?= $this->esc($value) ?></textarea>
+      <?php elseif( $kind === 'multiselect' ): ?>
+        <?php $chosen = array_map('trim', explode(',', (string) $value)) ?>
+        <input type="hidden" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>" value="<?= $this->esc($value) ?>"<?= $attrs ?>>
+        <div class="chips">
+          <?php foreach( $def['options'] ?? [] as $option ): ?>
+            <?php $on = in_array((string) $option, $chosen, true) ?>
+            <button type="button" class="chip<?= $on ? ' is-on' : '' ?>" data-action="toggleChip" data-value="<?= $this->esc($option) ?>"
+                    aria-pressed="<?= $on ? 'true' : 'false' ?>"<?= $rule && $rule['format'] === '' ? ' disabled' : '' ?>><?= $this->esc($option) ?></button>
+          <?php endforeach ?>
+        </div>
       <?php elseif( $kind === 'select' ): ?>
         <select class="input" id="<?= $this->esc($id) ?>" data-field="<?= $this->esc($name) ?>"<?= $attrs ?>>
           <option value=""><?= $def['required'] ?? false ? '—' : '(none)' ?></option>
@@ -179,6 +197,15 @@ class DetailRenderer extends Renderer
       </div>
     </div>
     <?php
+  }
+
+  /**
+   * The rules of the fields carried in the name, with the fixed values the
+   * object's type adds.
+   */
+  protected function nameRules() : array
+  {
+    return $this->app->path->fields($this->obj->type)->rules();
   }
 
   // Values

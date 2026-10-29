@@ -28,6 +28,11 @@ fields:
       end:
         type: 'date'
 
+# Fixed values this type adds to the name fields of a database, here to its tags.
+# The database's .sys/config.yml defines the field and how it is written.
+nameFields:
+  tags: ['urgent']
+
 # Tabs of the navigation column: each one filters the children
 tabs:
   entries:
