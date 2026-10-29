@@ -4,8 +4,6 @@
 
 Asked Claude shortly about how UI would look like
 
-This basically is [[sys-2 (gd main, CRM)]] layout
-
 ## UI concept
 
 The model says small and huge activities have the same structure, so the UI uses **one screen for any activity at any level**. It only shows more detail when the activity needs it.
