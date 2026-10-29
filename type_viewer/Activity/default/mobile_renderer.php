@@ -19,7 +19,7 @@ class ActivityDefaultMobileRenderer extends \Sys\MobileRenderer
              data-container="<?= $shown->isFolder && ! $obj->isLink ? '1' : '0' ?>">
       <span class="cell-dot status-dot status-<?= $this->esc($status !== '' ? $status : 'none') ?>"></span>
       <div class="cell-body">
-        <div class="cell-title"><span class="cell-text"><?= $this->esc($obj->title) ?></span><?= $this->tags() ?></div>
+        <div class="cell-title"><?= $this->tags(true) ?><span class="cell-text"><?= $this->esc($obj->title) ?></span><?= $this->tags() ?></div>
         <div class="cell-meta"><?= $this->meta() ?></div>
         <?= $this->contextBlock() ?>
       </div>

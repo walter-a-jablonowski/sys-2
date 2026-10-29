@@ -137,7 +137,8 @@ class NameFields
    * The fixed values a name carries, e.g. its tags or its prio: what cards
    * show and the list filter matches.
    *
-   * @return array[]  each with field, value, label, selected ('', 'global', 'local'), sort
+   * @return array[]  each with field, value, label, selected ('', 'global', 'local'), sort,
+   *                   start (leads the name, so it is shown before the title)
    */
   public function fixedValues( array $data ) : array
   {
@@ -155,7 +156,8 @@ class NameFields
           'value'    => $value,
           'label'    => $rule['labels'][$value] ?? $value,
           'selected' => $rule['selected'][$value] ?? '',
-          'sort'     => $rule['sort']
+          'sort'     => $rule['sort'],
+          'start'    => $rule['start']
         ];
       }
     }

@@ -14,6 +14,7 @@ class ListRenderer extends Renderer
     $shown  = $obj->display();
     $meta   = $this->meta();
     $badges = $this->badges();
+    $lead   = $this->tags(true);
     $tags   = $this->tags();
 
     ?>
@@ -24,6 +25,9 @@ class ListRenderer extends Renderer
       <span class="card-icon"><?= $this->icon($this->type->icon()) ?></span>
       <div class="card-body">
         <div class="card-line">
+          <?php if( $lead !== '' ): ?>
+            <span class="card-tags"><?= $lead ?></span>
+          <?php endif ?>
           <span class="card-title"><?= $this->esc($obj->title) ?></span>
           <?php if( $tags !== '' ): ?>
             <span class="card-tags"><?= $tags ?></span>

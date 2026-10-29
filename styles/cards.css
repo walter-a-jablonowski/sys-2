@@ -94,7 +94,7 @@
   color: var(--danger);
 }
 
-/* Fixed values in the name, e.g. tags, right after the title */
+/* Fixed values in the name: tags after the title, leading ones like the prio before it */
 
 .card-tags
 {

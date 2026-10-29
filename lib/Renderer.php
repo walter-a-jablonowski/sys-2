@@ -102,11 +102,15 @@ abstract class Renderer
 
   /**
    * The fixed values in the object's name, e.g. its tags or its prio, as
-   * small chips (view/tags.php). '' when there are none.
+   * small chips (view/tags.php). Those leading the name ($start, e.g. the
+   * prio) go before the title, the others after it, so a card reads like
+   * the name. '' when there are none.
    */
-  protected function tags() : string
+  protected function tags( bool $start = false ) : string
   {
-    return trim(View::render("{$this->app->root}/view/tags.php", ['app' => $this->app, 'obj' => $this->obj]));
+    $vars = ['app' => $this->app, 'obj' => $this->obj, 'start' => $start];
+
+    return trim(View::render("{$this->app->root}/view/tags.php", $vars));
   }
 
   protected function excerpt( string $text, int $max = 90 ) : string

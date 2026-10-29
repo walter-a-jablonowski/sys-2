@@ -117,7 +117,7 @@ A database may read fields out of file and folder names — `nameFields` in `<db
     - `(urgent)` is a tag on an Activity, on an Info it stays in the title
     - path lines (search, Recent, Pinned) know only the global tags
   - editor: toggle chips for a list, a dropdown for a single value; nothing else is accepted
-  - cards show them right after the title
+  - cards show them right after the title, leading ones (`at: 'start'`, e.g. the prio) right before it
 - **Leading fields, selection and priority**, e.g. `2 - My task` — see the `prio` rule in `data/gd_demo/.sys/config.yml`
   - `at: 'start'` — the token leads the name, the title follows right away: `2 - x`, `2-x`, `2 -x` all read as `2`
     - written as `format` says, before the title
